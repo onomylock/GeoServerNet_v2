@@ -1,0 +1,6 @@
+@MasterServer.HttpApi_HostAddress = http://localhost:5000
+
+GET {{MasterServer.HttpApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

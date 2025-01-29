@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.csproj" />
+    <ProjectReference Include="..\NodeServer.Domain\NodeServer.Domain.csproj" />
+  </ItemGroup>
+</Project>
