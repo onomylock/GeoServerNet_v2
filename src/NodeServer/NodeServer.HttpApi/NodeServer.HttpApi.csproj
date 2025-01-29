@@ -12,5 +12,10 @@
       <ProjectReference Include="..\..\Shared\Shared.csproj" />
       <ProjectReference Include="..\NodeServer.Application\NodeServer.Application.csproj" />
     </ItemGroup>
+    
+
+    <ItemGroup>
+      <Folder Include="Controllers\" />
+    </ItemGroup>
 
 </Project>

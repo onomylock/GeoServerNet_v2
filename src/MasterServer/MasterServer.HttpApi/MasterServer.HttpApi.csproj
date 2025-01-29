@@ -10,5 +10,9 @@
       <ProjectReference Include="..\..\Shared\Shared.csproj" />
       <ProjectReference Include="..\MasterServer.Application\MasterServer.Application.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Controllers\" />
+    </ItemGroup>
 
 </Project>
