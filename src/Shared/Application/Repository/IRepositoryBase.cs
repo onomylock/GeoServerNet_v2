@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.Application.Data;
 using Shared.Domain.Entity;
+using Shared.Domain.Entity.Base;
 
 namespace Shared.Application.Repository;
 

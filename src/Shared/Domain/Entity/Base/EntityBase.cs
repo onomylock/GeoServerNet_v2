@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Shared.Domain.Entity;
+namespace Shared.Domain.Entity.Base;
 
 public interface IEntityBase
 {

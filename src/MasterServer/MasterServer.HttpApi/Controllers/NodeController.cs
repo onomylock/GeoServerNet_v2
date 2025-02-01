@@ -1,4 +1,8 @@
-using MasterServer.Application.MediatR.Node.Queries.GetAvailableNodes;
+using System.ComponentModel.DataAnnotations;
+using MasterServer.Infrastructure.Handlers.Node.Commands.NodeDeleteCommand;
+using MasterServer.Infrastructure.Handlers.Node.Commands.NodeUpdateCommand;
+using MasterServer.Infrastructure.Handlers.Node.Queries.NodeReadCollectionSearchQuery;
+using MasterServer.Infrastructure.Handlers.Node.Queries.NodeReadQuery;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,19 +18,21 @@ public class NodeController(
 {
     [HttpGet]
     [Authorize(AuthorizationPolicies.Authorized)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ReadAvailableNodes([FromQuery] ReadAvailableNodesQuery query, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> ReadCollectionSearch([Required] [FromQuery] NodeReadCollectionSearchQuery query, CancellationToken cancellationToken = default)
     {
         return Ok(await mediator.Send(query, cancellationToken));
     }
 
+    [HttpGet]
+    [Authorize(AuthorizationPolicies.Authorized)]
+    public async Task<IActionResult> Read([Required] [FromQuery] NodeReadQuery query, CancellationToken cancellationToken = default)
+    {
+        return Ok(await mediator.Send(query, cancellationToken));
+    }
+    
     [HttpPost]
     [Authorize(AuthorizationPolicies.Authorized)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> SetAvailableNodes([FromBody] SetAvailableNodesCommand command,
+    public async Task<IActionResult> Update([Required] [FromBody] NodeUpdateCommand command,
         CancellationToken cancellationToken = default)
     {
         return Ok(await mediator.Send(command, cancellationToken));
@@ -34,9 +40,7 @@ public class NodeController(
 
     [HttpPost]
     [Authorize(AuthorizationPolicies.Authorized)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> DeleteAvailableNodes([FromBody] DeleteAvailbaleNode command,
+    public async Task<IActionResult> Delete([Required] [FromBody] NodeDeleteCommand command,
         CancellationToken cancellationToken = default)
     {
         return Ok(await mediator.Send(command, cancellationToken));
