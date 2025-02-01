@@ -7,7 +7,5 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Commands.AuthSignInViaAliasC
 
 public class AuthSignInViaAliasCommand : AuthSignInRequestBaseDto, IRequest<ResponseBase<AuthSignInResultBaseDto>>
 {
-    [Required]
-    [MinLength(1)]
-    public string Alias { get; set; }
+    [Required] [MinLength(1)] public string Alias { get; set; }
 }

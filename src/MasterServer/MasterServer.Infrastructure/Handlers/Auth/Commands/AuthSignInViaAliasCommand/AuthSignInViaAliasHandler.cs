@@ -20,21 +20,22 @@ public class AuthSignInViaAliasHandler(
     IOptions<MasterServiceOptions> masterServiceOptions,
     IRefreshTokenEntityService refreshTokenEntityService
 ) : AuthSingInHandlerBase(
-    httpContextAccessor, 
-    jsonWebTokenOptions, 
-    masterServiceOptions, 
+    httpContextAccessor,
+    jsonWebTokenOptions,
+    masterServiceOptions,
     refreshTokenEntityService), IRequestHandler<AuthSignInViaAliasCommand, ResponseBase<AuthSignInResultBaseDto>>
 {
-    public async Task<ResponseBase<AuthSignInResultBaseDto>> Handle(AuthSignInViaAliasCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<AuthSignInResultBaseDto>> Handle(AuthSignInViaAliasCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAsync(request, cancellationToken);
-        
+
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
 
             var user = await userEntityService.GetByAliasAsync(request.Alias, false, cancellationToken);
-            
+
             var result = await SignInBase(request, user, null, cancellationToken);
 
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);

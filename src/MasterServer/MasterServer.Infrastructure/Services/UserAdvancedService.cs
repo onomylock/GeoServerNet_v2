@@ -20,13 +20,16 @@ public class UserAdvancedService(
     {
         Guid resultUserId = default;
 
-        if (!Guid.TryParse(_httpContext.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.UserId)?.Value, out var userId))
+        if (!Guid.TryParse(_httpContext.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.UserId)?.Value,
+                out var userId))
         {
             //System Access Token acts as a RootUser
-            if (_httpContext.User.Claims.Any(_ => _.Type == ClaimKey.AccessToken && _.Value == commonServiceOptions.Value.SystemAccessToken))
+            if (_httpContext.User.Claims.Any(_ =>
+                    _.Type == ClaimKey.AccessToken && _.Value == commonServiceOptions.Value.SystemAccessToken))
                 resultUserId = Consts.RootUserId;
 
-            if (bool.TryParse(_httpContext.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.IsPublic)?.Value, out var isPublic))
+            if (bool.TryParse(_httpContext.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.IsPublic)?.Value,
+                    out var isPublic))
                 resultUserId = Consts.PublicUserId;
         }
         else
@@ -40,12 +43,14 @@ public class UserAdvancedService(
         return resultUserId;
     }
 
-    public async Task<bool> IsInUserGroupByUserGroupId(Guid userId, Guid userGroupId, CancellationToken cancellationToken = default)
+    public async Task<bool> IsInUserGroupByUserGroupId(Guid userId, Guid userGroupId,
+        CancellationToken cancellationToken = default)
     {
         //Avoid potential deadlocks between AuthService and UserService (exit early)
         if (userId == Consts.RootUserId && userGroupId == Consts.RootUserGroupId)
             return true;
 
-        return await userToUserGroupMappingEntityService.GetByEntityLeftIdEntityRightIdAsync(userId, userGroupId, true, cancellationToken) is { };
+        return await userToUserGroupMappingEntityService.GetByEntityLeftIdEntityRightIdAsync(userId, userGroupId, true,
+            cancellationToken) is not null;
     }
 }

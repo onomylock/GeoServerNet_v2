@@ -2,5 +2,4 @@ namespace MasterServer.Infrastructure.Handlers.UserGroup.Queries.UserGroupReadQu
 
 public class UserGroupReadQuery
 {
-    
 }

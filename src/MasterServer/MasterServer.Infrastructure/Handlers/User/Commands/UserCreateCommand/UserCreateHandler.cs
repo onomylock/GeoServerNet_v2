@@ -20,7 +20,8 @@ public class UserCreateHandler(
     IUserGroupEntityService userGroupEntityService
 ) : IRequestHandler<UserCreateCommand, ResponseBase<UserReadResultDto>>
 {
-    public async Task<ResponseBase<UserReadResultDto>> Handle(UserCreateCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<UserReadResultDto>> Handle(UserCreateCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
@@ -30,9 +31,12 @@ public class UserCreateHandler(
 
             var userId = userAdvancedService.GetUserIdFromHttpContext(true);
 
-            var isRoot = await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken);
+            var isRoot =
+                await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken);
 
-            if (!(isRoot || await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.ManageUsersUserGroupId, cancellationToken)))
+            if (!(isRoot ||
+                  await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.ManageUsersUserGroupId,
+                      cancellationToken)))
                 throw new InsufficientPermissionsException();
 
             var customPasswordHasher = new CustomPasswordHasher();
@@ -49,7 +53,7 @@ public class UserCreateHandler(
             };
 
             await userEntityService.SaveAsync(targetUser, cancellationToken);
-            
+
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
             return new ResponseBase<UserReadResultDto>

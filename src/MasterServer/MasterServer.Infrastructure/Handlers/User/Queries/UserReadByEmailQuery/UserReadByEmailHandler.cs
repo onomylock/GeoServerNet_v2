@@ -17,21 +17,23 @@ public class UserReadByEmailHandler(
     IUserGroupEntityService userGroupEntityService
 ) : IRequestHandler<UserReadByEmailQuery, ResponseBase<UserReadResultDto>>
 {
-    public async Task<ResponseBase<UserReadResultDto>> Handle(UserReadByEmailQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<UserReadResultDto>> Handle(UserReadByEmailQuery request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
         var userId = userAdvancedService.GetUserIdFromHttpContext(true);
-        
-        var isRoot = await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken);
+
+        var isRoot =
+            await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken);
 
         var targetUser = await userEntityService.GetByEmailAsync(request.Email, true, cancellationToken) ??
                          throw new UserNotFoundException();
-        
+
         return new ResponseBase<UserReadResultDto>
         {
             Data = await UserMapper.ToUserReadResultDto(targetUser, userGroupEntityService, isRoot,
-                cancellationToken: cancellationToken)
+                cancellationToken)
         };
     }
 }

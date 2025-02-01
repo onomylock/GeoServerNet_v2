@@ -18,18 +18,20 @@ public class NodeController(
 {
     [HttpGet]
     [Authorize(AuthorizationPolicies.Authorized)]
-    public async Task<IActionResult> ReadCollectionSearch([Required] [FromQuery] NodeReadCollectionSearchQuery query, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> ReadCollectionSearch([Required] [FromQuery] NodeReadCollectionSearchQuery query,
+        CancellationToken cancellationToken = default)
     {
         return Ok(await mediator.Send(query, cancellationToken));
     }
 
     [HttpGet]
     [Authorize(AuthorizationPolicies.Authorized)]
-    public async Task<IActionResult> Read([Required] [FromQuery] NodeReadQuery query, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Read([Required] [FromQuery] NodeReadQuery query,
+        CancellationToken cancellationToken = default)
     {
         return Ok(await mediator.Send(query, cancellationToken));
     }
-    
+
     [HttpPost]
     [Authorize(AuthorizationPolicies.Authorized)]
     public async Task<IActionResult> Update([Required] [FromBody] NodeUpdateCommand command,

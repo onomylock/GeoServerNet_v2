@@ -14,6 +14,6 @@ public interface IHangfireService
     string AddContinuations<T>(Expression<Action<T>> methodCall, string jobid);
 
     string AddSchedule(Expression<Action> methodCall, double time);
-    
+
     string AddSchedule<T>(Expression<Action<T>> methodCall, RecuringTime recuringTime, double time);
 }

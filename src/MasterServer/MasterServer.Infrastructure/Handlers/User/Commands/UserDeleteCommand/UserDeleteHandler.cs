@@ -29,14 +29,17 @@ public class UserDeleteHandler(
 
             var userId = userAdvancedService.GetUserIdFromHttpContext(true);
 
-            if (!(await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken) ||
-                  await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.ManageUsersUserGroupId, cancellationToken)))
+            if (!(await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId,
+                      cancellationToken) ||
+                  await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.ManageUsersUserGroupId,
+                      cancellationToken)))
                 throw new InsufficientPermissionsException();
 
             var targetUser = await userEntityService.GetByIdAsync(request.UserId, true, cancellationToken) ??
                              throw new UserNotFoundException();
-            
-            await userToUserGroupMappingEntityService.BulkDelete(query => query.Where(_ => _.EntityLeftId == targetUser.Id), cancellationToken);
+
+            await userToUserGroupMappingEntityService.BulkDelete(
+                query => query.Where(_ => _.EntityLeftId == targetUser.Id), cancellationToken);
 
             await userEntityService.DeleteAsync(targetUser, cancellationToken);
 
@@ -50,7 +53,7 @@ public class UserDeleteHandler(
         catch (Exception)
         {
             await dbContextTransactionAction.RollbackTransactionAsync(CancellationToken.None);
-            
+
             throw;
         }
     }

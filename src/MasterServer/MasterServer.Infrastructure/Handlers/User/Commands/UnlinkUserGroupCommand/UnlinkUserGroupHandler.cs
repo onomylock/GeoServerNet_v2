@@ -16,34 +16,39 @@ public class UnlinkUserGroupHandler(
     IDbContextTransactionAction dbContextTransactionAction,
     IUserAdvancedService userAdvancedService,
     IUserEntityService userEntityService,
-    IUserToUserGroupMappingEntityService userToUserGroupMappingEntityService) : IRequestHandler<UnlinkUserGroupCommand, ResponseBase<OkResult>>
+    IUserToUserGroupMappingEntityService userToUserGroupMappingEntityService)
+    : IRequestHandler<UnlinkUserGroupCommand, ResponseBase<OkResult>>
 {
-    public async Task<ResponseBase<OkResult>> Handle(UnlinkUserGroupCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<OkResult>> Handle(UnlinkUserGroupCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         var response = new ResponseBase<OkResult>();
-        
+
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
 
             var userId = userAdvancedService.GetUserIdFromHttpContext(true);
 
-            if (!(await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken) ||
-                  await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.ManageUsersUserGroupId, cancellationToken)))
+            if (!(await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId,
+                      cancellationToken) ||
+                  await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.ManageUsersUserGroupId,
+                      cancellationToken)))
                 throw new InsufficientPermissionsException();
 
             var targetUser = await userEntityService.GetByIdAsync(request.UserId, true, cancellationToken) ??
                              throw new UserNotFoundException();
 
             var errors = new List<ErrorBase>();
-            
+
             foreach (var userGroupId in request.UserGroupIds)
                 try
                 {
                     var userToUserGroupMapping =
-                        await userToUserGroupMappingEntityService.GetByEntityLeftIdEntityRightIdAsync(targetUser.Id, userGroupId, cancellationToken: cancellationToken);
+                        await userToUserGroupMappingEntityService.GetByEntityLeftIdEntityRightIdAsync(targetUser.Id,
+                            userGroupId, cancellationToken: cancellationToken);
 
                     await userToUserGroupMappingEntityService.DeleteAsync(userToUserGroupMapping, cancellationToken);
                 }
@@ -58,7 +63,7 @@ public class UnlinkUserGroupHandler(
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
             response.Errors = errors;
-            
+
             return response;
         }
         catch (Exception)

@@ -21,22 +21,23 @@ public abstract class AuthSingInHandlerBase(
     IRefreshTokenEntityService refreshTokenEntityService)
 {
     private readonly HttpContext _httpContext = httpContextAccessor.HttpContext;
-    
+
     protected async Task<(AuthSignInResultBaseDto result, IEnumerable<ErrorBase> errors)> SignInBase(
-        AuthSignInRequestBaseDto data, 
+        AuthSignInRequestBaseDto data,
         Domain.Entities.User user,
-        ClaimEntry[] claims, 
+        ClaimEntry[] claims,
         CancellationToken cancellationToken = default)
     {
         var errors = new List<ErrorBase>();
-        
+
         //GRPC does not have cookies
-        var useCookies = data.UseCookies && _httpContext.Request is not { Protocol: "HTTP/2", ContentType: "application/grpc" };
-        
+        var useCookies = data.UseCookies && _httpContext.Request is not
+            { Protocol: "HTTP/2", ContentType: "application/grpc" };
+
         var customPasswordHasher = new CustomPasswordHasher();
 
         var dateTimeOffsetUtcNow = DateTimeOffset.UtcNow;
-        
+
         if (!customPasswordHasher.VerifyPassword(user.PasswordHashed, data.Password))
             throw new IncorrectCredentialsException();
 
@@ -49,22 +50,23 @@ public abstract class AuthSingInHandlerBase(
             ExpiresAt = refreshTokenExpiresAt,
             UserId = user.Id
         }, cancellationToken);
-        
+
         //Create new JsonWebToken
         var jsonWebTokenIdNew = Guid.NewGuid();
-        
+
         var claimsToAdd = new List<Claim>
         {
             new(ClaimKey.UserId, user.Id.ToString(), ClaimValueTypes.String),
             new(ClaimKey.JsonWebTokenId, jsonWebTokenIdNew.ToString(), ClaimValueTypes.String)
         };
-        
+
         if (claims?.Length > 0)
             claimsToAdd.AddRange(claims.Select(_ => new Claim(_.Type, _.Value, _.ValueType)));
-        
+
         var jsonWebTokenExpiresAt = dateTimeOffsetUtcNow.AddSeconds(jsonWebTokenOptions.Value.ExpirySeconds);
         var jsonWebTokenString = JsonWebTokenHelpers.CreateWithClaims(jsonWebTokenOptions.Value.IssuerSigningKey,
-            jsonWebTokenOptions.Value.Issuer, jsonWebTokenOptions.Value.Audience, claimsToAdd, jsonWebTokenExpiresAt.UtcDateTime);
+            jsonWebTokenOptions.Value.Issuer, jsonWebTokenOptions.Value.Audience, claimsToAdd,
+            jsonWebTokenExpiresAt.UtcDateTime);
 
         if (useCookies)
         {
@@ -76,14 +78,15 @@ public abstract class AuthSingInHandlerBase(
                 HttpOnly = true,
                 Domain = masterServiceOptions.Value.CookiesDomain
             });
-            _httpContext.Response.Cookies.Append(CookieKey.RefreshTokenExpiresAt, refreshTokenExpiresAt.ToString("o"), new CookieOptions
-            {
-                Expires = refreshTokenExpiresAt,
-                Secure = masterServiceOptions.Value.SecureCookies,
-                SameSite = SameSiteMode.Strict,
-                HttpOnly = false,
-                Domain = masterServiceOptions.Value.CookiesDomain
-            });
+            _httpContext.Response.Cookies.Append(CookieKey.RefreshTokenExpiresAt, refreshTokenExpiresAt.ToString("o"),
+                new CookieOptions
+                {
+                    Expires = refreshTokenExpiresAt,
+                    Secure = masterServiceOptions.Value.SecureCookies,
+                    SameSite = SameSiteMode.Strict,
+                    HttpOnly = false,
+                    Domain = masterServiceOptions.Value.CookiesDomain
+                });
             _httpContext.Response.Cookies.Append(CookieKey.JsonWebToken, jsonWebTokenString, new CookieOptions
             {
                 Expires = refreshTokenExpiresAt,
@@ -92,14 +95,15 @@ public abstract class AuthSingInHandlerBase(
                 HttpOnly = true,
                 Domain = masterServiceOptions.Value.CookiesDomain
             });
-            _httpContext.Response.Cookies.Append(CookieKey.JsonWebTokenExpiresAt, jsonWebTokenExpiresAt.ToString("o"), new CookieOptions
-            {
-                Expires = refreshTokenExpiresAt,
-                Secure = masterServiceOptions.Value.SecureCookies,
-                SameSite = SameSiteMode.Strict,
-                HttpOnly = false,
-                Domain = masterServiceOptions.Value.CookiesDomain
-            });
+            _httpContext.Response.Cookies.Append(CookieKey.JsonWebTokenExpiresAt, jsonWebTokenExpiresAt.ToString("o"),
+                new CookieOptions
+                {
+                    Expires = refreshTokenExpiresAt,
+                    Secure = masterServiceOptions.Value.SecureCookies,
+                    SameSite = SameSiteMode.Strict,
+                    HttpOnly = false,
+                    Domain = masterServiceOptions.Value.CookiesDomain
+                });
             _httpContext.Response.Cookies.Append(CookieKey.UserId, user.Id.ToString(), new CookieOptions
             {
                 Expires = refreshTokenExpiresAt,
@@ -118,12 +122,10 @@ public abstract class AuthSingInHandlerBase(
         }
 
         return (
-            new AuthSignInResultBaseDto(userId: user.Id, jsonWebToken: !useCookies ? jsonWebTokenString : null,
-                jsonWebTokenExpiresAt: !useCookies ? jsonWebTokenExpiresAt : null,
-                refreshToken: !useCookies ? refreshTokenString : null,
-                refreshTokenExpiresAt: !useCookies ? refreshTokenExpiresAt : null),
+            new AuthSignInResultBaseDto(user.Id, !useCookies ? jsonWebTokenString : null,
+                !useCookies ? jsonWebTokenExpiresAt : null,
+                !useCookies ? refreshTokenString : null,
+                !useCookies ? refreshTokenExpiresAt : null),
             errors);
     }
-    
-    
 }

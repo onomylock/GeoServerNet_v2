@@ -13,9 +13,11 @@ public class JsonWebTokenAdvancedService(
 {
     private readonly HttpContext _httpContext = httpContextAccessor.HttpContext;
 
-    public async Task<string> GetTokenFromHttpContext(bool throwIfNotProvided, bool throwIfExpiredOrRevoked, CancellationToken cancellationToken = default)
+    public async Task<string> GetTokenFromHttpContext(bool throwIfNotProvided, bool throwIfExpiredOrRevoked,
+        CancellationToken cancellationToken = default)
     {
-        if (_httpContext.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.JsonWebToken)?.Value is var jsonWebTokenString &&
+        if (_httpContext.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.JsonWebToken)?.Value is var
+                jsonWebTokenString &&
             string.IsNullOrEmpty(jsonWebTokenString))
             return throwIfNotProvided
                 ? throw new JsonWebTokenNotFoundOrHttpContextMissingClaims()
@@ -38,7 +40,8 @@ public class JsonWebTokenAdvancedService(
 
     public DateTimeOffset GetExpiresAtFromHttpContext(bool throwIfNotProvided)
     {
-        if (!int.TryParse(_httpContext.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.ExpiresAt)?.Value, out var expiresAt))
+        if (!int.TryParse(_httpContext.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.ExpiresAt)?.Value,
+                out var expiresAt))
             return throwIfNotProvided
                 ? throw new JsonWebTokenNotFoundOrHttpContextMissingClaims()
                 : default;
@@ -47,17 +50,20 @@ public class JsonWebTokenAdvancedService(
     }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    public async Task<bool> GetIsRevokedFromHttpContext(bool throwIfNotProvided, CancellationToken cancellationToken = default)
+    public async Task<bool> GetIsRevokedFromHttpContext(bool throwIfNotProvided,
+        CancellationToken cancellationToken = default)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
         var jsonWebTokenId = GetIdFromHttpContext(true);
-        
-        return await jsonWebTokenRevokedEntityService.GetByJsonWebTokenId(jsonWebTokenId, true, cancellationToken) is { };
+
+        return await jsonWebTokenRevokedEntityService.GetByJsonWebTokenId(jsonWebTokenId, true, cancellationToken) is
+            not null;
     }
 
     public Guid GetIdFromHttpContext(bool throwIfNotProvided)
     {
-        if (!Guid.TryParse(_httpContext.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.JsonWebTokenId)?.Value, out var jsonWebTokenId))
+        if (!Guid.TryParse(_httpContext.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.JsonWebTokenId)?.Value,
+                out var jsonWebTokenId))
             return throwIfNotProvided
                 ? throw new JsonWebTokenNotFoundOrHttpContextMissingClaims()
                 : Guid.Empty;

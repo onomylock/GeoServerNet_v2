@@ -1,6 +1,6 @@
 namespace Shared.Common.Models.DTO.Base;
 
-public class PaginationResponseBase<T>: GenericResponseBase<T> where T : EntityResponseBase
+public class PaginationResponseBase<T> : GenericResponseBase<T> where T : EntityResponseBase
 {
     public int PageNumber { get; set; }
     public int TotalPages { get; set; }

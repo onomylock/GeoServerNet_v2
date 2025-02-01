@@ -33,7 +33,7 @@ public static class UserMapper
             PasswordHashed = displaySensitiveData ? user.PasswordHashed : null,
             Active = user.Active,
             Email = user.Email,
-            UserGroupIds = userGroupEntityService is { }
+            UserGroupIds = userGroupEntityService is not null
                 ? (await userGroupEntityService.GetByUserIdAsync(user.Id, PageModel.Full, query => query, true,
                     cancellationToken)).entities.Select(_ => _.Id).ToArray()
                 : null,
@@ -42,7 +42,7 @@ public static class UserMapper
             UpdatedAt = user.UpdatedAt
         };
     }
-    
+
     public static async Task<UserReadCollectionResultDto> ToUserReadCollectionOutDto(
         (int total, IReadOnlyCollection<User> entities) data,
         IUserGroupEntityService userGroupEntityService,

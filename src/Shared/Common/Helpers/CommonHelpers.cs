@@ -1,11 +1,10 @@
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Numerics;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 
 namespace Shared.Common.Helpers;
@@ -53,7 +52,7 @@ public static class CommonHelpers
                 return new
                 {
                     Name = _.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name ?? _.Name,
-                    Description = _.GetCustomAttribute<DescriptionAttribute>()?.Description,
+                    _.GetCustomAttribute<DescriptionAttribute>()?.Description,
                     //Do not set AssemblyQualifiedName for types that not applied with [CustomDescription] attribute
                     AssemblyQualifiedName =
                         typeSelected.GetCustomAttribute<DescriptionAttribute>() == null
@@ -76,7 +75,7 @@ public static class CommonHelpers
 
         return modelDescription;
     }
-    
+
     public static byte[] GenerateRandomBytes(int byteCount)
     {
         var csp = RandomNumberGenerator.Create();
@@ -108,18 +107,22 @@ public static class CommonHelpers
 
     public static string ToHttpQueryString(object obj, JsonSerializerOptions jsonSerializerOptions = null)
     {
-        return Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(
+        return QueryHelpers.AddQueryString(
             "",
-            JsonSerializer.Deserialize<Dictionary<string, object>>(JsonSerializer.Serialize(obj, jsonSerializerOptions), jsonSerializerOptions)
-                .Where(_ => _.Value is { })
+            JsonSerializer.Deserialize<Dictionary<string, object>>(JsonSerializer.Serialize(obj, jsonSerializerOptions),
+                    jsonSerializerOptions)
+                .Where(_ => _.Value is not null)
                 .Select(_ => new KeyValuePair<string, StringValues>(_.Key, _.Value.ToString()))
         );
     }
 
-    public static IEnumerable<KeyValuePair<string, string>> ToKeyValues(object obj, JsonSerializerOptions jsonSerializerOptions = null)
+    public static IEnumerable<KeyValuePair<string, string>> ToKeyValues(object obj,
+        JsonSerializerOptions jsonSerializerOptions = null)
     {
-        return  JsonSerializer.Deserialize<Dictionary<string, object>>(JsonSerializer.Serialize(obj, jsonSerializerOptions), jsonSerializerOptions)
-            .Where(_ => _.Value is { })
+        return JsonSerializer
+            .Deserialize<Dictionary<string, object>>(JsonSerializer.Serialize(obj, jsonSerializerOptions),
+                jsonSerializerOptions)
+            .Where(_ => _.Value is not null)
             .Select(_ => new KeyValuePair<string, string>(_.Key, _.Value.ToString()));
     }
 
@@ -156,11 +159,11 @@ public static class CommonHelpers
 #nullable enable
     public static Task NullableTaskWaitAsync(Task? task, CancellationToken cancellationToken = default)
     {
-        return task is { } ? task.WaitAsync(cancellationToken) : Task.CompletedTask;
+        return task is not null ? task.WaitAsync(cancellationToken) : Task.CompletedTask;
     }
 
     public static Task NullableCtsCancelAsync(CancellationTokenSource? cts)
     {
-        return cts is { } ? cts.CancelAsync() : Task.CompletedTask;
+        return cts is not null ? cts.CancelAsync() : Task.CompletedTask;
     }
 }

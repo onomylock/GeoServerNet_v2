@@ -136,6 +136,12 @@ public static class Localize
 
         public static class Error
         {
+            #region Generic
+
+            public const string SignalRDisconnectFiltered = "#UI_SignalRConnectionExpired";
+
+            #endregion
+
             #region HttpClient
 
             public const string ResponseStatusCodeUnsuccessful = "#UI_ResponseStatusCodeUnsuccessful";
@@ -150,12 +156,6 @@ public static class Localize
 
             public const string HandledExceptionContactSystemAdministrator =
                 "#UI_HandledExceptionContactSystemAdministrator";
-
-            #endregion
-
-            #region Generic
-
-            public const string SignalRDisconnectFiltered = "#UI_SignalRConnectionExpired";
 
             #endregion
         }

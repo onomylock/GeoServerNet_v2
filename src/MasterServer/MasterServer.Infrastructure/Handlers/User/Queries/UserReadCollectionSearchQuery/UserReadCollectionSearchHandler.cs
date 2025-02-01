@@ -16,13 +16,15 @@ public class UserReadCollectionSearchHandler(
     IUserGroupEntityService userGroupEntityService
 ) : IRequestHandler<UserReadCollectionSearchQuery, ResponseBase<UserReadCollectionResultDto>>
 {
-    public async Task<ResponseBase<UserReadCollectionResultDto>> Handle(UserReadCollectionSearchQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<UserReadCollectionResultDto>> Handle(UserReadCollectionSearchQuery request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         var userId = userAdvancedService.GetUserIdFromHttpContext(true);
-        
-        var isRoot = await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken);
+
+        var isRoot =
+            await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken);
 
         var dataTerm = request.Term.ToLowerInvariant();
 

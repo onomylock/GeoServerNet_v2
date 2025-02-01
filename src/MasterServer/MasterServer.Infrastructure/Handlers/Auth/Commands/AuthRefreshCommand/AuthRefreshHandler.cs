@@ -23,18 +23,19 @@ public class AuthRefreshHandler(
     IJsonWebTokenRevokedEntityService jsonWebTokenRevokedEntityService,
     IRefreshTokenEntityService refreshTokenEntityService
 ) : AuthRefreshHandlerBase(
-    httpContextAccessor, 
-    jsonWebTokenOptions, 
+    httpContextAccessor,
+    jsonWebTokenOptions,
     masterServiceOptions,
     userAdvancedService,
     jsonWebTokenAdvancedService,
     jsonWebTokenRevokedEntityService,
     refreshTokenEntityService), IRequestHandler<AuthRefreshCommand, ResponseBase<AuthSignInResultBaseDto>>
 {
-    public async Task<ResponseBase<AuthSignInResultBaseDto>> Handle(AuthRefreshCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<AuthSignInResultBaseDto>> Handle(AuthRefreshCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);

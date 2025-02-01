@@ -21,19 +21,23 @@ public class UserUpdateHandler(
     IUserGroupEntityService userGroupEntityService
 ) : IRequestHandler<UserUpdateCommand, ResponseBase<UserReadResultDto>>
 {
-    public async Task<ResponseBase<UserReadResultDto>> Handle(UserUpdateCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<UserReadResultDto>> Handle(UserUpdateCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
 
             var userId = userAdvancedService.GetUserIdFromHttpContext(true);
-            
-            var isRoot = await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken);
 
-            if (!(isRoot || await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.ManageUsersUserGroupId, cancellationToken)))
+            var isRoot =
+                await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken);
+
+            if (!(isRoot ||
+                  await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.ManageUsersUserGroupId,
+                      cancellationToken)))
                 throw new InsufficientPermissionsException();
 
             var targetUser = await userEntityService.GetByIdAsync(request.UserId, true, cancellationToken) ??
@@ -46,7 +50,8 @@ public class UserUpdateHandler(
             targetUser.LastName = request.LastName;
             targetUser.Patronymic = request.Patronymic;
 
-            if (!string.IsNullOrWhiteSpace(request.Password)) targetUser.PasswordHashed = customPasswordHasher.HashPassword(request.Password);
+            if (!string.IsNullOrWhiteSpace(request.Password))
+                targetUser.PasswordHashed = customPasswordHasher.HashPassword(request.Password);
 
             targetUser.Active = request.Active;
             targetUser.Email = request.Email;

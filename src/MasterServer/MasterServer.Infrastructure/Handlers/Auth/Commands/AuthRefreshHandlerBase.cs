@@ -25,25 +25,28 @@ public abstract class AuthRefreshHandlerBase(
     IRefreshTokenEntityService refreshTokenEntityService)
 {
     private readonly HttpContext _httpContext = httpContextAccessor.HttpContext;
-    
-    protected async Task<(AuthSignInResultBaseDto result, IEnumerable<ErrorBase> errors)> RefreshBase(AuthRefreshRequestBaseDto data, ClaimEntry[] claims,
+
+    protected async Task<(AuthSignInResultBaseDto result, IEnumerable<ErrorBase> errors)> RefreshBase(
+        AuthRefreshRequestBaseDto data, ClaimEntry[] claims,
         CancellationToken cancellationToken = default)
     {
         var errors = new List<ErrorBase>();
-        
+
         var userId = userAdvancedService.GetUserIdFromHttpContext(true);
 
         var dateTimeOffsetUtcNow = DateTimeOffset.UtcNow;
 
         //GRPC does not have cookies
-        var useCookies = string.IsNullOrEmpty(data.RefreshToken) && _httpContext.Request is not { Protocol: "HTTP/2", ContentType: "application/grpc" };
+        var useCookies = string.IsNullOrEmpty(data.RefreshToken) && _httpContext.Request is not
+            { Protocol: "HTTP/2", ContentType: "application/grpc" };
 
         data.RefreshToken ??= _httpContext.Request.Cookies[CookieKey.RefreshToken];
         if (string.IsNullOrEmpty(data.RefreshToken))
             throw new RefreshTokenNotProvidedException();
 
         //Find old RefreshToken
-        var refreshTokenOld = await refreshTokenEntityService.GetByTokenAsync(data.RefreshToken, cancellationToken: cancellationToken);
+        var refreshTokenOld =
+            await refreshTokenEntityService.GetByTokenAsync(data.RefreshToken, cancellationToken: cancellationToken);
         if (refreshTokenOld == null)
             throw new RefreshTokenNotFoundException();
 
@@ -72,19 +75,20 @@ public abstract class AuthRefreshHandlerBase(
 
         //Create new JsonWebToken
         var jsonWebTokenIdNew = Guid.NewGuid();
-        
+
         var claimsToAdd = new List<Claim>
         {
             new(ClaimKey.UserId, userId.ToString(), ClaimValueTypes.String),
             new(ClaimKey.JsonWebTokenId, jsonWebTokenIdNew.ToString(), ClaimValueTypes.String)
         };
-        
+
         if (claims.Length > 0)
             claimsToAdd.AddRange(claims.Select(_ => new Claim(_.Type, _.Value, _.ValueType)));
-        
+
         var jsonWebTokenExpiresAt = dateTimeOffsetUtcNow.AddSeconds(jsonWebTokenOptions.Value.ExpirySeconds);
         var jsonWebTokenString = JsonWebTokenHelpers.CreateWithClaims(jsonWebTokenOptions.Value.IssuerSigningKey,
-            jsonWebTokenOptions.Value.Issuer, jsonWebTokenOptions.Value.Audience, claimsToAdd, jsonWebTokenExpiresAt.UtcDateTime);
+            jsonWebTokenOptions.Value.Issuer, jsonWebTokenOptions.Value.Audience, claimsToAdd,
+            jsonWebTokenExpiresAt.UtcDateTime);
 
         //Delete old RefreshToken
         await refreshTokenEntityService.DeleteAsync(refreshTokenOld, cancellationToken);
@@ -99,14 +103,15 @@ public abstract class AuthRefreshHandlerBase(
                 HttpOnly = true,
                 Domain = masterServiceOptions.Value.CookiesDomain
             });
-            _httpContext.Response.Cookies.Append(CookieKey.RefreshTokenExpiresAt, refreshTokenExpiresAt.ToString("o"), new CookieOptions
-            {
-                Expires = refreshTokenExpiresAt,
-                Secure = masterServiceOptions.Value.SecureCookies,
-                SameSite = SameSiteMode.Strict,
-                HttpOnly = false,
-                Domain = masterServiceOptions.Value.CookiesDomain
-            });
+            _httpContext.Response.Cookies.Append(CookieKey.RefreshTokenExpiresAt, refreshTokenExpiresAt.ToString("o"),
+                new CookieOptions
+                {
+                    Expires = refreshTokenExpiresAt,
+                    Secure = masterServiceOptions.Value.SecureCookies,
+                    SameSite = SameSiteMode.Strict,
+                    HttpOnly = false,
+                    Domain = masterServiceOptions.Value.CookiesDomain
+                });
             _httpContext.Response.Cookies.Append(CookieKey.JsonWebToken, jsonWebTokenString, new CookieOptions
             {
                 Expires = refreshTokenExpiresAt,
@@ -115,14 +120,15 @@ public abstract class AuthRefreshHandlerBase(
                 HttpOnly = true,
                 Domain = masterServiceOptions.Value.CookiesDomain
             });
-            _httpContext.Response.Cookies.Append(CookieKey.JsonWebTokenExpiresAt, jsonWebTokenExpiresAt.ToString("o"), new CookieOptions
-            {
-                Expires = refreshTokenExpiresAt,
-                Secure = masterServiceOptions.Value.SecureCookies,
-                SameSite = SameSiteMode.Strict,
-                HttpOnly = false,
-                Domain = masterServiceOptions.Value.CookiesDomain
-            });
+            _httpContext.Response.Cookies.Append(CookieKey.JsonWebTokenExpiresAt, jsonWebTokenExpiresAt.ToString("o"),
+                new CookieOptions
+                {
+                    Expires = refreshTokenExpiresAt,
+                    Secure = masterServiceOptions.Value.SecureCookies,
+                    SameSite = SameSiteMode.Strict,
+                    HttpOnly = false,
+                    Domain = masterServiceOptions.Value.CookiesDomain
+                });
             _httpContext.Response.Cookies.Append(CookieKey.UserId, userId.ToString(), new CookieOptions
             {
                 Expires = refreshTokenExpiresAt,
@@ -139,13 +145,12 @@ public abstract class AuthRefreshHandlerBase(
                 ErrorMessage = Localize.Keys.Warning.XssVulnerable
             });
         }
-        
+
         return (
-            new AuthSignInResultBaseDto(userId: userId, jsonWebToken: !useCookies ? jsonWebTokenString : null,
-                jsonWebTokenExpiresAt: !useCookies ? jsonWebTokenExpiresAt : null,
-                refreshToken: !useCookies ? refreshTokenString : null,
-                refreshTokenExpiresAt: !useCookies ? refreshTokenExpiresAt : null), 
+            new AuthSignInResultBaseDto(userId, !useCookies ? jsonWebTokenString : null,
+                !useCookies ? jsonWebTokenExpiresAt : null,
+                !useCookies ? refreshTokenString : null,
+                !useCookies ? refreshTokenExpiresAt : null),
             errors);
     }
-
 }

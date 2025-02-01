@@ -11,5 +11,4 @@ public class UserReadCollectionSearchQuery : IRequest<ResponseBase<UserReadColle
     [MinLength(1)] [MaxLength(64)] public string Term { get; set; }
 
     [Required] public PageModel PageModel { get; set; }
-
 }

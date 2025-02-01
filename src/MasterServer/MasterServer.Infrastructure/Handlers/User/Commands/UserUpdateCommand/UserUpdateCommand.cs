@@ -16,8 +16,7 @@ public class UserUpdateCommand : UserTargetBaseDto, IRequest<ResponseBase<UserRe
 
     [Required] public string Patronymic { get; set; }
 
-    [MinLength(8)]
-    public string Password { get; set; }
+    [MinLength(8)] public string Password { get; set; }
 
     public bool Active { get; set; }
 

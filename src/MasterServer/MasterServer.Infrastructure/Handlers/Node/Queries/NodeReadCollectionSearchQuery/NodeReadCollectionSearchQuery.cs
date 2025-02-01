@@ -2,5 +2,4 @@ namespace MasterServer.Infrastructure.Handlers.Node.Queries.NodeReadCollectionSe
 
 public class NodeReadCollectionSearchQuery
 {
-    
 }

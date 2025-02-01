@@ -4,5 +4,4 @@ namespace MasterServer.Application.Models.Dto.Job;
 
 public class ReadJobResponse : EntityResponseBase
 {
-    
 }

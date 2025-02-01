@@ -22,5 +22,4 @@ public class UserCreateCommand : IRequest<ResponseBase<UserReadResultDto>>
 
     [RegularExpression(RegexExpressions.Email)]
     public string Email { get; set; }
-
 }

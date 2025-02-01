@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Commands.AuthSignInViaAliasC
 
 public class AuthSignInViaAliasCommandValidator : AbstractValidator<AuthSignInViaAliasCommand>
 {
-    public AuthSignInViaAliasCommandValidator()
-    {
-        
-    }
 }

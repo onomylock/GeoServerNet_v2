@@ -6,7 +6,8 @@ public class AuthSignInResultBaseDto
     {
     }
 
-    public AuthSignInResultBaseDto(Guid userId, string jsonWebToken, DateTimeOffset? jsonWebTokenExpiresAt, string refreshToken, DateTimeOffset? refreshTokenExpiresAt)
+    public AuthSignInResultBaseDto(Guid userId, string jsonWebToken, DateTimeOffset? jsonWebTokenExpiresAt,
+        string refreshToken, DateTimeOffset? refreshTokenExpiresAt)
     {
         UserId = userId;
         JsonWebToken = jsonWebToken;

@@ -25,7 +25,7 @@ public class AuthController(
     {
         return Ok(await mediator.Send(command, cancellationToken));
     }
-    
+
     [HttpPost]
     [Authorize(AuthorizationPolicies.Default)]
     public async Task<IActionResult> SignInViaAlias(
@@ -54,5 +54,5 @@ public class AuthController(
     )
     {
         return Ok(await mediator.Send(command, cancellationToken));
-    }    
+    }
 }

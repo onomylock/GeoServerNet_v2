@@ -24,24 +24,26 @@ public class LinkUserGroupHandler(
     public async Task<ResponseBase<OkResult>> Handle(LinkUserGroupCommand request, CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         var response = new ResponseBase<OkResult>();
-        
+
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
 
             var userId = userAdvancedService.GetUserIdFromHttpContext(true);
 
-            if (!(await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken) ||
-                  await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.ManageUsersUserGroupId, cancellationToken)))
+            if (!(await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId,
+                      cancellationToken) ||
+                  await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.ManageUsersUserGroupId,
+                      cancellationToken)))
                 throw new InsufficientPermissionsException();
 
             var targetUser = await userEntityService.GetByIdAsync(request.UserId, true, cancellationToken) ??
                              throw new UserNotFoundException();
 
             var errors = new List<ErrorBase>();
-            
+
             foreach (var userGroupId in request.UserGroupIds)
                 try
                 {
@@ -53,7 +55,6 @@ public class LinkUserGroupHandler(
                         EntityLeftId = targetUser.Id,
                         EntityRightId = userGroup.Id
                     }, cancellationToken);
-                    
                 }
                 catch (Exception)
                 {
@@ -66,7 +67,7 @@ public class LinkUserGroupHandler(
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
             response.Errors = errors;
-            
+
             return response;
         }
         catch (Exception)

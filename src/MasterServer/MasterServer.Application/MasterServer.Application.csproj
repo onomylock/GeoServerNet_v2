@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <ProjectReference Include="..\..\Shared\Shared.csproj" />
-    <ProjectReference Include="..\MasterServer.Domain\MasterServer.Domain.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Dto\Solution\" />
-    <Folder Include="Models\Dto\UserGroup\" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Shared\Shared.csproj"/>
+        <ProjectReference Include="..\MasterServer.Domain\MasterServer.Domain.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Models\Dto\Solution\"/>
+        <Folder Include="Models\Dto\UserGroup\"/>
+    </ItemGroup>
 </Project>

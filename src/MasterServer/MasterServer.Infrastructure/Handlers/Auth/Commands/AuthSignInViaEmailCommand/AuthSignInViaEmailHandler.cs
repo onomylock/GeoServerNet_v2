@@ -20,21 +20,22 @@ public class AuthSignInViaEmailHandler(
     IOptions<MasterServiceOptions> masterServiceOptions,
     IRefreshTokenEntityService refreshTokenEntityService
 ) : AuthSingInHandlerBase(
-    httpContextAccessor, 
-    jsonWebTokenOptions, 
-    masterServiceOptions, 
+    httpContextAccessor,
+    jsonWebTokenOptions,
+    masterServiceOptions,
     refreshTokenEntityService), IRequestHandler<AuthSignInViaEmailCommand, ResponseBase<AuthSignInResultBaseDto>>
 {
-    public async Task<ResponseBase<AuthSignInResultBaseDto>> Handle(AuthSignInViaEmailCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<AuthSignInResultBaseDto>> Handle(AuthSignInViaEmailCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAsync(request, cancellationToken);
-        
+
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
 
             var user = await userEntityService.GetByEmailAsync(request.Email, false, cancellationToken);
-            
+
             var result = await SignInBase(request, user, null, cancellationToken);
 
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);

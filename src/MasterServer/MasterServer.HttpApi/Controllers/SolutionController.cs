@@ -1,6 +1,3 @@
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-
 namespace MasterServer.HttpApi.Controllers;
 
 // [ApiController]

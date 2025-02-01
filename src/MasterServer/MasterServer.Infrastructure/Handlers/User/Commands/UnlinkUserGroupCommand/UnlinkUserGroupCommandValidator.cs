@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.User.Commands.UnlinkUserGroupComm
 
 public class UnlinkUserGroupCommandValidator : AbstractValidator<UnlinkUserGroupCommand>
 {
-    public UnlinkUserGroupCommandValidator()
-    {
-        
-    }
 }

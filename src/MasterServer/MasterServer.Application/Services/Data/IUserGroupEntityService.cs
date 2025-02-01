@@ -6,7 +6,8 @@ namespace MasterServer.Application.Services.Data;
 
 public interface IUserGroupEntityService : IEntityServiceBase<UserGroup>
 {
-    Task<UserGroup> GetByAliasAsync(string alias, bool asNoTracking = false, CancellationToken cancellationToken = default);
+    Task<UserGroup> GetByAliasAsync(string alias, bool asNoTracking = false,
+        CancellationToken cancellationToken = default);
 
     Task<(int total, IReadOnlyCollection<UserGroup> entities)> GetByUserIdAsync(
         Guid userId,
