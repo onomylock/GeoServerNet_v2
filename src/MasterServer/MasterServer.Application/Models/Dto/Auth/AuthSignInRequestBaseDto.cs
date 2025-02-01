@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MasterServer.Application.Models.Dto.Auth;
 
-public class AuthSignInTargetBaseDto
+public class AuthSignInRequestBaseDto
 {
     /// <summary>
     ///     Password
