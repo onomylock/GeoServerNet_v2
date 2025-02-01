@@ -1,10 +1,10 @@
+using MasterServer.Application.MediatR.Node.Queries.GetAvailableNodes;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Common.Models;
-using Shared.Common.Models.DTO.Base;
 
-namespace ClientWebApi.HttpApi.Controllers;
+namespace MasterServer.HttpApi.Controllers;
 
 [ApiController]
 [Route("[controller/action]")]
@@ -17,7 +17,7 @@ public class NodeController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetAvailableNodes([FromQuery] GetAvailableNodesQuery query, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> ReadAvailableNodes([FromQuery] ReadAvailableNodesQuery query, CancellationToken cancellationToken = default)
     {
         return Ok(await mediator.Send(query, cancellationToken));
     }

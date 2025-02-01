@@ -1,4 +1,4 @@
-namespace ClientWebApi.HttpApi.Controllers;
+namespace MasterServer.HttpApi.Controllers;
 
 public class BackgroundJobController
 {

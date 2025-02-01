@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ClientWebApi.HttpApi.Controllers;
+namespace MasterServer.HttpApi.Controllers;
 
 [ApiController]
 [Route("[controller/action]")]

@@ -3,4 +3,9 @@
     <ProjectReference Include="..\..\Shared\Shared.csproj" />
     <ProjectReference Include="..\MasterServer.Domain\MasterServer.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
+    <Folder Include="Models\Dto\Solution\" />
+    <Folder Include="Models\Options\" />
+  </ItemGroup>
 </Project>
