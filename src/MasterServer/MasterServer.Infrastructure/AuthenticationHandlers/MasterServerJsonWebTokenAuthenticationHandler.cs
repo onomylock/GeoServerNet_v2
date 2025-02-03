@@ -29,7 +29,8 @@ public class MasterServerJsonWebTokenAuthenticationHandler(
 
         if (executingEndpoint.Metadata.OfType<AllowAnonymousAttribute>().Any()
             || executingEndpoint.Metadata.OfType<AllowAnonymousAttribute>().Any())
-            return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(), Scheme.Name)));
+            return Task.FromResult(
+                AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(), Scheme.Name)));
 
         var authorizationBearerPayloads = new[]
         {
@@ -48,7 +49,8 @@ public class MasterServerJsonWebTokenAuthenticationHandler(
                 try
                 {
                     var tokenHandler = new JwtSecurityTokenHandler();
-                    tokenHandler.ValidateToken(authorizationBearerPayloadTemp, Options.TokenValidationParameters, out var validatedToken);
+                    tokenHandler.ValidateToken(authorizationBearerPayloadTemp, Options.TokenValidationParameters,
+                        out var validatedToken);
 
                     var jwtToken = (JwtSecurityToken)validatedToken;
 
@@ -62,7 +64,8 @@ public class MasterServerJsonWebTokenAuthenticationHandler(
                     // ignored
                 }
 
-            if (!string.IsNullOrEmpty(authorizationBearerPayload)) claims.Add(new Claim(ClaimKey.JsonWebToken, authorizationBearerPayload, ClaimValueTypes.String));
+            if (!string.IsNullOrEmpty(authorizationBearerPayload))
+                claims.Add(new Claim(ClaimKey.JsonWebToken, authorizationBearerPayload, ClaimValueTypes.String));
         }
 
         var claimsIdentity = new ClaimsIdentity(claims, nameof(MasterServerJsonWebTokenAuthenticationHandler));

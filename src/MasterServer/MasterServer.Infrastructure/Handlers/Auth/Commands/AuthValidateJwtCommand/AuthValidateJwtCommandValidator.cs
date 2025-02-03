@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Commands.AuthValidateJwtComm
 
 public class AuthValidateJwtCommandValidator : AbstractValidator<AuthValidateJwtCommand>
 {
-    public AuthValidateJwtCommandValidator()
-    {
-        
-    }
 }

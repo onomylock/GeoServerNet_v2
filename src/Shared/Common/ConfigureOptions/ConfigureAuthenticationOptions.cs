@@ -1,6 +1,6 @@
-using Shared.Common.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
+using Shared.Common.Models;
 
 namespace Shared.Common.ConfigureOptions;
 

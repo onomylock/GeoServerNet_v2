@@ -25,10 +25,11 @@ public class AuthSignInWithClaimsHandler(
     masterServiceOptions,
     refreshTokenEntityService), IRequestHandler<AuthSignInWithClaimsCommand, ResponseBase<AuthSignInResultBaseDto>>
 {
-    public async Task<ResponseBase<AuthSignInResultBaseDto>> Handle(AuthSignInWithClaimsCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<AuthSignInResultBaseDto>> Handle(AuthSignInWithClaimsCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);

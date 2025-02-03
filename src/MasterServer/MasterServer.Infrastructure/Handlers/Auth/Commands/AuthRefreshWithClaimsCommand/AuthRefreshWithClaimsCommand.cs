@@ -8,6 +8,5 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Commands.AuthRefreshWithClai
 
 public class AuthRefreshWithClaimsCommand : AuthRefreshRequestBaseDto, IRequest<ResponseBase<AuthSignInResultBaseDto>>
 {
-    [MinLength(1)]
-    public ClaimEntry[] Claims { get; set; }
+    [MinLength(1)] public ClaimEntry[] Claims { get; set; }
 }

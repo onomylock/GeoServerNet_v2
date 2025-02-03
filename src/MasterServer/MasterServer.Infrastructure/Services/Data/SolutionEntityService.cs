@@ -25,7 +25,8 @@ public class SolutionEntityService(IMasterServerRepository<Solution> entityRepos
         return EntityServiceBase<Solution>.DeleteAsync(entityRepository, entity, cancellationToken);
     }
 
-    public Task<Solution> GetByIdAsync(Guid id, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    public Task<Solution> GetByIdAsync(Guid id, bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<Solution>.GetByIdAsync(entityRepository, id, asNoTracking, cancellationToken);
     }
@@ -36,15 +37,18 @@ public class SolutionEntityService(IMasterServerRepository<Solution> entityRepos
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<Solution>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls, cancellationToken);
+        return EntityServiceBase<Solution>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls,
+            cancellationToken);
     }
 
-    public Task<int> BulkDelete(Func<IQueryable<Solution>, IQueryable<Solution>> queryTransformationFunction, CancellationToken cancellationToken = default)
+    public Task<int> BulkDelete(Func<IQueryable<Solution>, IQueryable<Solution>> queryTransformationFunction,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<Solution>.BulkDelete(entityRepository, queryTransformationFunction, cancellationToken);
     }
 
-    public Task<IReadOnlyCollection<Solution>> SaveAsync(IEnumerable<Solution> entities, CancellationToken cancellationToken = default)
+    public Task<IReadOnlyCollection<Solution>> SaveAsync(IEnumerable<Solution> entities,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<Solution>.SaveAsync(entityRepository, entities, cancellationToken);
     }
@@ -61,7 +65,8 @@ public class SolutionEntityService(IMasterServerRepository<Solution> entityRepos
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<Solution>.GetCollection(entityRepository, pageModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<Solution>.GetCollection(entityRepository, pageModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 
     public Task<(string prev, IReadOnlyCollection<Solution> entities, string next)> GetCollection(
@@ -71,6 +76,7 @@ public class SolutionEntityService(IMasterServerRepository<Solution> entityRepos
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<Solution>.GetCollection(entityRepository, cursorModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<Solution>.GetCollection(entityRepository, cursorModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 }

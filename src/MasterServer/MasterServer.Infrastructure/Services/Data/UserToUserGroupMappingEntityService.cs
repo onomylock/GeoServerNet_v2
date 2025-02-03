@@ -13,12 +13,14 @@ public class UserToUserGroupMappingEntityService(
     IMasterServerRepository<UserToUserGroupMapping> entityRepository
 ) : IUserToUserGroupMappingEntityService
 {
-    public Task<UserToUserGroupMapping> AddAsync(UserToUserGroupMapping entity, CancellationToken cancellationToken = default)
+    public Task<UserToUserGroupMapping> AddAsync(UserToUserGroupMapping entity,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<UserToUserGroupMapping>.AddAsync(entityRepository, entity, cancellationToken);
     }
 
-    public Task<UserToUserGroupMapping> SaveAsync(UserToUserGroupMapping entity, CancellationToken cancellationToken = default)
+    public Task<UserToUserGroupMapping> SaveAsync(UserToUserGroupMapping entity,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<UserToUserGroupMapping>.SaveAsync(entityRepository, entity, cancellationToken);
     }
@@ -28,18 +30,22 @@ public class UserToUserGroupMappingEntityService(
         return EntityServiceBase<UserToUserGroupMapping>.DeleteAsync(entityRepository, entity, cancellationToken);
     }
 
-    public Task<UserToUserGroupMapping> GetByIdAsync(Guid id, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    public Task<UserToUserGroupMapping> GetByIdAsync(Guid id, bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
-        return EntityServiceBase<UserToUserGroupMapping>.GetByIdAsync(entityRepository, id, asNoTracking, cancellationToken);
+        return EntityServiceBase<UserToUserGroupMapping>.GetByIdAsync(entityRepository, id, asNoTracking,
+            cancellationToken);
     }
 
     public Task<int> BulkUpdate(
         Func<IQueryable<UserToUserGroupMapping>, IQueryable<UserToUserGroupMapping>> queryTransformationFunction,
-        Expression<Func<SetPropertyCalls<UserToUserGroupMapping>, SetPropertyCalls<UserToUserGroupMapping>>> setPropertyCalls,
+        Expression<Func<SetPropertyCalls<UserToUserGroupMapping>, SetPropertyCalls<UserToUserGroupMapping>>>
+            setPropertyCalls,
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<UserToUserGroupMapping>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls, cancellationToken);
+        return EntityServiceBase<UserToUserGroupMapping>.BulkUpdate(entityRepository, queryTransformationFunction,
+            setPropertyCalls, cancellationToken);
     }
 
     public Task<int> BulkDelete(
@@ -47,10 +53,12 @@ public class UserToUserGroupMappingEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<UserToUserGroupMapping>.BulkDelete(entityRepository, queryTransformationFunction, cancellationToken);
+        return EntityServiceBase<UserToUserGroupMapping>.BulkDelete(entityRepository, queryTransformationFunction,
+            cancellationToken);
     }
 
-    public Task<IReadOnlyCollection<UserToUserGroupMapping>> SaveAsync(IEnumerable<UserToUserGroupMapping> entities, CancellationToken cancellationToken = default)
+    public Task<IReadOnlyCollection<UserToUserGroupMapping>> SaveAsync(IEnumerable<UserToUserGroupMapping> entities,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<UserToUserGroupMapping>.SaveAsync(entityRepository, entities, cancellationToken);
     }
@@ -67,7 +75,8 @@ public class UserToUserGroupMappingEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<UserToUserGroupMapping>.GetCollection(entityRepository, pageModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<UserToUserGroupMapping>.GetCollection(entityRepository, pageModel,
+            queryTransformationFunction, asNoTracking, cancellationToken);
     }
 
     public Task<(string prev, IReadOnlyCollection<UserToUserGroupMapping> entities, string next)> GetCollection(
@@ -77,7 +86,8 @@ public class UserToUserGroupMappingEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<UserToUserGroupMapping>.GetCollection(entityRepository, cursorModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<UserToUserGroupMapping>.GetCollection(entityRepository, cursorModel,
+            queryTransformationFunction, asNoTracking, cancellationToken);
     }
 
     public Task<UserToUserGroupMapping> GetByEntityLeftIdEntityRightIdAsync(
@@ -87,7 +97,8 @@ public class UserToUserGroupMappingEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityToEntityMappingServiceBase<UserToUserGroupMapping>.GetByEntityLeftIdEntityRightIdAsync(entityRepository,
+        return EntityToEntityMappingServiceBase<UserToUserGroupMapping>.GetByEntityLeftIdEntityRightIdAsync(
+            entityRepository,
             entityLeftId, entityRightId, asNoTracking, cancellationToken);
     }
 
@@ -98,7 +109,8 @@ public class UserToUserGroupMappingEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityToEntityMappingServiceBase<UserToUserGroupMapping>.GetByEntityLeftIdAsync(entityRepository, entityLeftId,
+        return EntityToEntityMappingServiceBase<UserToUserGroupMapping>.GetByEntityLeftIdAsync(entityRepository,
+            entityLeftId,
             pageModel, asNoTracking, cancellationToken);
     }
 
@@ -109,7 +121,8 @@ public class UserToUserGroupMappingEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityToEntityMappingServiceBase<UserToUserGroupMapping>.GetByEntityRightIdAsync(entityRepository, entityRightId,
+        return EntityToEntityMappingServiceBase<UserToUserGroupMapping>.GetByEntityRightIdAsync(entityRepository,
+            entityRightId,
             pageModel, asNoTracking, cancellationToken);
     }
 }

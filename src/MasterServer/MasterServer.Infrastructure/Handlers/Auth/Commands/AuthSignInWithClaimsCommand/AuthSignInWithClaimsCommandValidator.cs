@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Commands.AuthSignInWithClaim
 
 public class AuthSignInWithClaimsCommandValidator : AbstractValidator<AuthSignInWithClaimsCommand>
 {
-    public AuthSignInWithClaimsCommandValidator()
-    {
-        
-    }
 }

@@ -18,7 +18,8 @@ public class SystemOrAuthorizedOrDefaultARH
             if (context.HasSucceeded)
                 return Task.CompletedTask;
 
-            if (context.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.AccessToken)?.Value == authorizationRequirement.AccessToken)
+            if (context.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.AccessToken)?.Value ==
+                authorizationRequirement.AccessToken)
                 context.Succeed(authorizationRequirement);
 
             return Task.CompletedTask;
@@ -27,22 +28,26 @@ public class SystemOrAuthorizedOrDefaultARH
 
     public class Default : AuthorizationHandler<SystemOrAuthorizedOrDefaultAR>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, SystemOrAuthorizedOrDefaultAR requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
+            SystemOrAuthorizedOrDefaultAR requirement)
         {
             if (context.HasSucceeded)
                 return Task.CompletedTask;
 
             var isPublicClaim = context.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.IsPublic);
 
-            if (isPublicClaim is { ValueType: ClaimValueTypes.Boolean } && isPublicClaim.Value == true.ToString()) context.Succeed(requirement);
+            if (isPublicClaim is { ValueType: ClaimValueTypes.Boolean } && isPublicClaim.Value == true.ToString())
+                context.Succeed(requirement);
 
             return Task.CompletedTask;
         }
     }
 
-    public class Authorized(IJsonWebTokenAdvancedService jsonWebTokenAdvancedService) : AuthorizationHandler<SystemOrAuthorizedOrDefaultAR>
+    public class Authorized(IJsonWebTokenAdvancedService jsonWebTokenAdvancedService)
+        : AuthorizationHandler<SystemOrAuthorizedOrDefaultAR>
     {
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, SystemOrAuthorizedOrDefaultAR requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context,
+            SystemOrAuthorizedOrDefaultAR requirement)
         {
             if (context.HasSucceeded)
                 return;

@@ -7,7 +7,8 @@ using Shared.Common.Models.Options;
 
 namespace MasterServer.Infrastructure.ConfigureNamedOptions;
 
-public class MasterServerConfigureJwtBearerOptions(JsonWebTokenOptions jsonWebTokenOptions) : IConfigureNamedOptions<JsonWebTokenAuthenticationSchemeOptions>
+public class MasterServerConfigureJwtBearerOptions(JsonWebTokenOptions jsonWebTokenOptions)
+    : IConfigureNamedOptions<JsonWebTokenAuthenticationSchemeOptions>
 {
     public void Configure(string name, JsonWebTokenAuthenticationSchemeOptions options)
     {

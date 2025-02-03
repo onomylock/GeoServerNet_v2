@@ -7,11 +7,7 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Commands.AuthValidateJwtComm
 
 public class AuthValidateJwtCommand : IRequest<ResponseBase<AuthValidateJwtResultBaseDto>>
 {
-    [Required]
-    [MinLength(1)]
-    public string Token { get; set; }
-    
-    [Required]
-    [MinLength(1)]
-    public string AuthenticationScheme { get; set; }
+    [Required] [MinLength(1)] public string Token { get; set; }
+
+    [Required] [MinLength(1)] public string AuthenticationScheme { get; set; }
 }

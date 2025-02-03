@@ -74,23 +74,11 @@ public class DbContextAction<TDbContext>(TDbContext dbContext) : IDbContextActio
         }
     }
 
-    Task IDbContextTransactionAction.BeginTransactionAsync(IsolationLevel isolationLevel, CancellationToken cancellationToken,
+    Task IDbContextTransactionAction.BeginTransactionAsync(IsolationLevel isolationLevel,
+        CancellationToken cancellationToken,
         bool shouldThrow)
     {
         return BeginTransactionAsync(isolationLevel, cancellationToken, shouldThrow);
-    }
-
-    public async Task BeginTransactionAsync(IsolationLevel isolationLevel, CancellationToken cancellationToken = default, bool shouldThrow = false)
-    {
-        if (TransactionInProgress)
-        {
-            if (shouldThrow) throw new AnotherTransactionInProgressException();
-        }
-        else
-        {
-            await DbContext.Database.BeginTransactionAsync(isolationLevel, cancellationToken).ConfigureAwait(false);
-            TransactionInProgress = true;
-        }
     }
 
     public void CommitTransaction(bool shouldThrow = false)
@@ -144,6 +132,20 @@ public class DbContextAction<TDbContext>(TDbContext dbContext) : IDbContextActio
         {
             if (shouldThrow)
                 throw new NoTransactionInProgressException();
+        }
+    }
+
+    public async Task BeginTransactionAsync(IsolationLevel isolationLevel,
+        CancellationToken cancellationToken = default, bool shouldThrow = false)
+    {
+        if (TransactionInProgress)
+        {
+            if (shouldThrow) throw new AnotherTransactionInProgressException();
+        }
+        else
+        {
+            await DbContext.Database.BeginTransactionAsync(isolationLevel, cancellationToken).ConfigureAwait(false);
+            TransactionInProgress = true;
         }
     }
 

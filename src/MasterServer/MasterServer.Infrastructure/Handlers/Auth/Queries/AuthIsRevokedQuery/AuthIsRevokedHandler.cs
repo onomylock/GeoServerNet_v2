@@ -11,17 +11,18 @@ public class AuthIsRevokedHandler(
     IJsonWebTokenRevokedEntityService jsonWebTokenRevokedEntityService
 ) : IRequestHandler<AuthIsRevokedQuery, ResponseBase<AuthIsRevokedResultBaseDto>>
 {
-    public async Task<ResponseBase<AuthIsRevokedResultBaseDto>> Handle(AuthIsRevokedQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<AuthIsRevokedResultBaseDto>> Handle(AuthIsRevokedQuery request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
-        return new ResponseBase<AuthIsRevokedResultBaseDto>()
+        return new ResponseBase<AuthIsRevokedResultBaseDto>
         {
             Data = new AuthIsRevokedResultBaseDto
             {
                 IsRevoked = await jsonWebTokenRevokedEntityService.GetByJsonWebTokenId(request.JsonWebTokenId, true,
-                    cancellationToken) is { }
-            } 
+                    cancellationToken) is not null
+            }
         };
     }
 }

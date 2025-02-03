@@ -4,7 +4,8 @@ using Shared.Common.AuthorizationRequirement;
 
 namespace Shared.Common.AuthorizationRequirementHandlers;
 
-public class AuthorizedARH(IJsonWebTokenAdvancedService jsonWebTokenAdvancedService) : AuthorizationHandler<AuthorizedAR>
+public class AuthorizedARH(IJsonWebTokenAdvancedService jsonWebTokenAdvancedService)
+    : AuthorizationHandler<AuthorizedAR>
 {
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorizedAR requirement)
     {

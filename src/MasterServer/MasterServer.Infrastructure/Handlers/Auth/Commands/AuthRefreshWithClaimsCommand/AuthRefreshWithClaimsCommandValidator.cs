@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Commands.AuthRefreshWithClai
 
 public class AuthRefreshWithClaimsCommandValidator : AbstractValidator<AuthRefreshWithClaimsCommand>
 {
-    public AuthRefreshWithClaimsCommandValidator()
-    {
-        
-    }
 }

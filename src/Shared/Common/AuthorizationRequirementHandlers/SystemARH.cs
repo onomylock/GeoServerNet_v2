@@ -11,7 +11,8 @@ public class SystemARH : AuthorizationHandler<SystemAR>
         SystemAR authorizationRequirement
     )
     {
-        if (context.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.AccessToken)?.Value == authorizationRequirement.AccessToken)
+        if (context.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.AccessToken)?.Value ==
+            authorizationRequirement.AccessToken)
             context.Succeed(authorizationRequirement);
         else
             context.Fail();

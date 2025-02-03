@@ -36,15 +36,18 @@ public class NodeEntityService(IMasterServerRepository<Node> entityRepository) :
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<Node>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls, cancellationToken);
+        return EntityServiceBase<Node>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls,
+            cancellationToken);
     }
 
-    public Task<int> BulkDelete(Func<IQueryable<Node>, IQueryable<Node>> queryTransformationFunction, CancellationToken cancellationToken = default)
+    public Task<int> BulkDelete(Func<IQueryable<Node>, IQueryable<Node>> queryTransformationFunction,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<Node>.BulkDelete(entityRepository, queryTransformationFunction, cancellationToken);
     }
 
-    public Task<IReadOnlyCollection<Node>> SaveAsync(IEnumerable<Node> entities, CancellationToken cancellationToken = default)
+    public Task<IReadOnlyCollection<Node>> SaveAsync(IEnumerable<Node> entities,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<Node>.SaveAsync(entityRepository, entities, cancellationToken);
     }
@@ -61,7 +64,8 @@ public class NodeEntityService(IMasterServerRepository<Node> entityRepository) :
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<Node>.GetCollection(entityRepository, pageModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<Node>.GetCollection(entityRepository, pageModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 
     public Task<(string prev, IReadOnlyCollection<Node> entities, string next)> GetCollection(
@@ -71,6 +75,7 @@ public class NodeEntityService(IMasterServerRepository<Node> entityRepository) :
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<Node>.GetCollection(entityRepository, cursorModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<Node>.GetCollection(entityRepository, cursorModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 }

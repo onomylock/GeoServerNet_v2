@@ -9,14 +9,16 @@ using Shared.Infrastructure.Services;
 
 namespace MasterServer.Infrastructure.Services.Data;
 
-public class JsonWebTokenRevokedEntityService(IMasterServerRepository<JsonWebTokenRevoked> entityRepository) : IJsonWebTokenRevokedEntityService
+public class JsonWebTokenRevokedEntityService(IMasterServerRepository<JsonWebTokenRevoked> entityRepository)
+    : IJsonWebTokenRevokedEntityService
 {
     public Task<JsonWebTokenRevoked> AddAsync(JsonWebTokenRevoked entity, CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<JsonWebTokenRevoked>.AddAsync(entityRepository, entity, cancellationToken);
     }
 
-    public Task<JsonWebTokenRevoked> SaveAsync(JsonWebTokenRevoked entity, CancellationToken cancellationToken = default)
+    public Task<JsonWebTokenRevoked> SaveAsync(JsonWebTokenRevoked entity,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<JsonWebTokenRevoked>.SaveAsync(entityRepository, entity, cancellationToken);
     }
@@ -26,9 +28,11 @@ public class JsonWebTokenRevokedEntityService(IMasterServerRepository<JsonWebTok
         return EntityServiceBase<JsonWebTokenRevoked>.DeleteAsync(entityRepository, entity, cancellationToken);
     }
 
-    public Task<JsonWebTokenRevoked> GetByIdAsync(Guid id, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    public Task<JsonWebTokenRevoked> GetByIdAsync(Guid id, bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
-        return EntityServiceBase<JsonWebTokenRevoked>.GetByIdAsync(entityRepository, id, asNoTracking, cancellationToken);
+        return EntityServiceBase<JsonWebTokenRevoked>.GetByIdAsync(entityRepository, id, asNoTracking,
+            cancellationToken);
     }
 
     public Task<int> BulkUpdate(
@@ -37,25 +41,33 @@ public class JsonWebTokenRevokedEntityService(IMasterServerRepository<JsonWebTok
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<JsonWebTokenRevoked>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls, cancellationToken);
+        return EntityServiceBase<JsonWebTokenRevoked>.BulkUpdate(entityRepository, queryTransformationFunction,
+            setPropertyCalls, cancellationToken);
     }
 
-    public Task<int> BulkDelete(Func<IQueryable<JsonWebTokenRevoked>, IQueryable<JsonWebTokenRevoked>> queryTransformationFunction, CancellationToken cancellationToken = default)
+    public Task<int> BulkDelete(
+        Func<IQueryable<JsonWebTokenRevoked>, IQueryable<JsonWebTokenRevoked>> queryTransformationFunction,
+        CancellationToken cancellationToken = default)
     {
-        return EntityServiceBase<JsonWebTokenRevoked>.BulkDelete(entityRepository, queryTransformationFunction, cancellationToken);
+        return EntityServiceBase<JsonWebTokenRevoked>.BulkDelete(entityRepository, queryTransformationFunction,
+            cancellationToken);
     }
 
-    public Task<JsonWebTokenRevoked> GetByJsonWebTokenId(Guid jsonWebTokenId, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    public Task<JsonWebTokenRevoked> GetByJsonWebTokenId(Guid jsonWebTokenId, bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
-        return entityRepository.Query(asNoTracking).SingleOrDefaultAsync(_ => _.JsonWebTokenId == jsonWebTokenId, cancellationToken);
+        return entityRepository.Query(asNoTracking)
+            .SingleOrDefaultAsync(_ => _.JsonWebTokenId == jsonWebTokenId, cancellationToken);
     }
 
     public Task PurgeAsync(CancellationToken cancellationToken = default)
     {
-        return EntityServiceBase<JsonWebTokenRevoked>.BulkDelete(entityRepository, query => query.Where(_ => _.ExpiresAt < DateTimeOffset.UtcNow), cancellationToken);
+        return EntityServiceBase<JsonWebTokenRevoked>.BulkDelete(entityRepository,
+            query => query.Where(_ => _.ExpiresAt < DateTimeOffset.UtcNow), cancellationToken);
     }
 
-    public Task<IReadOnlyCollection<JsonWebTokenRevoked>> SaveAsync(IEnumerable<JsonWebTokenRevoked> entities, CancellationToken cancellationToken = default)
+    public Task<IReadOnlyCollection<JsonWebTokenRevoked>> SaveAsync(IEnumerable<JsonWebTokenRevoked> entities,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<JsonWebTokenRevoked>.SaveAsync(entityRepository, entities, cancellationToken);
     }
@@ -72,7 +84,8 @@ public class JsonWebTokenRevokedEntityService(IMasterServerRepository<JsonWebTok
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<JsonWebTokenRevoked>.GetCollection(entityRepository, pageModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<JsonWebTokenRevoked>.GetCollection(entityRepository, pageModel,
+            queryTransformationFunction, asNoTracking, cancellationToken);
     }
 
     public Task<(string prev, IReadOnlyCollection<JsonWebTokenRevoked> entities, string next)> GetCollection(
@@ -82,6 +95,7 @@ public class JsonWebTokenRevokedEntityService(IMasterServerRepository<JsonWebTok
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<JsonWebTokenRevoked>.GetCollection(entityRepository, cursorModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<JsonWebTokenRevoked>.GetCollection(entityRepository, cursorModel,
+            queryTransformationFunction, asNoTracking, cancellationToken);
     }
 }

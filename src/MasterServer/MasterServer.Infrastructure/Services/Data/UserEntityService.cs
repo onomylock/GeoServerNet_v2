@@ -39,15 +39,18 @@ public class UserEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<User>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls, cancellationToken);
+        return EntityServiceBase<User>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls,
+            cancellationToken);
     }
 
-    public Task<int> BulkDelete(Func<IQueryable<User>, IQueryable<User>> queryTransformationFunction, CancellationToken cancellationToken = default)
+    public Task<int> BulkDelete(Func<IQueryable<User>, IQueryable<User>> queryTransformationFunction,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<User>.BulkDelete(entityRepository, queryTransformationFunction, cancellationToken);
     }
 
-    public Task<IReadOnlyCollection<User>> SaveAsync(IEnumerable<User> entities, CancellationToken cancellationToken = default)
+    public Task<IReadOnlyCollection<User>> SaveAsync(IEnumerable<User> entities,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<User>.SaveAsync(entityRepository, entities, cancellationToken);
     }
@@ -64,7 +67,8 @@ public class UserEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<User>.GetCollection(entityRepository, pageModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<User>.GetCollection(entityRepository, pageModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 
     public Task<(string prev, IReadOnlyCollection<User> entities, string next)> GetCollection(
@@ -74,15 +78,18 @@ public class UserEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<User>.GetCollection(entityRepository, cursorModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<User>.GetCollection(entityRepository, cursorModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 
-    public Task<User> GetByEmailAsync(string email, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    public Task<User> GetByEmailAsync(string email, bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
         return entityRepository.Query(asNoTracking).SingleOrDefaultAsync(_ => _.Email == email, cancellationToken);
     }
 
-    public Task<User> GetByAliasAsync(string alias, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    public Task<User> GetByAliasAsync(string alias, bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
         return entityRepository.Query(asNoTracking).SingleOrDefaultAsync(_ => _.Alias == alias, cancellationToken);
     }

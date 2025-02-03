@@ -7,7 +7,8 @@ namespace Shared.Common.Extensions;
 
 public static class QueryableExtensions
 {
-    public static async Task<(int total, IQueryable<T> query)> GetPage<T>(this IQueryable<T> query, PageModel model, CancellationToken cancellationToken = default) where T : class
+    public static async Task<(int total, IQueryable<T> query)> GetPage<T>(this IQueryable<T> query, PageModel model,
+        CancellationToken cancellationToken = default) where T : class
     {
         if (model == PageModel.Count)
             return (await query.CountAsync(cancellationToken), null);
@@ -20,13 +21,17 @@ public static class QueryableExtensions
         );
     }
 
-    public static async Task<(string prev, IQueryable<T> query, string next)> GetPage<T>(this IQueryable<T> query, CursorModel model, CancellationToken cancellationToken = default)
+    public static async Task<(string prev, IQueryable<T> query, string next)> GetPage<T>(this IQueryable<T> query,
+        CursorModel model, CancellationToken cancellationToken = default)
         where T : EntityBase
     {
         if (string.IsNullOrWhiteSpace(model.At))
             model.At = model.Reverse
-                ? ToCursorString(GetPropertyValue(await query.OrderBy($"{model.By} desc").FirstOrDefaultAsync(cancellationToken), model.By))
-                : ToCursorString(GetPropertyValue(await query.OrderBy($"{model.By}").FirstOrDefaultAsync(cancellationToken), model.By));
+                ? ToCursorString(GetPropertyValue(
+                    await query.OrderBy($"{model.By} desc").FirstOrDefaultAsync(cancellationToken), model.By))
+                : ToCursorString(
+                    GetPropertyValue(await query.OrderBy($"{model.By}").FirstOrDefaultAsync(cancellationToken),
+                        model.By));
 
         if (model.Reverse)
         {
@@ -79,7 +84,8 @@ public static class QueryableExtensions
         // Get the PropertyInfo object for the specified property
         var propertyInfo = type.GetProperty(propertyName);
 
-        if (propertyInfo == null) throw new ArgumentException($"Property '{propertyName}' not found on type '{type.FullName}'.");
+        if (propertyInfo == null)
+            throw new ArgumentException($"Property '{propertyName}' not found on type '{type.FullName}'.");
 
         // Get the value of the property
         return propertyInfo.GetValue(obj);

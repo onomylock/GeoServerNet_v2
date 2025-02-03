@@ -10,22 +10,26 @@ public class AuthorizedOrDefaultARH
 {
     public class Default : AuthorizationHandler<AuthorizedOrDefaultAR>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorizedOrDefaultAR requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
+            AuthorizedOrDefaultAR requirement)
         {
             if (context.HasSucceeded)
                 return Task.CompletedTask;
 
             var isPublicClaim = context.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.IsPublic);
 
-            if (isPublicClaim is { ValueType: ClaimValueTypes.Boolean } && isPublicClaim.Value == true.ToString()) context.Succeed(requirement);
+            if (isPublicClaim is { ValueType: ClaimValueTypes.Boolean } && isPublicClaim.Value == true.ToString())
+                context.Succeed(requirement);
 
             return Task.CompletedTask;
         }
     }
 
-    public class Authorized(IJsonWebTokenAdvancedService jsonWebTokenAdvancedService) : AuthorizationHandler<AuthorizedOrDefaultAR>
+    public class Authorized(IJsonWebTokenAdvancedService jsonWebTokenAdvancedService)
+        : AuthorizationHandler<AuthorizedOrDefaultAR>
     {
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorizedOrDefaultAR requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context,
+            AuthorizedOrDefaultAR requirement)
         {
             if (context.HasSucceeded)
                 return;

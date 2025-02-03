@@ -17,22 +17,23 @@ public static class ConfigureExtensions
         {
             logger.LogInformation("Add Swagger & SwaggerUI");
             app.UseSwagger().UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
-            
         }
         else
         {
             app.UseHsts();
         }
-        
+
         app.UseSerilogRequestLogging(options =>
             {
                 options.MessageTemplate =
                     "[{httpContextTraceIdentifier}] {httpContextRequestProtocol} {httpContextRequestMethod} {httpContextRequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
                 options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
                 {
-                    diagnosticContext.Set("httpContextTraceIdentifier", Activity.Current?.Id ?? httpContext.TraceIdentifier);
+                    diagnosticContext.Set("httpContextTraceIdentifier",
+                        Activity.Current?.Id ?? httpContext.TraceIdentifier);
                     diagnosticContext.Set("httpContextConnectionId", httpContext.Connection.Id);
-                    diagnosticContext.Set("httpContextConnectionRemoteIpAddress", httpContext.Connection.RemoteIpAddress);
+                    diagnosticContext.Set("httpContextConnectionRemoteIpAddress",
+                        httpContext.Connection.RemoteIpAddress);
                     diagnosticContext.Set("httpContextConnectionRemotePort", httpContext.Connection.RemotePort);
                     diagnosticContext.Set("httpContextRequestHost", httpContext.Request.Host);
                     diagnosticContext.Set("httpContextRequestPath", httpContext.Request.Path);
@@ -63,11 +64,11 @@ public static class ConfigureExtensions
                 // endpointRouteBuilder.MapHub<ChatHub>("/hubs/chat");
             });
     }
-    
+
     public static void InitBootstrapLogger()
     {
         Env.Load();
-        
+
         var configurationRoot = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false, false)
             .AddJsonFile("appsettings.Development.json", true, false)

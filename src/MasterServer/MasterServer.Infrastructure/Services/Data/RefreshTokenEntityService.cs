@@ -11,7 +11,8 @@ using Shared.Infrastructure.Services;
 
 namespace MasterServer.Infrastructure.Services.Data;
 
-public class RefreshTokenEntityService(IMasterServerRepository<RefreshToken> entityRepository) : IRefreshTokenEntityService
+public class RefreshTokenEntityService(IMasterServerRepository<RefreshToken> entityRepository)
+    : IRefreshTokenEntityService
 {
     public Task<RefreshToken> AddAsync(RefreshToken entity, CancellationToken cancellationToken = default)
     {
@@ -28,7 +29,8 @@ public class RefreshTokenEntityService(IMasterServerRepository<RefreshToken> ent
         return EntityServiceBase<RefreshToken>.DeleteAsync(entityRepository, entity, cancellationToken);
     }
 
-    public Task<RefreshToken> GetByIdAsync(Guid id, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    public Task<RefreshToken> GetByIdAsync(Guid id, bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<RefreshToken>.GetByIdAsync(entityRepository, id, asNoTracking, cancellationToken);
     }
@@ -39,15 +41,19 @@ public class RefreshTokenEntityService(IMasterServerRepository<RefreshToken> ent
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<RefreshToken>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls, cancellationToken);
+        return EntityServiceBase<RefreshToken>.BulkUpdate(entityRepository, queryTransformationFunction,
+            setPropertyCalls, cancellationToken);
     }
 
-    public Task<int> BulkDelete(Func<IQueryable<RefreshToken>, IQueryable<RefreshToken>> queryTransformationFunction, CancellationToken cancellationToken = default)
+    public Task<int> BulkDelete(Func<IQueryable<RefreshToken>, IQueryable<RefreshToken>> queryTransformationFunction,
+        CancellationToken cancellationToken = default)
     {
-        return EntityServiceBase<RefreshToken>.BulkDelete(entityRepository, queryTransformationFunction, cancellationToken);
+        return EntityServiceBase<RefreshToken>.BulkDelete(entityRepository, queryTransformationFunction,
+            cancellationToken);
     }
 
-    public Task<RefreshToken> GetByTokenAsync(string token, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    public Task<RefreshToken> GetByTokenAsync(string token, bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
         return entityRepository
             .Query(asNoTracking)
@@ -56,15 +62,18 @@ public class RefreshTokenEntityService(IMasterServerRepository<RefreshToken> ent
 
     public Task PurgeByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        return EntityServiceBase<RefreshToken>.BulkDelete(entityRepository, query => query.Where(_ => _.UserId == userId), cancellationToken);
+        return EntityServiceBase<RefreshToken>.BulkDelete(entityRepository,
+            query => query.Where(_ => _.UserId == userId), cancellationToken);
     }
 
     public Task PurgeAsync(CancellationToken cancellationToken = default)
     {
-        return EntityServiceBase<RefreshToken>.BulkDelete(entityRepository, query => query.Where(_ => _.ExpiresAt < DateTimeOffset.UtcNow), cancellationToken);
+        return EntityServiceBase<RefreshToken>.BulkDelete(entityRepository,
+            query => query.Where(_ => _.ExpiresAt < DateTimeOffset.UtcNow), cancellationToken);
     }
 
-    public Task<IReadOnlyCollection<RefreshToken>> SaveAsync(IEnumerable<RefreshToken> entities, CancellationToken cancellationToken = default)
+    public Task<IReadOnlyCollection<RefreshToken>> SaveAsync(IEnumerable<RefreshToken> entities,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<RefreshToken>.SaveAsync(entityRepository, entities, cancellationToken);
     }
@@ -81,7 +90,8 @@ public class RefreshTokenEntityService(IMasterServerRepository<RefreshToken> ent
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<RefreshToken>.GetCollection(entityRepository, pageModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<RefreshToken>.GetCollection(entityRepository, pageModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 
     public Task<(string prev, IReadOnlyCollection<RefreshToken> entities, string next)> GetCollection(
@@ -91,6 +101,7 @@ public class RefreshTokenEntityService(IMasterServerRepository<RefreshToken> ent
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<RefreshToken>.GetCollection(entityRepository, cursorModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<RefreshToken>.GetCollection(entityRepository, cursorModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 }

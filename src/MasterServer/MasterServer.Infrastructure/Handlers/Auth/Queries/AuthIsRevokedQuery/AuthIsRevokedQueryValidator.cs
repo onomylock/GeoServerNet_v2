@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Queries.AuthIsRevokedQuery;
 
 public class AuthIsRevokedQueryValidator : AbstractValidator<AuthIsRevokedQuery>
 {
-    public AuthIsRevokedQueryValidator()
-    {
-        
-    }
 }

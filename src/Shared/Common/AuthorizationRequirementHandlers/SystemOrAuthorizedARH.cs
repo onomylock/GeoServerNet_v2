@@ -17,16 +17,19 @@ public class SystemOrAuthorizedARH
             if (context.HasSucceeded)
                 return Task.CompletedTask;
 
-            if (context.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.AccessToken)?.Value == authorizationRequirement.AccessToken)
+            if (context.User.Claims.FirstOrDefault(_ => _.Type == ClaimKey.AccessToken)?.Value ==
+                authorizationRequirement.AccessToken)
                 context.Succeed(authorizationRequirement);
 
             return Task.CompletedTask;
         }
     }
 
-    public class Authorized(IJsonWebTokenAdvancedService jsonWebTokenAdvancedService) : AuthorizationHandler<SystemOrAuthorizedAR>
+    public class Authorized(IJsonWebTokenAdvancedService jsonWebTokenAdvancedService)
+        : AuthorizationHandler<SystemOrAuthorizedAR>
     {
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, SystemOrAuthorizedAR requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context,
+            SystemOrAuthorizedAR requirement)
         {
             if (context.HasSucceeded)
                 return;

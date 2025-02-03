@@ -36,15 +36,18 @@ public class JobEntityService(IMasterServerRepository<Job> entityRepository) : I
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<Job>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls, cancellationToken);
+        return EntityServiceBase<Job>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls,
+            cancellationToken);
     }
 
-    public Task<int> BulkDelete(Func<IQueryable<Job>, IQueryable<Job>> queryTransformationFunction, CancellationToken cancellationToken = default)
+    public Task<int> BulkDelete(Func<IQueryable<Job>, IQueryable<Job>> queryTransformationFunction,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<Job>.BulkDelete(entityRepository, queryTransformationFunction, cancellationToken);
     }
 
-    public Task<IReadOnlyCollection<Job>> SaveAsync(IEnumerable<Job> entities, CancellationToken cancellationToken = default)
+    public Task<IReadOnlyCollection<Job>> SaveAsync(IEnumerable<Job> entities,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<Job>.SaveAsync(entityRepository, entities, cancellationToken);
     }
@@ -61,7 +64,8 @@ public class JobEntityService(IMasterServerRepository<Job> entityRepository) : I
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<Job>.GetCollection(entityRepository, pageModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<Job>.GetCollection(entityRepository, pageModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 
     public Task<(string prev, IReadOnlyCollection<Job> entities, string next)> GetCollection(
@@ -71,6 +75,7 @@ public class JobEntityService(IMasterServerRepository<Job> entityRepository) : I
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<Job>.GetCollection(entityRepository, cursorModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<Job>.GetCollection(entityRepository, cursorModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 }

@@ -113,7 +113,7 @@ public static class EntityServiceBase<TEntity> where TEntity : EntityBase
 
         var (total, result) = await queryTransformed.GetPage(pageModel, cancellationToken);
 
-        return (total, result is { } ? await result.ToArrayAsync(cancellationToken) : []);
+        return (total, result is not null ? await result.ToArrayAsync(cancellationToken) : []);
     }
 
     public static async Task<(string prev, IReadOnlyCollection<TEntity> entities, string next)> GetCollection(
@@ -128,6 +128,6 @@ public static class EntityServiceBase<TEntity> where TEntity : EntityBase
 
         var (prev, result, next) = await queryTransformed.GetPage(cursorModel, cancellationToken);
 
-        return (prev, result is { } ? await result.ToArrayAsync(cancellationToken) : [], next);
+        return (prev, result is not null ? await result.ToArrayAsync(cancellationToken) : [], next);
     }
 }

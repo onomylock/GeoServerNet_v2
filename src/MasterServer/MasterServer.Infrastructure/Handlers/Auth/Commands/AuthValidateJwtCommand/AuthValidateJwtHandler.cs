@@ -14,14 +14,17 @@ public class AuthValidateJwtHandler(
     IOptionsMonitor<JsonWebTokenAuthenticationSchemeOptions> jsonWebTokenAuthenticationSchemeOptionsMonitor
 ) : IRequestHandler<AuthValidateJwtCommand, ResponseBase<AuthValidateJwtResultBaseDto>>
 {
-    public async Task<ResponseBase<AuthValidateJwtResultBaseDto>> Handle(AuthValidateJwtCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<AuthValidateJwtResultBaseDto>> Handle(AuthValidateJwtCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAsync(request, cancellationToken);
-        
-        var jsonWebTokenAuthenticationSchemeOptions = jsonWebTokenAuthenticationSchemeOptionsMonitor.Get(request.AuthenticationScheme);
-        
+
+        var jsonWebTokenAuthenticationSchemeOptions =
+            jsonWebTokenAuthenticationSchemeOptionsMonitor.Get(request.AuthenticationScheme);
+
         var tokenHandler = new JwtSecurityTokenHandler();
-        tokenHandler.ValidateToken(request.Token, jsonWebTokenAuthenticationSchemeOptions.TokenValidationParameters, out var validatedToken);
+        tokenHandler.ValidateToken(request.Token, jsonWebTokenAuthenticationSchemeOptions.TokenValidationParameters,
+            out var validatedToken);
 
         var jwtToken = (JwtSecurityToken)validatedToken;
 
@@ -35,7 +38,7 @@ public class AuthValidateJwtHandler(
                     Value = _.Value,
                     ValueType = _.ValueType
                 }).ToArray()
-            },
+            }
         };
     }
 }

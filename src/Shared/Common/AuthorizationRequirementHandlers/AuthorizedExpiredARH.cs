@@ -8,7 +8,8 @@ namespace Shared.Common.AuthorizationRequirementHandlers;
 public class AuthorizedExpiredARH(IJsonWebTokenAdvancedService jsonWebTokenAdvancedService)
     : AuthorizationHandler<AuthorizedExpiredAR>
 {
-    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorizedExpiredAR requirement)
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context,
+        AuthorizedExpiredAR requirement)
     {
         try
         {

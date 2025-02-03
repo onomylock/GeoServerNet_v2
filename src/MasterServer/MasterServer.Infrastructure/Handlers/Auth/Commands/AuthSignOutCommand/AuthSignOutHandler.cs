@@ -26,11 +26,11 @@ public class AuthSignOutHandler(
 ) : IRequestHandler<AuthSignOutCommand, ResponseBase<OkResult>>
 {
     private readonly HttpContext _httpContext = httpContextAccessor.HttpContext;
-    
+
     public async Task<ResponseBase<OkResult>> Handle(AuthSignOutCommand request, CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
@@ -38,14 +38,17 @@ public class AuthSignOutHandler(
             var userId = userAdvancedService.GetUserIdFromHttpContext(true);
 
             //GRPC does not have cookies
-            var useCookies = string.IsNullOrEmpty(request.RefreshToken) && _httpContext.Request is not { Protocol: "HTTP/2", ContentType: "application/grpc" };
+            var useCookies = string.IsNullOrEmpty(request.RefreshToken) && _httpContext.Request is not
+                { Protocol: "HTTP/2", ContentType: "application/grpc" };
 
             request.RefreshToken ??= _httpContext.Request.Cookies[CookieKey.RefreshToken];
             if (string.IsNullOrEmpty(request.RefreshToken))
                 throw new RefreshTokenNotProvidedException();
 
             //Find old RefreshToken
-            var refreshTokenOld = await refreshTokenEntityService.GetByTokenAsync(request.RefreshToken, cancellationToken: cancellationToken);
+            var refreshTokenOld =
+                await refreshTokenEntityService.GetByTokenAsync(request.RefreshToken,
+                    cancellationToken: cancellationToken);
             if (refreshTokenOld == null)
                 throw new RefreshTokenNotFoundException();
 
@@ -106,7 +109,7 @@ public class AuthSignOutHandler(
 
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
-            return new ResponseBase<OkResult>()
+            return new ResponseBase<OkResult>
             {
                 Data = new OkResult()
             };

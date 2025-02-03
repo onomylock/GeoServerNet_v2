@@ -8,9 +8,7 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Commands.AuthSignInWithClaim
 
 public class AuthSignInWithClaimsCommand : AuthSignInRequestBaseDto, IRequest<ResponseBase<AuthSignInResultBaseDto>>
 {
-    [Required]
-    public Guid UserId { get; set; }
-    
-    [MinLength(1)]
-    public ClaimEntry[] Claims { get; set; }
+    [Required] public Guid UserId { get; set; }
+
+    [MinLength(1)] public ClaimEntry[] Claims { get; set; }
 }

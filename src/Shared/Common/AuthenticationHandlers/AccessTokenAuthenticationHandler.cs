@@ -45,7 +45,8 @@ public class AccessTokenAuthenticationHandler(
         {
             var accessToken = authorizationBearerPayloads.First();
 
-            if (!string.IsNullOrEmpty(accessToken)) claims.Add(new Claim(ClaimKey.AccessToken, accessToken, ClaimValueTypes.String));
+            if (!string.IsNullOrEmpty(accessToken))
+                claims.Add(new Claim(ClaimKey.AccessToken, accessToken, ClaimValueTypes.String));
         }
 
         var claimsIdentity = new ClaimsIdentity(claims, nameof(AccessTokenAuthenticationHandler));

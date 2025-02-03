@@ -66,7 +66,8 @@ public abstract class RepositoryBase<TEntity, TDbContext> : IRepositoryBase<TEnt
         _dbSet.RemoveRange(entities);
     }
 
-    public IQueryable<TEntity> Transform(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryTransformationFunction, bool asNoTracking = false)
+    public IQueryable<TEntity> Transform(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryTransformationFunction,
+        bool asNoTracking = false)
     {
         return queryTransformationFunction(Query(asNoTracking).OrderBy(_ => _.CreatedAt));
     }

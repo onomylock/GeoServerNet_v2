@@ -1,4 +1,3 @@
-
 using System.Text.Json.Serialization;
 using FluentValidation;
 using Hangfire;
@@ -41,7 +40,8 @@ public static class ConfigureServicesExtensions
 {
     public static void InitMasterServiceHttpApi(this IHostApplicationBuilder builder)
     {
-        var masterServerHttpApiOptions = builder.Configuration.GetSection(nameof(MasterServerHttpApiOptions)).Get<MasterServerHttpApiOptions>();
+        var masterServerHttpApiOptions = builder.Configuration.GetSection(nameof(MasterServerHttpApiOptions))
+            .Get<MasterServerHttpApiOptions>();
         //var minioOptions = builder.Configuration.GetSection(nameof(MinioOptions)).Get<MinioOptions>();
 
         builder.Services
@@ -126,10 +126,10 @@ public static class ConfigureServicesExtensions
         //Those services are a must have for HttpApi/GrpcApi
         serviceCollection.AddScoped<IJsonWebTokenAdvancedService, JsonWebTokenAdvancedService>();
         serviceCollection.AddScoped<IUserAdvancedService, UserAdvancedService>();
-        
+
         serviceCollection.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-        
-        
+
+
         //serviceCollection.AddSingleton<IMinioService, MinioService>();
         // serviceCollection.AddKeyedScoped<IRedisCacheService, RedisCacheService>(ServiceKeys.Generic, (provider, _) => new RedisCacheService(
         //     provider.GetRequiredService<ILogger<RedisCacheService>>(),
@@ -147,15 +147,15 @@ public static class ConfigureServicesExtensions
     private static IServiceCollection ConfigureDiValidators(this IServiceCollection serviceCollection)
     {
         var assem = AppDomain.CurrentDomain.GetAssemblies();
-        
+
         serviceCollection.AddValidatorsFromAssemblies(assem);
         return serviceCollection;
     }
-    
+
     private static IServiceCollection ConfigureDiHandlers(this IServiceCollection serviceCollection)
     {
         var assem = AppDomain.CurrentDomain.GetAssemblies();
-        
+
         serviceCollection.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
@@ -180,25 +180,30 @@ public static class ConfigureServicesExtensions
         serviceCollection.AddScoped<IDbContextTransactionAction, DbContextAction<MasterServerDbContext>>();
 
         serviceCollection.AddDbContext<MasterServerDbContext>((provider, builder) =>
-                DbContextOptionsBuilder(builder, provider.GetRequiredService<IOptions<MasterServerDbContextOptions>>().Value),
+                DbContextOptionsBuilder(builder,
+                    provider.GetRequiredService<IOptions<MasterServerDbContextOptions>>().Value),
             ServiceLifetime.Scoped,
             ServiceLifetime.Singleton
         );
         serviceCollection.AddDbContextFactory<MasterServerDbContext>((provider, builder) =>
-            DbContextOptionsBuilder(builder, provider.GetRequiredService<IOptions<MasterServerDbContextOptions>>().Value));
+            DbContextOptionsBuilder(builder,
+                provider.GetRequiredService<IOptions<MasterServerDbContextOptions>>().Value));
 
         return serviceCollection;
 
         void DbContextOptionsBuilder(DbContextOptionsBuilder options, MasterServerDbContextOptions appDbContextOptions)
         {
-            var connectionString = appDbContextOptions.ConnectionString + (!env.IsProduction() ? ";Include Error Detail=true" : "");
+            var connectionString = appDbContextOptions.ConnectionString +
+                                   (!env.IsProduction() ? ";Include Error Detail=true" : "");
 
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
             dataSourceBuilder.EnableDynamicJson();
             var dataSource = dataSourceBuilder.Build();
 
             options
-                .UseNpgsql(dataSource, npgsqlDbContextOptionsBuilder => npgsqlDbContextOptionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery));
+                .UseNpgsql(dataSource,
+                    npgsqlDbContextOptionsBuilder =>
+                        npgsqlDbContextOptionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery));
 
             if (!env.IsProduction()) options.EnableSensitiveDataLogging().EnableDetailedErrors();
         }
@@ -207,9 +212,13 @@ public static class ConfigureServicesExtensions
     private static IServiceCollection ConfigureDiConfigureOptions(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<IConfigureOptions<AuthenticationOptions>, ConfigureAuthenticationOptions>();
-        serviceCollection.AddSingleton<IConfigureOptions<JsonWebTokenAuthenticationSchemeOptions>, MasterServerConfigureJwtBearerOptions>(
-            provider => new MasterServerConfigureJwtBearerOptions(provider.GetRequiredService<IOptions<JsonWebTokenOptions>>().Value));
-        serviceCollection.AddSingleton<IConfigureOptions<AccessTokenAuthenticationSchemeOptions>, ConfigureAccessTokenOptions>();
+        serviceCollection
+            .AddSingleton<IConfigureOptions<JsonWebTokenAuthenticationSchemeOptions>,
+                MasterServerConfigureJwtBearerOptions>(
+                provider => new MasterServerConfigureJwtBearerOptions(provider
+                    .GetRequiredService<IOptions<JsonWebTokenOptions>>().Value));
+        serviceCollection
+            .AddSingleton<IConfigureOptions<AccessTokenAuthenticationSchemeOptions>, ConfigureAccessTokenOptions>();
 
         return serviceCollection;
     }
@@ -254,15 +263,22 @@ public static class ConfigureServicesExtensions
 
         var masterServerHttpApiConfigSection = configuration.GetSection(nameof(MasterServerHttpApiOptions));
 
-        serviceCollection.AddOptions<MasterServerHttpApiOptions>().Bind(masterServerHttpApiConfigSection).ValidateDataAnnotations().ValidateOnStart();
-        serviceCollection.AddOptions<MasterServerOptions>().Bind(masterServerHttpApiConfigSection).ValidateDataAnnotations().ValidateOnStart();
-        serviceCollection.AddOptions<CommonServiceOptions>().Bind(masterServerHttpApiConfigSection).ValidateDataAnnotations().ValidateOnStart();
-        serviceCollection.AddOptions<JsonWebTokenOptions>().Bind(configuration.GetSection(nameof(JsonWebTokenOptions))).ValidateDataAnnotations().ValidateOnStart();
-        
-        serviceCollection.AddOptions<HangfireOptions>().Bind(configuration.GetSection(nameof(HangfireOptions))).ValidateDataAnnotations().ValidateOnStart();
+        serviceCollection.AddOptions<MasterServerHttpApiOptions>().Bind(masterServerHttpApiConfigSection)
+            .ValidateDataAnnotations().ValidateOnStart();
+        serviceCollection.AddOptions<MasterServerOptions>().Bind(masterServerHttpApiConfigSection)
+            .ValidateDataAnnotations().ValidateOnStart();
+        serviceCollection.AddOptions<CommonServiceOptions>().Bind(masterServerHttpApiConfigSection)
+            .ValidateDataAnnotations().ValidateOnStart();
+        serviceCollection.AddOptions<JsonWebTokenOptions>().Bind(configuration.GetSection(nameof(JsonWebTokenOptions)))
+            .ValidateDataAnnotations().ValidateOnStart();
+
+        serviceCollection.AddOptions<HangfireOptions>().Bind(configuration.GetSection(nameof(HangfireOptions)))
+            .ValidateDataAnnotations().ValidateOnStart();
         //serviceCollection.AddOptions<MinioOptions>().Bind(configuration.GetSection(nameof(MinioOptions))).ValidateDataAnnotations().ValidateOnStart();
 
-        serviceCollection.AddOptions<MasterServerDbContextOptions>().Bind(configuration.GetSection(nameof(MasterServerDbContextOptions))).ValidateDataAnnotations().ValidateOnStart();
+        serviceCollection.AddOptions<MasterServerDbContextOptions>()
+            .Bind(configuration.GetSection(nameof(MasterServerDbContextOptions))).ValidateDataAnnotations()
+            .ValidateOnStart();
 
         return serviceCollection;
     }
@@ -271,10 +287,14 @@ public static class ConfigureServicesExtensions
     {
         serviceCollection
             .AddAuthentication()
-            .AddScheme<DefaultAuthenticationSchemeOptions, DefaultAuthenticationHandler>(AuthenticationSchemes.Default, null!)
-            .AddScheme<AccessTokenAuthenticationSchemeOptions, AccessTokenAuthenticationHandler>(AuthenticationSchemes.AccessToken, null!)
-            .AddScheme<JsonWebTokenAuthenticationSchemeOptions, MasterServerJsonWebTokenAuthenticationHandler>(AuthenticationSchemes.JsonWebToken, null!)
-            .AddScheme<JsonWebTokenAuthenticationSchemeOptions, MasterServerJsonWebTokenExpiredAuthenticationHandler>(AuthenticationSchemes.JsonWebTokenExpired, null!);
+            .AddScheme<DefaultAuthenticationSchemeOptions, DefaultAuthenticationHandler>(AuthenticationSchemes.Default,
+                null!)
+            .AddScheme<AccessTokenAuthenticationSchemeOptions, AccessTokenAuthenticationHandler>(
+                AuthenticationSchemes.AccessToken, null!)
+            .AddScheme<JsonWebTokenAuthenticationSchemeOptions, MasterServerJsonWebTokenAuthenticationHandler>(
+                AuthenticationSchemes.JsonWebToken, null!)
+            .AddScheme<JsonWebTokenAuthenticationSchemeOptions, MasterServerJsonWebTokenExpiredAuthenticationHandler>(
+                AuthenticationSchemes.JsonWebTokenExpired, null!);
 
         return serviceCollection;
     }
@@ -301,7 +321,8 @@ public static class ConfigureServicesExtensions
                 authorizationOptions.AddPolicy(AuthorizationPolicies.System,
                     policy =>
                     {
-                        policy.Requirements.Add(new SystemAR(provider.GetRequiredService<IOptions<MasterServerHttpApiOptions>>().Value.SystemAccessToken));
+                        policy.Requirements.Add(new SystemAR(provider
+                            .GetRequiredService<IOptions<MasterServerHttpApiOptions>>().Value.SystemAccessToken));
                         policy.AuthenticationSchemes = SystemAR.AuthenticationSchemes;
                     });
                 authorizationOptions.AddPolicy(AuthorizationPolicies.Authorized,
@@ -325,13 +346,15 @@ public static class ConfigureServicesExtensions
                 authorizationOptions.AddPolicy(AuthorizationPolicies.SystemOrAuthorized,
                     policy =>
                     {
-                        policy.Requirements.Add(new SystemOrAuthorizedAR(provider.GetRequiredService<IOptions<MasterServerHttpApiOptions>>().Value.SystemAccessToken));
+                        policy.Requirements.Add(new SystemOrAuthorizedAR(provider
+                            .GetRequiredService<IOptions<MasterServerHttpApiOptions>>().Value.SystemAccessToken));
                         policy.AuthenticationSchemes = SystemOrAuthorizedAR.AuthenticationSchemes;
                     });
                 authorizationOptions.AddPolicy(AuthorizationPolicies.SystemOrAuthorizedOrDefault,
                     policy =>
                     {
-                        policy.Requirements.Add(new SystemOrAuthorizedOrDefaultAR(provider.GetRequiredService<IOptions<MasterServerHttpApiOptions>>().Value.SystemAccessToken));
+                        policy.Requirements.Add(new SystemOrAuthorizedOrDefaultAR(provider
+                            .GetRequiredService<IOptions<MasterServerHttpApiOptions>>().Value.SystemAccessToken));
                         policy.AuthenticationSchemes = SystemOrAuthorizedOrDefaultAR.AuthenticationSchemes;
                     });
             });
@@ -405,22 +428,22 @@ public static class ConfigureServicesExtensions
 
         serviceCollection
             .AddMvc();
-            // .ConfigureApiBehaviorOptions(apiBehaviorOptions =>
-            // {
-            //     // options.SuppressModelStateInvalidFilter = true;
-            //     apiBehaviorOptions.InvalidModelStateResponseFactory = context =>
-            //     {
-            //         var errorModelResult = new ErrorModelResult
-            //         {
-            //             TraceId = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier
-            //         };
-            //
-            //         foreach (var modelError in context.ModelState.Values.SelectMany(modelStateValue => modelStateValue.Errors))
-            //             errorModelResult.Errors.Add(new ErrorModelResultEntry(ErrorType.ModelState, modelError.ErrorMessage));
-            //
-            //         return new BadRequestObjectResult(errorModelResult);
-            //     };
-            // });
+        // .ConfigureApiBehaviorOptions(apiBehaviorOptions =>
+        // {
+        //     // options.SuppressModelStateInvalidFilter = true;
+        //     apiBehaviorOptions.InvalidModelStateResponseFactory = context =>
+        //     {
+        //         var errorModelResult = new ErrorModelResult
+        //         {
+        //             TraceId = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier
+        //         };
+        //
+        //         foreach (var modelError in context.ModelState.Values.SelectMany(modelStateValue => modelStateValue.Errors))
+        //             errorModelResult.Errors.Add(new ErrorModelResultEntry(ErrorType.ModelState, modelError.ErrorMessage));
+        //
+        //         return new BadRequestObjectResult(errorModelResult);
+        //     };
+        // });
 
         serviceCollection
             //.AddControllers(mvcOptions => { mvcOptions.Filters.Add<HttpResponseExceptionFilter>(); })

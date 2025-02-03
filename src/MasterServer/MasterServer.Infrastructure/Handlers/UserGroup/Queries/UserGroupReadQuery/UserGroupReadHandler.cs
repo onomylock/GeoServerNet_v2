@@ -12,10 +12,11 @@ public class UserGroupReadHandler(
     IUserGroupEntityService userGroupEntityService
 ) : IRequestHandler<UserGroupReadQuery, ResponseBase<UserGroupReadResultDto>>
 {
-    public async Task<ResponseBase<UserGroupReadResultDto>> Handle(UserGroupReadQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<UserGroupReadResultDto>> Handle(UserGroupReadQuery request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         var targetUser = await userGroupEntityService.GetByIdAsync(request.UserGroupId, true, cancellationToken) ??
                          throw new UserGroupNotFoundException();
 

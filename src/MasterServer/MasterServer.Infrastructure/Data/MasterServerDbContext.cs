@@ -1,8 +1,6 @@
 using MasterServer.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Shared.Common.Helpers;
 using Shared.Common.Models;
-using Shared.Common.Models.Options;
 using Shared.Common.ValueConverters;
 using DbContextOptions = Microsoft.EntityFrameworkCore.DbContextOptions;
 
@@ -18,20 +16,20 @@ public class MasterServerDbContext(DbContextOptions options) : DbContext(options
     public DbSet<Node> Nodes { get; set; }
     public DbSet<Job> Jobs { get; set; }
     public DbSet<Solution> Solutions { get; set; }
-    
+
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder
             .Properties<DateTimeOffset>()
             .HaveConversion<DateTimeOffsetValueConverter>();
     }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // var customPasswordHasher = new CustomPasswordHasher();
         // var passwordHash = customPasswordHasher.HashPassword("public_user_password");
-        
-        
+
+
         modelBuilder.Entity<User>(_ =>
         {
             _.HasIndex(__ => __.Alias).IsUnique();

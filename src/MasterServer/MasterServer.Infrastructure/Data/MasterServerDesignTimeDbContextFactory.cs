@@ -1,9 +1,6 @@
-using MasterServer.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Npgsql;
-using Shared.Common.Models;
-using Shared.Common.ValueConverters;
 
 namespace MasterServer.Infrastructure.Data;
 

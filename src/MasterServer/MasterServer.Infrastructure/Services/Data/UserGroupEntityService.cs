@@ -29,7 +29,8 @@ public class UserGroupEntityService(
         return EntityServiceBase<UserGroup>.DeleteAsync(entityRepository, entity, cancellationToken);
     }
 
-    public Task<UserGroup> GetByIdAsync(Guid id, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    public Task<UserGroup> GetByIdAsync(Guid id, bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<UserGroup>.GetByIdAsync(entityRepository, id, asNoTracking, cancellationToken);
     }
@@ -40,15 +41,19 @@ public class UserGroupEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<UserGroup>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls, cancellationToken);
+        return EntityServiceBase<UserGroup>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls,
+            cancellationToken);
     }
 
-    public Task<int> BulkDelete(Func<IQueryable<UserGroup>, IQueryable<UserGroup>> queryTransformationFunction, CancellationToken cancellationToken = default)
+    public Task<int> BulkDelete(Func<IQueryable<UserGroup>, IQueryable<UserGroup>> queryTransformationFunction,
+        CancellationToken cancellationToken = default)
     {
-        return EntityServiceBase<UserGroup>.BulkDelete(entityRepository, queryTransformationFunction, cancellationToken);
+        return EntityServiceBase<UserGroup>.BulkDelete(entityRepository, queryTransformationFunction,
+            cancellationToken);
     }
 
-    public Task<IReadOnlyCollection<UserGroup>> SaveAsync(IEnumerable<UserGroup> entities, CancellationToken cancellationToken = default)
+    public Task<IReadOnlyCollection<UserGroup>> SaveAsync(IEnumerable<UserGroup> entities,
+        CancellationToken cancellationToken = default)
     {
         return EntityServiceBase<UserGroup>.SaveAsync(entityRepository, entities, cancellationToken);
     }
@@ -65,7 +70,8 @@ public class UserGroupEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<UserGroup>.GetCollection(entityRepository, pageModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<UserGroup>.GetCollection(entityRepository, pageModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 
     public Task<(string prev, IReadOnlyCollection<UserGroup> entities, string next)> GetCollection(
@@ -75,10 +81,12 @@ public class UserGroupEntityService(
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<UserGroup>.GetCollection(entityRepository, cursorModel, queryTransformationFunction, asNoTracking, cancellationToken);
+        return EntityServiceBase<UserGroup>.GetCollection(entityRepository, cursorModel, queryTransformationFunction,
+            asNoTracking, cancellationToken);
     }
 
-    public Task<UserGroup> GetByAliasAsync(string alias, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    public Task<UserGroup> GetByAliasAsync(string alias, bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
         return entityRepository.Query(asNoTracking).SingleOrDefaultAsync(_ => _.Alias == alias, cancellationToken);
     }

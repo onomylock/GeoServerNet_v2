@@ -17,7 +17,8 @@ public static class EntityToEntityMappingServiceBase<TEntity> where TEntity : En
     {
         return repository
             .Query(asNoTracking)
-            .SingleOrDefaultAsync(_ => _.EntityLeftId == entityLeftId && _.EntityRightId == entityRightId, cancellationToken);
+            .SingleOrDefaultAsync(_ => _.EntityLeftId == entityLeftId && _.EntityRightId == entityRightId,
+                cancellationToken);
     }
 
     public static async Task<(int total, IReadOnlyCollection<TEntity> entities)> GetByEntityLeftIdAsync(
@@ -35,7 +36,7 @@ public static class EntityToEntityMappingServiceBase<TEntity> where TEntity : En
 
         var (total, result) = await query.GetPage(pageModel, cancellationToken);
 
-        return (total, result is { } ? await result.ToArrayAsync(cancellationToken) : []);
+        return (total, result is not null ? await result.ToArrayAsync(cancellationToken) : []);
     }
 
     public static async Task<(int total, IReadOnlyCollection<TEntity> entities)> GetByEntityRightIdAsync(
@@ -53,7 +54,7 @@ public static class EntityToEntityMappingServiceBase<TEntity> where TEntity : En
 
         var (total, result) = await query.GetPage(pageModel, cancellationToken);
 
-        return (total, result is { } ? await result.ToArrayAsync(cancellationToken) : []);
+        return (total, result is not null ? await result.ToArrayAsync(cancellationToken) : []);
     }
 
     public static async Task<(string prev, IReadOnlyCollection<TEntity> entities, string next)> GetByEntityLeftIdAsync(
@@ -71,7 +72,7 @@ public static class EntityToEntityMappingServiceBase<TEntity> where TEntity : En
 
         var (prev, result, next) = await query.GetPage(cursorModel, cancellationToken);
 
-        return (prev, result is { } ? await result.ToArrayAsync(cancellationToken) : [], next);
+        return (prev, result is not null ? await result.ToArrayAsync(cancellationToken) : [], next);
     }
 
     public static async Task<(string prev, IReadOnlyCollection<TEntity> entities, string next)> GetByEntityRightIdAsync(
@@ -89,6 +90,6 @@ public static class EntityToEntityMappingServiceBase<TEntity> where TEntity : En
 
         var (prev, result, next) = await query.GetPage(cursorModel, cancellationToken);
 
-        return (prev, result is { } ? await result.ToArrayAsync(cancellationToken) : [], next);
+        return (prev, result is not null ? await result.ToArrayAsync(cancellationToken) : [], next);
     }
 }

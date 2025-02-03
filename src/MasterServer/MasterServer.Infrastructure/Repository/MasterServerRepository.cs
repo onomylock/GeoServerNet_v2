@@ -7,6 +7,8 @@ using Shared.Infrastructure.Repository;
 
 namespace MasterServer.Infrastructure.Repository;
 
-public class MasterServerRepository<TEntity>(MasterServerDbContext dbContext, ILogger<DbContextAction<MasterServerDbContext>> logger)
+public class MasterServerRepository<TEntity>(
+    MasterServerDbContext dbContext,
+    ILogger<DbContextAction<MasterServerDbContext>> logger)
     : RepositoryBase<TEntity, MasterServerDbContext>(dbContext, logger), IMasterServerRepository<TEntity>
     where TEntity : EntityBase;

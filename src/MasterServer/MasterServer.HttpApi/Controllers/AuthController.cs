@@ -48,7 +48,7 @@ public class AuthController(
     {
         return Ok(await mediator.Send(command, cancellationToken));
     }
-    
+
     [HttpPost]
     [Authorize(AuthorizationPolicies.AuthorizedExpired)]
     public async Task<IActionResult> Refresh(

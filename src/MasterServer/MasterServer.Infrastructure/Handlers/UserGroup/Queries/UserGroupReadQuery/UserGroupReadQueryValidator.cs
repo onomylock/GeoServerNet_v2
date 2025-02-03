@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.UserGroup.Queries.UserGroupReadQu
 
 public class UserGroupReadQueryValidator : AbstractValidator<UserGroupReadQuery>
 {
-    public UserGroupReadQueryValidator()
-    {
-        
-    }
 }
