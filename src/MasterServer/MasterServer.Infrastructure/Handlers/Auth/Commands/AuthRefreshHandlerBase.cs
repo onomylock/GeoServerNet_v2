@@ -147,10 +147,14 @@ public abstract class AuthRefreshHandlerBase(
         }
 
         return (
-            new AuthSignInResultBaseDto(userId, !useCookies ? jsonWebTokenString : null,
-                !useCookies ? jsonWebTokenExpiresAt : null,
-                !useCookies ? refreshTokenString : null,
-                !useCookies ? refreshTokenExpiresAt : null),
+            new AuthSignInResultBaseDto
+            {
+                UserId = userId,
+                JsonWebToken = !useCookies ? jsonWebTokenString : null,
+                JsonWebTokenExpiresAt = !useCookies ? jsonWebTokenExpiresAt : null,
+                RefreshToken = !useCookies ? refreshTokenString : null,
+                RefreshTokenExpiresAt = !useCookies ? refreshTokenExpiresAt : null
+            },
             errors);
     }
 }

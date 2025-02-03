@@ -11,7 +11,7 @@ using Shared.Common.Models;
 namespace MasterServer.HttpApi.Controllers;
 
 [ApiController]
-[Route("[controller/action]")]
+[Route("[controller]/[action]")]
 public class NodeController(
     IMediator mediator
 ) : ControllerBase

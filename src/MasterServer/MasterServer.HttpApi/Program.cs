@@ -1,38 +1,72 @@
+using MasterServer.HttpApi.Extensions;
+using MasterServer.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Settings.Configuration;
+
+//TODO: This disables requirement of SSL/TLS, useless during development and in secure environments
+AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
+ConfigureExtensions.InitBootstrapLogger();
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
+
+//STAGE: ConfigureServices
+
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    configuration
+        .ReadFrom.Configuration(context.Configuration, new ConfigurationReaderOptions { SectionName = "Serilog" })
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext()
+        .Enrich.WithAssemblyName()
+        .Enrich.WithEnvironmentName()
+        .Enrich.WithMachineName()
+        .Enrich.WithMemoryUsage()
+        .Enrich.WithProcessId()
+        .Enrich.WithProcessName()
+        .Enrich.WithThreadId()
+        .Enrich.WithThreadName();
+});
+
+builder.InitMasterServiceHttpApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment()) app.MapOpenApi();
+//STAGE: Configure
 
-app.UseHttpsRedirection();
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
-var summaries = new[]
+var appDbContextFactory = app.Services.GetRequiredService<IDbContextFactory<MasterServerDbContext>>();
+var appDbContext = await appDbContextFactory.CreateDbContextAsync();
+
+logger.LogInformation("Migrating database...");
+await appDbContext.Database.MigrateAsync();
+
+if (!await appDbContext.Database.CanConnectAsync())
+    throw new ApplicationException("Failed connecting to database!");
+
+logger.LogInformation("Environment: {0}", app.Environment.EnvironmentName);
+
+ConfigureExtensions.ConfigureMiddlewarePipeline(app);
+
+try
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    logger.LogInformation("Application setting is finished...");
 
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
+    app.Run();
 
-app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string Summary)
+    logger.LogInformation("Application stopping...");
+}
+catch (Exception e)
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    logger.LogCritical(e, "An unhandled exception occured during bootstrapping!");
+}
+finally
+{
+    logger.LogInformation("Flushing logs...");
+
+    Log.CloseAndFlush();
 }

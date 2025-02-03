@@ -1,15 +1,18 @@
 
 using System.Text.Json.Serialization;
+using FluentValidation;
 using Hangfire;
 using Hangfire.PostgreSql;
 using MasterServer.Application.Models.Options;
 using MasterServer.Application.Repository;
 using MasterServer.Application.Services.Data;
 using MasterServer.Infrastructure.AuthenticationHandlers;
+using MasterServer.Infrastructure.ConfigureNamedOptions;
 using MasterServer.Infrastructure.Data;
 using MasterServer.Infrastructure.Repository;
 using MasterServer.Infrastructure.Services;
 using MasterServer.Infrastructure.Services.Data;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -38,8 +41,8 @@ public static class ConfigureServicesExtensions
 {
     public static void InitMasterServiceHttpApi(this IHostApplicationBuilder builder)
     {
-        var masterServerHttpApiOptions = builder.Configuration.GetSection(nameof(MasterServerOptions)).Get<MasterServerOptions>();
-        var minioOptions = builder.Configuration.GetSection(nameof(MinioOptions)).Get<MinioOptions>();
+        var masterServerHttpApiOptions = builder.Configuration.GetSection(nameof(MasterServerHttpApiOptions)).Get<MasterServerHttpApiOptions>();
+        //var minioOptions = builder.Configuration.GetSection(nameof(MinioOptions)).Get<MinioOptions>();
 
         builder.Services
             .ConfigureDiOptions(builder.Configuration)
@@ -82,6 +85,7 @@ public static class ConfigureServicesExtensions
             })
             .ConfigureDiRepositories()
             .ConfigureDiServices()
+            .ConfigureDiValidators()
             .ConfigureDiHandlers()
             .ConfigureDiBackgroundServices()
             .ConfigureDiHangfire(builder.Environment)
@@ -122,7 +126,10 @@ public static class ConfigureServicesExtensions
         //Those services are a must have for HttpApi/GrpcApi
         serviceCollection.AddScoped<IJsonWebTokenAdvancedService, JsonWebTokenAdvancedService>();
         serviceCollection.AddScoped<IUserAdvancedService, UserAdvancedService>();
-
+        
+        serviceCollection.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        
+        
         //serviceCollection.AddSingleton<IMinioService, MinioService>();
         // serviceCollection.AddKeyedScoped<IRedisCacheService, RedisCacheService>(ServiceKeys.Generic, (provider, _) => new RedisCacheService(
         //     provider.GetRequiredService<ILogger<RedisCacheService>>(),
@@ -137,6 +144,14 @@ public static class ConfigureServicesExtensions
         return serviceCollection;
     }
 
+    private static IServiceCollection ConfigureDiValidators(this IServiceCollection serviceCollection)
+    {
+        var assem = AppDomain.CurrentDomain.GetAssemblies();
+        
+        serviceCollection.AddValidatorsFromAssemblies(assem);
+        return serviceCollection;
+    }
+    
     private static IServiceCollection ConfigureDiHandlers(this IServiceCollection serviceCollection)
     {
         var assem = AppDomain.CurrentDomain.GetAssemblies();
@@ -192,7 +207,8 @@ public static class ConfigureServicesExtensions
     private static IServiceCollection ConfigureDiConfigureOptions(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<IConfigureOptions<AuthenticationOptions>, ConfigureAuthenticationOptions>();
-        serviceCollection.AddSingleton<IConfigureOptions<JsonWebTokenAuthenticationSchemeOptions>, ConfigureJwtBearerOptions>();
+        serviceCollection.AddSingleton<IConfigureOptions<JsonWebTokenAuthenticationSchemeOptions>, MasterServerConfigureJwtBearerOptions>(
+            provider => new MasterServerConfigureJwtBearerOptions(provider.GetRequiredService<IOptions<JsonWebTokenOptions>>().Value));
         serviceCollection.AddSingleton<IConfigureOptions<AccessTokenAuthenticationSchemeOptions>, ConfigureAccessTokenOptions>();
 
         return serviceCollection;
@@ -236,14 +252,15 @@ public static class ConfigureServicesExtensions
     {
         serviceCollection.AddOptions();
 
-        var MasterServerHttpApiConfigSection = configuration.GetSection(nameof(MasterServerHttpApiOptions));
+        var masterServerHttpApiConfigSection = configuration.GetSection(nameof(MasterServerHttpApiOptions));
 
-        serviceCollection.AddOptions<MasterServerHttpApiOptions>().Bind(MasterServerHttpApiConfigSection).ValidateDataAnnotations().ValidateOnStart();
-        serviceCollection.AddOptions<MasterServerOptions>().Bind(MasterServerHttpApiConfigSection).ValidateDataAnnotations().ValidateOnStart();
-        serviceCollection.AddOptions<CommonServiceOptions>().Bind(MasterServerHttpApiConfigSection).ValidateDataAnnotations().ValidateOnStart();
+        serviceCollection.AddOptions<MasterServerHttpApiOptions>().Bind(masterServerHttpApiConfigSection).ValidateDataAnnotations().ValidateOnStart();
+        serviceCollection.AddOptions<MasterServerOptions>().Bind(masterServerHttpApiConfigSection).ValidateDataAnnotations().ValidateOnStart();
+        serviceCollection.AddOptions<CommonServiceOptions>().Bind(masterServerHttpApiConfigSection).ValidateDataAnnotations().ValidateOnStart();
+        serviceCollection.AddOptions<JsonWebTokenOptions>().Bind(configuration.GetSection(nameof(JsonWebTokenOptions))).ValidateDataAnnotations().ValidateOnStart();
         
         serviceCollection.AddOptions<HangfireOptions>().Bind(configuration.GetSection(nameof(HangfireOptions))).ValidateDataAnnotations().ValidateOnStart();
-        serviceCollection.AddOptions<MinioOptions>().Bind(configuration.GetSection(nameof(MinioOptions))).ValidateDataAnnotations().ValidateOnStart();
+        //serviceCollection.AddOptions<MinioOptions>().Bind(configuration.GetSection(nameof(MinioOptions))).ValidateDataAnnotations().ValidateOnStart();
 
         serviceCollection.AddOptions<MasterServerDbContextOptions>().Bind(configuration.GetSection(nameof(MasterServerDbContextOptions))).ValidateDataAnnotations().ValidateOnStart();
 

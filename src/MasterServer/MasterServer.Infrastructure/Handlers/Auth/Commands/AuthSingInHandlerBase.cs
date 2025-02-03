@@ -122,10 +122,14 @@ public abstract class AuthSingInHandlerBase(
         }
 
         return (
-            new AuthSignInResultBaseDto(user.Id, !useCookies ? jsonWebTokenString : null,
-                !useCookies ? jsonWebTokenExpiresAt : null,
-                !useCookies ? refreshTokenString : null,
-                !useCookies ? refreshTokenExpiresAt : null),
+            new AuthSignInResultBaseDto
+            {
+                UserId = user.Id,
+                JsonWebToken = !useCookies ? jsonWebTokenString : null,
+                JsonWebTokenExpiresAt = !useCookies ? jsonWebTokenExpiresAt : null,
+                RefreshToken = !useCookies ? refreshTokenString : null,
+                RefreshTokenExpiresAt = !useCookies ? refreshTokenExpiresAt : null
+            },
             errors);
     }
 }

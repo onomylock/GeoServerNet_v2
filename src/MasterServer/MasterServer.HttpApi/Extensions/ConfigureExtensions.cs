@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Reflection;
+using DotNetEnv;
+using DotNetEnv.Configuration;
 using Serilog;
 using Serilog.Settings.Configuration;
 
@@ -64,9 +66,12 @@ public static class ConfigureExtensions
     
     public static void InitBootstrapLogger()
     {
+        Env.Load();
+        
         var configurationRoot = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false, false)
             .AddJsonFile("appsettings.Development.json", true, false)
+            .AddDotNetEnv("master-server.env", LoadOptions.TraversePath())
             .AddUserSecrets(Assembly.GetExecutingAssembly())
             .Build();
 

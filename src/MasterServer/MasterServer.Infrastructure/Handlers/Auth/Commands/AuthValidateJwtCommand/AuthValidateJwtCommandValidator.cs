@@ -1,6 +1,11 @@
+using FluentValidation;
+
 namespace MasterServer.Infrastructure.Handlers.Auth.Commands.AuthValidateJwtCommand;
 
-public class AuthValidateJwtCommandValidator
+public class AuthValidateJwtCommandValidator : AbstractValidator<AuthValidateJwtCommand>
 {
-    
+    public AuthValidateJwtCommandValidator()
+    {
+        
+    }
 }

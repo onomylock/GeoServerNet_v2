@@ -1,7 +1,10 @@
 using MasterServer.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Shared.Common.Helpers;
 using Shared.Common.Models;
+using Shared.Common.Models.Options;
 using Shared.Common.ValueConverters;
+using DbContextOptions = Microsoft.EntityFrameworkCore.DbContextOptions;
 
 namespace MasterServer.Infrastructure.Data;
 
@@ -25,6 +28,10 @@ public class MasterServerDbContext(DbContextOptions options) : DbContext(options
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // var customPasswordHasher = new CustomPasswordHasher();
+        // var passwordHash = customPasswordHasher.HashPassword("public_user_password");
+        
+        
         modelBuilder.Entity<User>(_ =>
         {
             _.HasIndex(__ => __.Alias).IsUnique();
@@ -33,13 +40,15 @@ public class MasterServerDbContext(DbContextOptions options) : DbContext(options
             _.HasData(new User
             {
                 Alias = "Public",
-                Id = Consts.PublicUserId
+                Id = Consts.PublicUserId,
+                PasswordHashed = "AQAAAAEAACcQAAAAEB865BgMrFifPjLdVzTaX2mj6sYFRcQuqemhEGP4naELoxpdgl5M3I/GFlIyNgD1WA=="
             });
 
             _.HasData(new User
             {
                 Alias = "Root",
-                Id = Consts.RootUserId
+                Id = Consts.RootUserId,
+                PasswordHashed = "AQAAAAEAACcQAAAAEB865BgMrFifPjLdVzTaX2mj6sYFRcQuqemhEGP4naELoxpdgl5M3I/GFlIyNgD1WA=="
             });
         });
 

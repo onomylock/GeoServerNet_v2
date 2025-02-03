@@ -1,5 +1,5 @@
 using System.Linq.Dynamic.Core;
-using EntityFramework.DynamicLinq;
+using Microsoft.EntityFrameworkCore;
 using Shared.Common.Models;
 using Shared.Domain.Entity.Base;
 

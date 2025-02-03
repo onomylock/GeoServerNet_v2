@@ -5,6 +5,7 @@
         <Folder Include="Domain\"/>
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="DotNetEnv" />
         <PackageReference Include="EntityFramework.DynamicLinq"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>

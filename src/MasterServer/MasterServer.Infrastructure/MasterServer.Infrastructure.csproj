@@ -2,8 +2,14 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Shared\Shared.csproj"/>
         <ProjectReference Include="..\MasterServer.Application\MasterServer.Application.csproj"/>
+        <ProjectReference Include="..\MasterServer.Domain\MasterServer.Domain.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Handlers\UserGroup\Commands\"/>
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="Microsoft.EntityFrameworkCore">
+        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.entityframeworkcore\9.0.1\lib\net8.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>
