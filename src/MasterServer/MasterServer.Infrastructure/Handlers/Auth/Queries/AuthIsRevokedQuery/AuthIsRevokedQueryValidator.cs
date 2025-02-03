@@ -1,6 +1,11 @@
+using FluentValidation;
+
 namespace MasterServer.Infrastructure.Handlers.Auth.Queries.AuthIsRevokedQuery;
 
-public class AuthIsRevokedQueryValidator
+public class AuthIsRevokedQueryValidator : AbstractValidator<AuthIsRevokedQuery>
 {
-    
+    public AuthIsRevokedQueryValidator()
+    {
+        
+    }
 }

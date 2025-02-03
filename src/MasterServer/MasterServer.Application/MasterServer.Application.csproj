@@ -5,6 +5,5 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Models\Dto\Solution\"/>
-        <Folder Include="Models\Dto\UserGroup\"/>
     </ItemGroup>
 </Project>
