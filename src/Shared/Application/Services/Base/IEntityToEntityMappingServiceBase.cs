@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Shared.Common.Models;
 using Shared.Domain.Entity.Base;
 
 namespace Shared.Application.Services.Base;

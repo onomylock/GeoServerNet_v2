@@ -17,7 +17,7 @@ public class AuthSignInViaEmailHandler(
     IUserEntityService userEntityService,
     IHttpContextAccessor httpContextAccessor,
     IOptions<JsonWebTokenOptions> jsonWebTokenOptions,
-    IOptions<MasterServiceOptions> masterServiceOptions,
+    IOptions<MasterServerOptions> masterServiceOptions,
     IRefreshTokenEntityService refreshTokenEntityService
 ) : AuthSingInHandlerBase(
     httpContextAccessor,

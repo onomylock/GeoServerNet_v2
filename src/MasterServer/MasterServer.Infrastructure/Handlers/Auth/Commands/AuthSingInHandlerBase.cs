@@ -17,7 +17,7 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Commands;
 public abstract class AuthSingInHandlerBase(
     IHttpContextAccessor httpContextAccessor,
     IOptions<JsonWebTokenOptions> jsonWebTokenOptions,
-    IOptions<MasterServiceOptions> masterServiceOptions,
+    IOptions<MasterServerOptions> masterServiceOptions,
     IRefreshTokenEntityService refreshTokenEntityService)
 {
     private readonly HttpContext _httpContext = httpContextAccessor.HttpContext;

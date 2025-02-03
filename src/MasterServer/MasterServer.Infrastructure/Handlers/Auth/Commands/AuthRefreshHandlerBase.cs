@@ -18,7 +18,7 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Commands;
 public abstract class AuthRefreshHandlerBase(
     IHttpContextAccessor httpContextAccessor,
     IOptions<JsonWebTokenOptions> jsonWebTokenOptions,
-    IOptions<MasterServiceOptions> masterServiceOptions,
+    IOptions<MasterServerOptions> masterServiceOptions,
     IUserAdvancedService userAdvancedService,
     IJsonWebTokenAdvancedService jsonWebTokenAdvancedService,
     IJsonWebTokenRevokedEntityService jsonWebTokenRevokedEntityService,

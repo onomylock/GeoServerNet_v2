@@ -3,14 +3,18 @@
         <Folder Include="Application\Data\"/>
         <Folder Include="Application\Repository\"/>
         <Folder Include="Domain\"/>
-        <Folder Include="Infrastructure\"/>
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="EntityFramework.DynamicLinq"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
+        <PackageReference Include="Hangfire" />
+        <PackageReference Include="Hangfire.AspNetCore" />
+        <PackageReference Include="Hangfire.Core" />
+        <PackageReference Include="Hangfire.PostgreSql" />
         <PackageReference Include="MediatR"/>
         <PackageReference Include="MemoryPack"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
         <PackageReference Include="Microsoft.EntityFrameworkCore"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
             <PrivateAssets>all</PrivateAssets>
@@ -18,7 +22,22 @@
         </PackageReference>
         <PackageReference Include="Microsoft.IdentityModel.Tokens"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
+        <PackageReference Include="Serilog.AspNetCore" />
+        <PackageReference Include="Serilog.Enrichers.AssemblyName" />
+        <PackageReference Include="Serilog.Enrichers.Environment" />
+        <PackageReference Include="Serilog.Enrichers.GlobalLogContext" />
+        <PackageReference Include="Serilog.Enrichers.Memory" />
+        <PackageReference Include="Serilog.Enrichers.Process" />
+        <PackageReference Include="Serilog.Enrichers.Span" />
+        <PackageReference Include="Serilog.Enrichers.Thread" />
+        <PackageReference Include="Serilog.Extensions.Hosting" />
+        <PackageReference Include="Serilog.Extensions.Logging" />
+        <PackageReference Include="Serilog.Settings.Configuration" />
+        <PackageReference Include="Serilog.Sinks.Console" />
         <PackageReference Include="SharpZipLib"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
     </ItemGroup>
 </Project>

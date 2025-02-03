@@ -1,0 +1,3 @@
+namespace Shared.Common.AuthenticationSchemeOptions;
+
+public class AccessTokenAuthenticationSchemeOptions : Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions;

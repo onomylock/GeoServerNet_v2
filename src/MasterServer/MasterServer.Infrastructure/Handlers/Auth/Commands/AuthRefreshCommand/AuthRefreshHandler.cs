@@ -15,7 +15,7 @@ namespace MasterServer.Infrastructure.Handlers.Auth.Commands.AuthRefreshCommand;
 public class AuthRefreshHandler(
     IDbContextTransactionAction dbContextTransactionAction,
     IValidator<AuthRefreshCommand> validator,
-    IOptions<MasterServiceOptions> masterServiceOptions,
+    IOptions<MasterServerOptions> masterServiceOptions,
     IUserAdvancedService userAdvancedService,
     IJsonWebTokenAdvancedService jsonWebTokenAdvancedService,
     IHttpContextAccessor httpContextAccessor,

@@ -4,7 +4,7 @@ using Shared.Common.Models.Options;
 
 namespace MasterServer.Application.Models.Options;
 
-public class MasterServiceOptions : CommonServiceOptions
+public class MasterServerOptions : CommonServiceOptions
 {
     /// <summary>
     ///     HTTP Secure Cookies
