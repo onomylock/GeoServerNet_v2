@@ -1,21 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-    
+
 
     <ItemGroup>
-      <Content Include="..\..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\..\..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
-    
+
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Shared\Shared.csproj" />
-      <ProjectReference Include="..\NodeServer.Application\NodeServer.Application.csproj" />
+        <ProjectReference Include="..\..\Shared\Shared.csproj"/>
+        <ProjectReference Include="..\NodeServer.Application\NodeServer.Application.csproj"/>
     </ItemGroup>
-    
+
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
+        <Folder Include="Controllers\"/>
     </ItemGroup>
 
 </Project>

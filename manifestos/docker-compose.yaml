@@ -27,6 +27,19 @@ services:
     volumes:
       - pg_hangfire-storage:/var/lib/postgresql/data/
 
+  pg_master:
+    image: postgres:17
+    container_name: pg_master
+    restart: always
+    ports:
+      - "5435:5435"
+    env_file:
+      - .env/pg_master.env
+    networks:
+      - postgres
+    volumes:
+      - pg_master-storage:/var/lib/postgresql/data/
+
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4:8
@@ -107,6 +120,7 @@ networks:
 
 volumes:
   pg_hangfire-storage:
+  pg_master-storage:
   pgadmin-storage:
   data1-1:
   data1-2:
