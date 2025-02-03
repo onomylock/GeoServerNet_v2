@@ -14,7 +14,7 @@ public static class ProcessHelper
             UseShellExecute = true,
             WorkingDirectory = metadata.First(x => x.Key == "WorkingDirectory").Value ?? string.Empty
         };
-        
+
         return Task.FromResult(processStartInfo);
     }
 }

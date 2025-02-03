@@ -1,11 +1,12 @@
 ﻿using System.Linq.Expressions;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore.Query;
 using Shared.Common.Models;
+using Shared.Domain.Entity.Base;
+using PageModel = Shared.Common.Models.PageModel;
 
 namespace Shared.Application.Services.Base;
 
-public interface IEntityServiceBase<TEntity>
+public interface IEntityServiceBase<TEntity> where TEntity : EntityBase
 {
     Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task<TEntity> SaveAsync(TEntity entity, CancellationToken cancellationToken = default);

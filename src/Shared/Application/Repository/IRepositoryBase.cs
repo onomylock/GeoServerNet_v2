@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.Application.Data;
-using Shared.Domain.Entity;
+using Shared.Domain.Entity.Base;
 
 namespace Shared.Application.Repository;
 
@@ -33,7 +33,10 @@ public interface IRepositoryBase<TEntity> : IDbContextEntityAction, IRepositoryB
     /// </summary>
     /// <param name="entity"></param>
     /// <remarks>Use to add entity which is uniquely identified, yet not appearing in a set</remarks>
-    /// <remarks><br />Added entity which is uniquely identified, can not be created, but can be added. Useful for saving entity received from remote resource</remarks>
+    /// <remarks>
+    ///     <br />Added entity which is uniquely identified, can not be created, but can be added. Useful for saving
+    ///     entity received from remote resource
+    /// </remarks>
     void Add(TEntity entity);
 
     /// <summary>
@@ -41,7 +44,10 @@ public interface IRepositoryBase<TEntity> : IDbContextEntityAction, IRepositoryB
     /// </summary>
     /// <param name="entities"></param>
     /// <remarks>Use to add entities which are uniquely identified, yet not appearing in a set</remarks>
-    /// <remarks><br />Added entities which are uniquely identified, can not be created, but can be added. Useful for saving entities received from remote resource</remarks>
+    /// <remarks>
+    ///     <br />Added entities which are uniquely identified, can not be created, but can be added. Useful for saving
+    ///     entities received from remote resource
+    /// </remarks>
     void Add(IEnumerable<TEntity> entities);
 
     /// <summary>
@@ -50,7 +56,10 @@ public interface IRepositoryBase<TEntity> : IDbContextEntityAction, IRepositoryB
     /// <param name="entity"></param>
     /// <param name="cancellationToken"></param>
     /// <remarks>Use to add entity which is uniquely identified, yet not appearing in a set</remarks>
-    /// <remarks><br />Added entity which is uniquely identified, can not be created, but can be added. Useful for saving entity received from remote resource</remarks>
+    /// <remarks>
+    ///     <br />Added entity which is uniquely identified, can not be created, but can be added. Useful for saving
+    ///     entity received from remote resource
+    /// </remarks>
     Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -59,7 +68,10 @@ public interface IRepositoryBase<TEntity> : IDbContextEntityAction, IRepositoryB
     /// <param name="entities"></param>
     /// <param name="cancellationToken"></param>
     /// <remarks>Use to add entities which are uniquely identified, yet not appearing in a set</remarks>
-    /// <remarks><br />Added entities which are uniquely identified, can not be created, but can be added. Useful for saving entities received from remote resource</remarks>
+    /// <remarks>
+    ///     <br />Added entities which are uniquely identified, can not be created, but can be added. Useful for saving
+    ///     entities received from remote resource
+    /// </remarks>
     Task AddAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -79,17 +91,20 @@ public interface IRepositoryBase<TEntity> : IDbContextEntityAction, IRepositoryB
     /// </summary>
     /// <param name="queryTransform"></param>
     /// <param name="asNoTracking">
-    ///     Do not track entities materialized, increasing performance. Be aware, that returned data could not be deleted or updated, it must be added to a change
+    ///     Do not track entities materialized, increasing performance. Be aware, that returned data could not be deleted or
+    ///     updated, it must be added to a change
     ///     tracker manually
     /// </param>
     /// <returns></returns>
-    public IQueryable<TEntity> Transform(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryTransform, bool asNoTracking = false);
+    public IQueryable<TEntity> Transform(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryTransform,
+        bool asNoTracking = false);
 
     /// <summary>
     ///     Returns Entity queryable
     /// </summary>
     /// <param name="asNoTracking">
-    ///     Do not track entities materialized, increasing performance. Be aware, that returned data could not be deleted or updated, it must be added to a change
+    ///     Do not track entities materialized, increasing performance. Be aware, that returned data could not be deleted or
+    ///     updated, it must be added to a change
     ///     tracker manually
     /// </param>
     /// <returns></returns>

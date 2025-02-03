@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using MemoryPack;
+using Shared.Domain.Entity.Base;
 using Shared.Domain.View;
 
 namespace Shared.Domain.Entity;

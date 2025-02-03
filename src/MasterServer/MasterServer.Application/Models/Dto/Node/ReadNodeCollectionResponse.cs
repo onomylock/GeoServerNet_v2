@@ -4,5 +4,4 @@ namespace MasterServer.Application.Models.Dto.Node;
 
 public class ReadNodeCollectionResponse : ResponseBase<IReadOnlyCollection<ReadNodeResponseBase>>
 {
-    
 }
