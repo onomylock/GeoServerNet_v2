@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.SolutionType.Commands.SolutionTyp
 
 public class SolutionTypeDeleteCommandValidator : AbstractValidator<SolutionTypeDeleteCommand>
 {
-    public SolutionTypeDeleteCommandValidator()
-    {
-        
-    }
 }

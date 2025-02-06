@@ -12,10 +12,10 @@ public class SolutionTypeCreateHandler(
     IValidator<SolutionTypeCreateCommand> validator,
     IDbContextTransactionAction dbContextTransactionAction,
     ISolutionTypeEntityService solutionTypeEntityService
-    
 ) : IRequestHandler<SolutionTypeCreateCommand, ResponseBase<SolutionTypeReadResultDto>>
 {
-    public async Task<ResponseBase<SolutionTypeReadResultDto>> Handle(SolutionTypeCreateCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<SolutionTypeReadResultDto>> Handle(SolutionTypeCreateCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
@@ -28,7 +28,7 @@ public class SolutionTypeCreateHandler(
                 Alias = request.Alias,
                 ArgumentsMask = request.ArgumentsMask
             };
-            
+
             await solutionTypeEntityService.SaveAsync(targetSolutionType, cancellationToken);
 
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
@@ -41,7 +41,7 @@ public class SolutionTypeCreateHandler(
         catch (Exception)
         {
             await dbContextTransactionAction.RollbackTransactionAsync(cancellationToken);
-            
+
             throw;
         }
     }

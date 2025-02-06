@@ -14,23 +14,24 @@ public class SolutionTypeDeleteHandler(
     ISolutionTypeEntityService solutionTypeEntityService
 ) : IRequestHandler<SolutionTypeDeleteCommand, ResponseBase<OkResult>>
 {
-    public async Task<ResponseBase<OkResult>> Handle(SolutionTypeDeleteCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<OkResult>> Handle(SolutionTypeDeleteCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
-            
+
             var targetSolutionType =
                 await solutionTypeEntityService.GetByIdAsync(request.SolutionTypeId, true, cancellationToken) ??
-                                     throw new SolutionTypeNotFoundException();
-            
+                throw new SolutionTypeNotFoundException();
+
             await solutionTypeEntityService.DeleteAsync(targetSolutionType, cancellationToken);
-            
+
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
-            return new ResponseBase<OkResult>()
+            return new ResponseBase<OkResult>
             {
                 Data = new OkResult()
             };
@@ -38,7 +39,7 @@ public class SolutionTypeDeleteHandler(
         catch (Exception)
         {
             await dbContextTransactionAction.RollbackTransactionAsync(CancellationToken.None);
-            
+
             throw;
         }
     }

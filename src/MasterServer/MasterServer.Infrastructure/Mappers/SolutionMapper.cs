@@ -21,11 +21,10 @@ public static class SolutionMapper
             FileName = solution.FileName,
             BucketName = solution.BucketName,
             SolutionTypeAlias = (await solutionTypeEntityService.GetByIdAsync(solution.Id, true, cancellationToken))
-                .Alias,
+                .Alias
         };
     }
-    
-    
+
 
     public static async Task<SolutionReadCollectionResultDto> ToSolutionReadCollectionResultDto(
         (int total, IReadOnlyCollection<Solution> entities) data,
@@ -35,9 +34,7 @@ public static class SolutionMapper
         var items = new List<SolutionReadResultDto>(PageModel.Max.PageSize);
 
         foreach (var entity in data.entities)
-        {
             items.Add(await ToSolutionReadResultDto(entity, solutionTypeEntityService, cancellationToken));
-        }
 
         return new SolutionReadCollectionResultDto
         {

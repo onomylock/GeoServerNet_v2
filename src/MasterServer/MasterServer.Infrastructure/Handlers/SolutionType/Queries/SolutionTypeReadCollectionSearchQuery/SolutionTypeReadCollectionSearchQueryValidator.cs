@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.SolutionType.Queries.SolutionType
 
 public class SolutionTypeReadCollectionSearchQueryValidator : AbstractValidator<SolutionTypeReadCollectionSearchQuery>
 {
-    public SolutionTypeReadCollectionSearchQueryValidator()
-    {
-        
-    }
 }

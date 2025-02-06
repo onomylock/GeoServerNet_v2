@@ -45,7 +45,7 @@ public class UserDeleteHandler(
             await userEntityService.DeleteAsync(targetUser, cancellationToken);
 
             await refreshTokenEntityService.PurgeByUserIdAsync(targetUser.Id, cancellationToken);
-            
+
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
             return new ResponseBase<OkResult>

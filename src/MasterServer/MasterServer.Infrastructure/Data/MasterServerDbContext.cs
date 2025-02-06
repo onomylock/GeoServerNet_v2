@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using MasterServer.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Shared.Common.Models;
@@ -19,8 +18,8 @@ public class MasterServerDbContext(DbContextOptions options) : DbContext(options
     public DbSet<Solution> Solutions { get; set; }
     public DbSet<SolutionType> SolutionTypes { get; set; }
     public DbSet<UserToNodeMapping> UserToNodeMappings { get; set; }
-    
-    
+
+
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder

@@ -1,7 +1,5 @@
 using MasterServer.Application.Models.Dto.Solution;
-using MasterServer.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Shared.Common.Models.DTO.Base;
 
 namespace MasterServer.Infrastructure.Handlers.Solution.Commands.SolutionCreateCommand;

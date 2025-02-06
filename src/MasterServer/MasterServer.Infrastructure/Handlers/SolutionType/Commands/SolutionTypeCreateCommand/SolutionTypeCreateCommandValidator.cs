@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.SolutionType.Commands.SolutionTyp
 
 public class SolutionTypeCreateCommandValidator : AbstractValidator<SolutionTypeCreateCommand>
 {
-    public SolutionTypeCreateCommandValidator()
-    {
-        
-    }
 }

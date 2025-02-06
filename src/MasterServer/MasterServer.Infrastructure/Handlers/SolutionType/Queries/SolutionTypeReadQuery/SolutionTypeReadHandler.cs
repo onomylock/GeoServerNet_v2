@@ -13,15 +13,16 @@ public class SolutionTypeReadHandler(
     ISolutionTypeEntityService solutionTypeEntityService
 ) : IRequestHandler<SolutionTypeReadQuery, ResponseBase<SolutionTypeReadResultDto>>
 {
-    public async Task<ResponseBase<SolutionTypeReadResultDto>> Handle(SolutionTypeReadQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<SolutionTypeReadResultDto>> Handle(SolutionTypeReadQuery request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         var targetSolutionType =
             await solutionTypeEntityService.GetByIdAsync(request.SolutionTypeId, true, cancellationToken) ??
             throw new SolutionTypeNotFoundException();
 
-        return new ResponseBase<SolutionTypeReadResultDto>()
+        return new ResponseBase<SolutionTypeReadResultDto>
         {
             Data = SolutionTypeMapper.ToSolutionTypeReadResultDto(targetSolutionType)
         };

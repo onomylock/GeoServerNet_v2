@@ -6,6 +6,6 @@ namespace MasterServer.Domain.Entities;
 public record SolutionType : EntityBase
 {
     public string Alias { get; set; }
-    [Column(TypeName = "jsonb")]
-    public string ArgumentsMask { get; set; }
+
+    [Column(TypeName = "jsonb")] public string ArgumentsMask { get; set; }
 }

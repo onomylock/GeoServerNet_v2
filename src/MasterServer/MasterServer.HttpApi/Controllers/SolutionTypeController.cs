@@ -22,7 +22,7 @@ public class SolutionTypeController(IMediator mediator) : ControllerBase
     {
         return Ok(await mediator.Send(command, cancellationToken));
     }
-    
+
     [HttpDelete]
     [Authorize(AuthorizationPolicies.SystemOrAuthorized)]
     public async Task<IActionResult> Delete([FromBody] [Required] SolutionTypeDeleteCommand command,

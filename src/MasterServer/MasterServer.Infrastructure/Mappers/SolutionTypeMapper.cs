@@ -10,7 +10,7 @@ public static class SolutionTypeMapper
         return new SolutionTypeReadResultDto
         {
             Alias = solutionType.Alias,
-            ArgumentsMask = solutionType.ArgumentsMask,
+            ArgumentsMask = solutionType.ArgumentsMask
         };
     }
 
@@ -19,10 +19,7 @@ public static class SolutionTypeMapper
     {
         var items = new List<SolutionTypeReadResultDto>();
 
-        foreach (var entity in data.entities)
-        {
-            items.Add(ToSolutionTypeReadResultDto(entity));
-        }
+        foreach (var entity in data.entities) items.Add(ToSolutionTypeReadResultDto(entity));
 
         return new SolutionTypeReadCollectionResultDto
         {
