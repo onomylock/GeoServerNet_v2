@@ -2,6 +2,6 @@ using Shared.Common.Models.DTO.Base;
 
 namespace MasterServer.Application.Models.Dto.Job;
 
-public class ReadJobResponse : EntityResponseBase
+public class JobReadResultBaseDto : EntityResponseBase
 {
 }

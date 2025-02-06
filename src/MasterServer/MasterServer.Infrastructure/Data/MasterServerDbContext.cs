@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using MasterServer.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Shared.Common.Models;
@@ -16,7 +17,10 @@ public class MasterServerDbContext(DbContextOptions options) : DbContext(options
     public DbSet<Node> Nodes { get; set; }
     public DbSet<Job> Jobs { get; set; }
     public DbSet<Solution> Solutions { get; set; }
-
+    public DbSet<SolutionType> SolutionTypes { get; set; }
+    public DbSet<UserToNodeMapping> UserToNodeMappings { get; set; }
+    
+    
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder
@@ -26,10 +30,6 @@ public class MasterServerDbContext(DbContextOptions options) : DbContext(options
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // var customPasswordHasher = new CustomPasswordHasher();
-        // var passwordHash = customPasswordHasher.HashPassword("public_user_password");
-
-
         modelBuilder.Entity<User>(_ =>
         {
             _.HasIndex(__ => __.Alias).IsUnique();
@@ -38,15 +38,13 @@ public class MasterServerDbContext(DbContextOptions options) : DbContext(options
             _.HasData(new User
             {
                 Alias = "Public",
-                Id = Consts.PublicUserId,
-                PasswordHashed = "AQAAAAEAACcQAAAAEB865BgMrFifPjLdVzTaX2mj6sYFRcQuqemhEGP4naELoxpdgl5M3I/GFlIyNgD1WA=="
+                Id = Consts.PublicUserId
             });
 
             _.HasData(new User
             {
                 Alias = "Root",
-                Id = Consts.RootUserId,
-                PasswordHashed = "AQAAAAEAACcQAAAAEB865BgMrFifPjLdVzTaX2mj6sYFRcQuqemhEGP4naELoxpdgl5M3I/GFlIyNgD1WA=="
+                Id = Consts.RootUserId
             });
         });
 
@@ -91,8 +89,23 @@ public class MasterServerDbContext(DbContextOptions options) : DbContext(options
             });
         });
 
+        modelBuilder.Entity<UserToNodeMapping>(_ =>
+        {
+            _.HasIndex(__ => new { __.EntityLeftId, __.EntityRightId }).IsUnique();
+        });
+
         modelBuilder.Entity<JsonWebTokenRevoked>(_ => { _.HasIndex(__ => __.JsonWebTokenId).IsUnique(); });
 
         modelBuilder.Entity<RefreshToken>(_ => { _.HasIndex(__ => __.Token).IsUnique(); });
+
+        modelBuilder.Entity<SolutionType>(_ =>
+        {
+            _.HasIndex(__ => __.Alias).IsUnique();
+            _.OwnsOne(__ => __.ArgumentsMask, ___ => ___.ToJson());
+        });
+
+        modelBuilder.Entity<Solution>();
+        modelBuilder.Entity<Node>();
+        modelBuilder.Entity<Job>();
     }
 }

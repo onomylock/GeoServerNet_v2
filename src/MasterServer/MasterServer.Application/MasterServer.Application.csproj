@@ -3,7 +3,4 @@
         <ProjectReference Include="..\..\Shared\Shared.csproj"/>
         <ProjectReference Include="..\MasterServer.Domain\MasterServer.Domain.csproj"/>
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Models\Dto\Solution\"/>
-    </ItemGroup>
 </Project>
