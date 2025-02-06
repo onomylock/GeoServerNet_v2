@@ -3,4 +3,4 @@ using Shared.Application.Services.Base;
 
 namespace MasterServer.Application.Services.Data;
 
-public interface IUserToNodeMappingEntityService : IEntityToEntityMappingServiceBase<UserToNodeMapping>;
+public interface IClusterEntityService : IEntityServiceBase<Cluster>;

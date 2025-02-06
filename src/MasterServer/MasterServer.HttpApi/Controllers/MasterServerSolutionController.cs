@@ -22,7 +22,7 @@ namespace MasterServer.HttpApi.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class SolutionController(IMediator mediator) : ControllerBase
+public class MasterServerSolutionController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     [Authorize(AuthorizationPolicies.SystemOrAuthorized)]

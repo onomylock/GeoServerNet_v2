@@ -17,7 +17,7 @@ public class MasterServerDbContext(DbContextOptions options) : DbContext(options
     public DbSet<Job> Jobs { get; set; }
     public DbSet<Solution> Solutions { get; set; }
     public DbSet<SolutionType> SolutionTypes { get; set; }
-    public DbSet<UserToNodeMapping> UserToNodeMappings { get; set; }
+    public DbSet<ClusterToNodeMapping> ClusterToNodeMappings { get; set; }
 
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
@@ -88,7 +88,7 @@ public class MasterServerDbContext(DbContextOptions options) : DbContext(options
             });
         });
 
-        modelBuilder.Entity<UserToNodeMapping>(_ =>
+        modelBuilder.Entity<ClusterToNodeMapping>(_ =>
         {
             _.HasIndex(__ => new { __.EntityLeftId, __.EntityRightId }).IsUnique();
         });

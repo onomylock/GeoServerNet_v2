@@ -13,7 +13,7 @@ namespace MasterServer.HttpApi.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class SolutionTypeController(IMediator mediator) : ControllerBase
+public class MasterServerSolutionTypeController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     [Authorize(AuthorizationPolicies.SystemOrAuthorized)]

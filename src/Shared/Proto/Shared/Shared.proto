@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option csharp_namespace = "Shared.Protos.Shared";
+
+package Shared;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+message OkReply {
+
+}
+
+message PageModel {
+  int32 Page = 1;
+  int32 PageSize = 2;
+}
+
+message EntityBaseReply {
+  string Id = 1;
+  google.protobuf.Timestamp CreatedAt = 2;
+  google.protobuf.Timestamp UpdatedAt = 3;
+}
+
+message KeyValueEntryDto {
+  string Key = 1;
+  string Value = 2;
+}
+
+message ClaimEntry {
+  string Type = 1;
+  string Value = 2;
+  google.protobuf.StringValue ValueType = 3;
+}
+
+message FileReadReply {
+  bool IsInUse = 1;
+  string Url = 2;
+  Shared.EntityBaseReply EntityBase = 4;
+}
+
+message FileReadCollectionReply {
+  int32 Total = 1;
+  repeated FileReadReply Items = 2;
+}

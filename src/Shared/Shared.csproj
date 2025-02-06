@@ -3,12 +3,22 @@
         <Folder Include="Application\Data\"/>
         <Folder Include="Application\Repository\"/>
         <Folder Include="Domain\"/>
+        <Folder Include="Proto\Messages\MasterServerService\" />
+        <Folder Include="Proto\Messages\NodeServerService\" />
+        <Folder Include="Proto\Services\MasterServerService\" />
+        <Folder Include="Proto\Services\NodeServerService\" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="DotNetEnv"/>
         <PackageReference Include="EntityFramework.DynamicLinq"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
+        <PackageReference Include="Google.Protobuf" />
+        <PackageReference Include="Grpc.AspNetCore" />
+        <PackageReference Include="Grpc.Tools">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Hangfire"/>
         <PackageReference Include="Hangfire.AspNetCore"/>
         <PackageReference Include="Hangfire.Core"/>

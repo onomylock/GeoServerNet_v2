@@ -16,7 +16,7 @@ namespace MasterServer.HttpApi.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class AuthController(
+public class MasterServerAuthController(
     IMediator mediator
 ) : ControllerBase
 {

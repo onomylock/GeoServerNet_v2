@@ -10,7 +10,7 @@ namespace MasterServer.HttpApi.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class UserGroupController(
+public class MasterServerUserGroupController(
     IMediator mediator
 ) : ControllerBase
 {

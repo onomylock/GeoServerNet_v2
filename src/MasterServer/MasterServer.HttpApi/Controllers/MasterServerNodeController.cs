@@ -12,7 +12,7 @@ namespace MasterServer.HttpApi.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class NodeController(
+public class MasterServerNodeController(
     IMediator mediator
 ) : ControllerBase
 {

@@ -3,4 +3,9 @@
         <ProjectReference Include="..\..\Shared\Shared.csproj"/>
         <ProjectReference Include="..\NodeServer.Domain\NodeServer.Domain.csproj"/>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Exceptions\" />
+      <Folder Include="Models\" />
+      <Folder Include="Services\" />
+    </ItemGroup>
 </Project>
