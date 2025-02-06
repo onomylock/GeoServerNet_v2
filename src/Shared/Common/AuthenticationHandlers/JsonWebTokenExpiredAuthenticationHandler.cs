@@ -1,5 +1,6 @@
 // using System.Security.Claims;
 // using System.Text.Encodings.Web;
+// using Grpc.Core;
 // using Microsoft.AspNetCore.Authentication;
 // using Microsoft.AspNetCore.Authorization;
 // using Microsoft.AspNetCore.Http;
@@ -9,6 +10,8 @@
 // using Shared.Common.AuthenticationSchemeOptions;
 // using Shared.Common.Models;
 // using Shared.Common.Models.Options;
+// using Shared.Protos.Messages.MasterServerAuth;
+// using Shared.Protos.Services.MasterServerAuth;
 //
 // namespace Shared.Common.AuthenticationHandlers;
 //
@@ -16,7 +19,7 @@
 //     IOptionsMonitor<JsonWebTokenAuthenticationSchemeOptions> options,
 //     ILoggerFactory logger,
 //     UrlEncoder encoder,
-//     AuthServiceAuthGrpc.AuthServiceAuthGrpcClient authServiceAuthGrpcClient,
+//     MasterServerAuthGrpc.MasterServerAuthGrpcClient masterServerAuthGrpcClient,
 //     IOptions<CommonServiceOptions> commonServiceOptions,
 //     IHttpContextAccessor httpContextAccessor)
 //     : AuthenticationHandler<JsonWebTokenAuthenticationSchemeOptions>(options, logger, encoder)
@@ -50,7 +53,7 @@
 //             foreach (var authorizationBearerPayloadTemp in authorizationBearerPayloads)
 //                 try
 //                 {
-//                     var validateJwtResult = await authServiceAuthGrpcClient.ValidateJwtAsync(new AuthValidateJwtRequest
+//                     var validateJwtResult = await masterServerAuthGrpcClient.ValidateJwtAsync(new AuthValidateJwtRequest
 //                     {
 //                         Token = authorizationBearerPayloadTemp,
 //                         AuthenticationScheme = AuthenticationSchemes.JsonWebTokenExpired
@@ -79,4 +82,4 @@
 //     }
 // }
 //
-
+//

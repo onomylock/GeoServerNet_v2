@@ -1,7 +1,6 @@
 using FluentValidation;
 using MasterServer.Application.Exceptions;
 using MasterServer.Application.Services.Data;
-using MasterServer.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Application.Data;

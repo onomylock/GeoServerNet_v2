@@ -6,6 +6,7 @@ using MasterServer.Infrastructure.Mappers;
 using MediatR;
 using Shared.Application.Data;
 using Shared.Common.Models.DTO.Base;
+using Yarp.ReverseProxy.Configuration;
 
 namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterCreateCommand;
 
@@ -35,6 +36,8 @@ public class ClusterCreateHandler(
 
             await clusterEntityService.SaveAsync(targetCluster, cancellationToken);
 
+            
+            
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
             return new ResponseBase<ClusterReadResultDto>
