@@ -1,11 +1,11 @@
-using MasterServer.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
 namespace MasterServer.Application.Models.Dto.Solution;
 
 public class SolutionCreateRequestDto
 {
-    public IFormFile File { get; set; }
-    public long FileSize { get; set; }
-    public string SolutionTypeAlias { get; set; }
+    [Required] public IFormFile File { get; set; }
+    [Required] public long FileSize { get; set; }
+    [Required] public string SolutionTypeAlias { get; set; }
 }

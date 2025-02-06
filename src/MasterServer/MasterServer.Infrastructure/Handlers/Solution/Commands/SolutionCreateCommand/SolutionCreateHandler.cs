@@ -1,6 +1,8 @@
 using FluentValidation;
 using MasterServer.Application.Exceptions;
+using MasterServer.Application.Models.Dto.Solution;
 using MasterServer.Application.Services.Data;
+using MasterServer.Infrastructure.Mappers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Application.Data;
@@ -18,9 +20,9 @@ public class SolutionCreateHandler(
     ISolutionTypeEntityService solutionTypeEntityService,
     IUserAdvancedService userAdvancedService,
     IMinioService minioService
-) : IRequestHandler<SolutionCreateCommand, ResponseBase<OkResult>>
+) : IRequestHandler<SolutionCreateCommand, ResponseBase<SolutionReadResultDto>>
 {
-    public async Task<ResponseBase<OkResult>> Handle(SolutionCreateCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<SolutionReadResultDto>> Handle(SolutionCreateCommand request, CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
@@ -54,11 +56,10 @@ public class SolutionCreateHandler(
             await minioService.SaveAsync(request.FileStream, targetSolution.FileName, targetSolution.BucketName, request.FileSize, cancellationToken);
          
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
-
-
-            return new ResponseBase<OkResult>
+            
+            return new ResponseBase<SolutionReadResultDto>
             {
-                Data = new OkResult()
+                Data = await SolutionMapper.ToSolutionReadResultDto(targetSolution, solutionTypeEntityService, cancellationToken)
             };
         }
         catch (Exception)

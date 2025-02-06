@@ -1,6 +1,11 @@
+using FluentValidation;
+
 namespace MasterServer.Infrastructure.Handlers.SolutionType.Queries.SolutionTypeReadQuery;
 
-public class SolutionTypeReadQueryValidator
+public class SolutionTypeReadQueryValidator : AbstractValidator<SolutionTypeReadQuery>
 {
-    
+    public SolutionTypeReadQueryValidator()
+    {
+        
+    }
 }

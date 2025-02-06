@@ -1,6 +1,11 @@
+using FluentValidation;
+
 namespace MasterServer.Infrastructure.Handlers.SolutionType.Commands.SolutionTypeCreateCommand;
 
-public class SolutionTypeCreateCommandValidator
+public class SolutionTypeCreateCommandValidator : AbstractValidator<SolutionTypeCreateCommand>
 {
-    
+    public SolutionTypeCreateCommandValidator()
+    {
+        
+    }
 }

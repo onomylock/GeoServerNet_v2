@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using MasterServer.Infrastructure.Handlers.SolutionType.Commands.SolutionTypeCreateCommand;
 using MasterServer.Infrastructure.Handlers.SolutionType.Commands.SolutionTypeDeleteCommand;
+using MasterServer.Infrastructure.Handlers.SolutionType.Commands.SolutionTypeUpdateCommand;
 using MasterServer.Infrastructure.Handlers.SolutionType.Queries.SolutionTypeReadCollectionSearchQuery;
 using MasterServer.Infrastructure.Handlers.SolutionType.Queries.SolutionTypeReadQuery;
 using MediatR;
@@ -25,6 +26,14 @@ public class SolutionTypeController(IMediator mediator) : ControllerBase
     [HttpDelete]
     [Authorize(AuthorizationPolicies.SystemOrAuthorized)]
     public async Task<IActionResult> Delete([FromBody] [Required] SolutionTypeDeleteCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        return Ok(await mediator.Send(command, cancellationToken));
+    }
+
+    [HttpPost]
+    [Authorize(AuthorizationPolicies.SystemOrAuthorized)]
+    public async Task<IActionResult> Update([FromBody] [Required] SolutionTypeUpdateCommand command,
         CancellationToken cancellationToken = default)
     {
         return Ok(await mediator.Send(command, cancellationToken));

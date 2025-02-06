@@ -43,7 +43,7 @@ public class UserReadCollectionSearchHandler(
 
         return new ResponseBase<UserReadCollectionResultDto>
         {
-            Data = await UserMapper.ToUserReadCollectionOutDto(targetUsers, userGroupEntityService, isRoot,
+            Data = await UserMapper.ToUserReadCollectionResultDto(targetUsers, userGroupEntityService, isRoot,
                 cancellationToken)
         };
     }

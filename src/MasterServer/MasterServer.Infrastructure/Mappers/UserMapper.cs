@@ -43,7 +43,7 @@ public static class UserMapper
         };
     }
 
-    public static async Task<UserReadCollectionResultDto> ToUserReadCollectionOutDto(
+    public static async Task<UserReadCollectionResultDto> ToUserReadCollectionResultDto(
         (int total, IReadOnlyCollection<User> entities) data,
         IUserGroupEntityService userGroupEntityService,
         bool displaySensitiveData = false,

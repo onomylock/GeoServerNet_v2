@@ -5,6 +5,7 @@ using System.Text.Json;
 using MasterServer.Application.Models.Dto.Solution;
 using MasterServer.Infrastructure.Handlers.Solution.Commands.SolutionCreateCommand;
 using MasterServer.Infrastructure.Handlers.Solution.Commands.SolutionDeleteCommand;
+using MasterServer.Infrastructure.Handlers.Solution.Queries.SolutionReadCollectionSearchQuery;
 using MasterServer.Infrastructure.Handlers.Solution.Queries.SolutionReadQuery;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +27,14 @@ public class SolutionController(IMediator mediator) : ControllerBase
     [HttpGet]
     [Authorize(AuthorizationPolicies.SystemOrAuthorized)]
     public async Task<IActionResult> Read([FromQuery] [Required] SolutionReadQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        return Ok(await mediator.Send(query, cancellationToken));
+    }
+
+    [HttpGet]
+    [Authorize(AuthorizationPolicies.SystemOrAuthorized)]
+    public async Task<IActionResult> ReadCollection([FromQuery] [Required] SolutionReadCollectionSearchQuery query,
         CancellationToken cancellationToken = default)
     {
         return Ok(await mediator.Send(query, cancellationToken));
