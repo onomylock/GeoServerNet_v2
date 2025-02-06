@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Solution.Commands.SolutionCreateC
 
 public class SolutionCreateCommandValidator : AbstractValidator<SolutionCreateCommand>
 {
-    public SolutionCreateCommandValidator()
-    {
-        
-    }
 }

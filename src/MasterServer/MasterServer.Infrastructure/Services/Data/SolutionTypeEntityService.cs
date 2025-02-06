@@ -9,7 +9,8 @@ using Shared.Infrastructure.Services;
 
 namespace MasterServer.Infrastructure.Services.Data;
 
-public class SolutionTypeEntityService(IMasterServerRepository<SolutionType> entityRepository) : ISolutionTypeEntityService
+public class SolutionTypeEntityService(IMasterServerRepository<SolutionType> entityRepository)
+    : ISolutionTypeEntityService
 {
     public Task<SolutionType> AddAsync(SolutionType entity, CancellationToken cancellationToken = default)
     {
@@ -38,14 +39,16 @@ public class SolutionTypeEntityService(IMasterServerRepository<SolutionType> ent
         CancellationToken cancellationToken = default
     )
     {
-        return EntityServiceBase<SolutionType>.BulkUpdate(entityRepository, queryTransformationFunction, setPropertyCalls,
+        return EntityServiceBase<SolutionType>.BulkUpdate(entityRepository, queryTransformationFunction,
+            setPropertyCalls,
             cancellationToken);
     }
 
     public Task<int> BulkDelete(Func<IQueryable<SolutionType>, IQueryable<SolutionType>> queryTransformationFunction,
         CancellationToken cancellationToken = default)
     {
-        return EntityServiceBase<SolutionType>.BulkDelete(entityRepository, queryTransformationFunction, cancellationToken);
+        return EntityServiceBase<SolutionType>.BulkDelete(entityRepository, queryTransformationFunction,
+            cancellationToken);
     }
 
     public Task<IReadOnlyCollection<SolutionType>> SaveAsync(IEnumerable<SolutionType> entities,
@@ -81,7 +84,8 @@ public class SolutionTypeEntityService(IMasterServerRepository<SolutionType> ent
             asNoTracking, cancellationToken);
     }
 
-    public Task<SolutionType> GetByAliasAsync(string alias, bool asNoTracking = false, CancellationToken cancellationToken = default)
+    public Task<SolutionType> GetByAliasAsync(string alias, bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
         return entityRepository.Query(asNoTracking).SingleOrDefaultAsync(_ => _.Alias == alias, cancellationToken);
     }

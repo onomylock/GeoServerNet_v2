@@ -13,10 +13,11 @@ public class SolutionReadCollectionSearchHandler(
     ISolutionTypeEntityService solutionTypeEntityService
 ) : IRequestHandler<SolutionReadCollectionSearchQuery, ResponseBase<SolutionReadCollectionResultDto>>
 {
-    public async Task<ResponseBase<SolutionReadCollectionResultDto>> Handle(SolutionReadCollectionSearchQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<SolutionReadCollectionResultDto>> Handle(SolutionReadCollectionSearchQuery request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         var dataTerm = request.Term.ToLowerInvariant();
 
 #pragma warning disable CA1862
@@ -26,11 +27,12 @@ public class SolutionReadCollectionSearchHandler(
                 .Where(_ => string.IsNullOrEmpty(request.Term)
                             || _.FileName.ToLower().Contains(dataTerm) || dataTerm.Contains(_.FileName.ToLower())
                             || _.BucketName.ToLower().Contains(dataTerm) || dataTerm.Contains(_.BucketName.ToLower())
-                            || _.SolutionTypeId.ToString().ToLower().Contains(dataTerm) || dataTerm.Contains(_.SolutionTypeId.ToString().ToLower()));
+                            || _.SolutionTypeId.ToString().ToLower().Contains(dataTerm) ||
+                            dataTerm.Contains(_.SolutionTypeId.ToString().ToLower()));
         }, true, cancellationToken);
 #pragma warning restore CA1862
 
-        return new ResponseBase<SolutionReadCollectionResultDto>()
+        return new ResponseBase<SolutionReadCollectionResultDto>
         {
             Data = await SolutionMapper.ToSolutionReadCollectionResultDto(targetSolutions, solutionTypeEntityService,
                 cancellationToken)

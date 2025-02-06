@@ -60,7 +60,8 @@ public class SolutionController(IMediator mediator) : ControllerBase
         var multipartSection = await reader.ReadNextSectionAsync(cancellationToken) ??
                                throw new MultipartSectionHelper.MultipartSectionNotFoundException();
 
-        if (!ContentDispositionHeaderValue.TryParse(multipartSection.ContentDisposition, out var contentDispositionForm))
+        if (!ContentDispositionHeaderValue.TryParse(multipartSection.ContentDisposition,
+                out var contentDispositionForm))
             throw new MultipartSectionHelper.MultipartSectionContentDispositionParseFailedException();
 
         if (!MultipartRequestHelper.HasFormDataContentDisposition(contentDispositionForm))
@@ -73,20 +74,22 @@ public class SolutionController(IMediator mediator) : ControllerBase
 
         using var streamReader = new StreamReader(multipartSection.Body, encoding, true, 1024);
 
-        var data = await JsonSerializer.DeserializeAsync<SolutionCreateRequestDto>(streamReader.BaseStream, cancellationToken: cancellationToken);
+        var data = await JsonSerializer.DeserializeAsync<SolutionCreateRequestDto>(streamReader.BaseStream,
+            cancellationToken: cancellationToken);
 
         //File
         multipartSection = await reader.ReadNextSectionAsync(cancellationToken) ??
                            throw new MultipartSectionHelper.MultipartSectionNotFoundException();
 
-        if (!ContentDispositionHeaderValue.TryParse(multipartSection.ContentDisposition, out var contentDispositionFile))
+        if (!ContentDispositionHeaderValue.TryParse(multipartSection.ContentDisposition,
+                out var contentDispositionFile))
             throw new MultipartSectionHelper.MultipartSectionContentDispositionParseFailedException();
 
         if (!MultipartRequestHelper.HasFileContentDisposition(contentDispositionFile))
             throw new MultipartSectionHelper.MultipartSectionContentDispositionFileExpectedException();
 
         await using var fileStream = multipartSection.Body;
-        
+
         return Ok(await mediator.Send(new SolutionCreateCommand
         {
             FileStream = fileStream,

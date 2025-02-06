@@ -22,7 +22,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.IdentityModel.Tokens"/>
-        <PackageReference Include="Minio" />
+        <PackageReference Include="Minio"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
         <PackageReference Include="Serilog.AspNetCore"/>
         <PackageReference Include="Serilog.Enrichers.AssemblyName"/>
@@ -41,6 +41,6 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations"/>
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
-        <PackageReference Include="Yarp.ReverseProxy" />
+        <PackageReference Include="Yarp.ReverseProxy"/>
     </ItemGroup>
 </Project>

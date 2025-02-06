@@ -14,18 +14,19 @@ public class SolutionReadHandler(
     ISolutionTypeEntityService solutionTypeEntityService
 ) : IRequestHandler<SolutionReadQuery, ResponseBase<SolutionReadResultDto>>
 {
-    public async Task<ResponseBase<SolutionReadResultDto>> Handle(SolutionReadQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<SolutionReadResultDto>> Handle(SolutionReadQuery request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         var targetSolutionDto = await solutionEntityService.GetByIdAsync(request.SolutionId, true, cancellationToken) ??
                                 throw new SolutionNotFoundException();
 
 
-        return new ResponseBase<SolutionReadResultDto>()
+        return new ResponseBase<SolutionReadResultDto>
         {
-            Data = await SolutionMapper.ToSolutionReadResultDto(targetSolutionDto, solutionTypeEntityService, cancellationToken)
+            Data = await SolutionMapper.ToSolutionReadResultDto(targetSolutionDto, solutionTypeEntityService,
+                cancellationToken)
         };
-
     }
 }

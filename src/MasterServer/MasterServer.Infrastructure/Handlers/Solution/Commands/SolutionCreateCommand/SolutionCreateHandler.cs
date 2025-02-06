@@ -4,7 +4,6 @@ using MasterServer.Application.Models.Dto.Solution;
 using MasterServer.Application.Services.Data;
 using MasterServer.Infrastructure.Mappers;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Shared.Application.Data;
 using Shared.Application.Services;
 using Shared.Common.Exceptions;
@@ -22,7 +21,8 @@ public class SolutionCreateHandler(
     IMinioService minioService
 ) : IRequestHandler<SolutionCreateCommand, ResponseBase<SolutionReadResultDto>>
 {
-    public async Task<ResponseBase<SolutionReadResultDto>> Handle(SolutionCreateCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<SolutionReadResultDto>> Handle(SolutionCreateCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
@@ -31,7 +31,7 @@ public class SolutionCreateHandler(
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
 
             var userId = userAdvancedService.GetUserIdFromHttpContext(true);
-            
+
             var isRoot =
                 await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.RootUserGroupId, cancellationToken);
 
@@ -39,27 +39,29 @@ public class SolutionCreateHandler(
                   await userAdvancedService.IsInUserGroupByUserGroupId(userId, Consts.ManageUsersUserGroupId,
                       cancellationToken)))
                 throw new InsufficientPermissionsException();
-            
+
             var targetSolutionType =
                 await solutionTypeEntityService.GetByAliasAsync(request.SolutionTypeAlias, false, cancellationToken) ??
                 throw new SolutionTypeNotFoundException();
-            
+
             var targetSolution = new Domain.Entities.Solution
             {
                 FileName = Guid.NewGuid() + new FileInfo(request.FileName).Extension,
                 BucketName = S3BucketKey.SolutionBucket,
-                SolutionTypeId = targetSolutionType.Id,
+                SolutionTypeId = targetSolutionType.Id
             };
 
             await solutionEntityService.SaveAsync(targetSolution, cancellationToken);
-            
-            await minioService.SaveAsync(request.FileStream, targetSolution.FileName, targetSolution.BucketName, request.FileSize, cancellationToken);
-         
+
+            await minioService.SaveAsync(request.FileStream, targetSolution.FileName, targetSolution.BucketName,
+                request.FileSize, cancellationToken);
+
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
-            
+
             return new ResponseBase<SolutionReadResultDto>
             {
-                Data = await SolutionMapper.ToSolutionReadResultDto(targetSolution, solutionTypeEntityService, cancellationToken)
+                Data = await SolutionMapper.ToSolutionReadResultDto(targetSolution, solutionTypeEntityService,
+                    cancellationToken)
             };
         }
         catch (Exception)

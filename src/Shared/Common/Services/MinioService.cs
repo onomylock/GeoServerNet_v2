@@ -20,7 +20,8 @@ public class MinioService : IMinioService
             .WithSSL(minioOptionsValue.WithSsl);
     }
 
-    public async Task SaveAsync(Stream file, string fileName, string bucketName, long objectSize, CancellationToken cancellationToken = default)
+    public async Task SaveAsync(Stream file, string fileName, string bucketName, long objectSize,
+        CancellationToken cancellationToken = default)
     {
         // Make a bucket on the server, if not already present.
         var beArgs = new BucketExistsArgs().WithBucket(bucketName);
