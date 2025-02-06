@@ -1,9 +1,10 @@
 using System.Data.Entity;
 using Shared.Application.Repository;
+using Shared.Common.Extensions;
 using Shared.Common.Models;
 using Shared.Domain.Entity.Base;
 
-namespace Shared.Common.Extensions;
+namespace Shared.Infrastructure.Services;
 
 public static class EntityToEntityMappingServiceBase<TEntity> where TEntity : EntityToEntityMappingBase
 {

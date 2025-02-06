@@ -1,3 +1,4 @@
+// using System.Net.Http.Json;
 // using System.Security.Claims;
 // using System.Text.Encodings.Web;
 // using Microsoft.AspNetCore.Authentication;
@@ -16,11 +17,14 @@
 //     IOptionsMonitor<JsonWebTokenAuthenticationSchemeOptions> options,
 //     ILoggerFactory logger,
 //     UrlEncoder encoder,
+//     HttpClient httpClient,
 //     //AuthServiceAuthGrpc.AuthServiceAuthGrpcClient authServiceAuthGrpcClient,
-//     IOptions<CommonServiceOptions> commonServiceOptions,
-//     IHttpContextAccessor httpContextAccessor)
-//     : AuthenticationHandler<JsonWebTokenAuthenticationSchemeOptions>(options, logger, encoder)
+//     IOptions<MasterServerOptions> masterServerOptions,
+//     IHttpContextAccessor httpContextAccessor
+// ) : AuthenticationHandler<JsonWebTokenAuthenticationSchemeOptions>(options, logger, encoder)
 // {
+//     private readonly HttpContext _httpContext = httpContextAccessor.HttpContext;
+//     
 //     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
 //     {
 //         var claims = new List<Claim>();
@@ -50,16 +54,22 @@
 //             foreach (var authorizationBearerPayloadTemp in authorizationBearerPayloads)
 //                 try
 //                 {
-//                     // var validateJwtResult = await authServiceAuthGrpcClient.ValidateJwtAsync(new AuthValidateJwtRequest
-//                     // {
-//                     //     Token = authorizationBearerPayloadTemp,
-//                     //     AuthenticationScheme = AuthenticationSchemes.JsonWebToken
-//                     // }, headers: new Metadata
-//                     // {
-//                     //     { "Authorization", $"Bearer {commonServiceOptions.Value.SystemAccessToken}" }
-//                     // }, cancellationToken: httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None);
-//
-//                     claims.AddRange(validateJwtResult.Claims.Select(_ => new Claim(_.Type, _.Value, _.ValueType)));
+//                     
+//                     
+//                     // var validateJwtResultString = await httpClient.PostAsync(masterServerOptions.Value.MasterServerUri.Host, );
+//                     //
+//                     //     
+//                     //     
+//                     // // var validateJwtResult = await authServiceAuthGrpcClient.ValidateJwtAsync(new AuthValidateJwtRequest
+//                     // // {
+//                     // //     Token = authorizationBearerPayloadTemp,
+//                     // //     AuthenticationScheme = AuthenticationSchemes.JsonWebToken
+//                     // // }, headers: new Metadata
+//                     // // {
+//                     // //     { "Authorization", $"Bearer {commonServiceOptions.Value.SystemAccessToken}" }
+//                     // // }, cancellationToken: httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None);
+//                     //
+//                     // claims.AddRange(validateJwtResult.Claims.Select(_ => new Claim(_.Type, _.Value, _.ValueType)));
 //
 //                     authorizationBearerPayload = authorizationBearerPayloadTemp;
 //                     break;
@@ -78,4 +88,4 @@
 //         return AuthenticateResult.Success(ticket);
 //     }
 // }
-
+//
