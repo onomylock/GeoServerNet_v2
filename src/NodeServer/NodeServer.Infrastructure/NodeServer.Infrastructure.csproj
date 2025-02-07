@@ -4,7 +4,7 @@
         <ProjectReference Include="..\NodeServer.Application\NodeServer.Application.csproj"/>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Handlers\" />
+      <Folder Include="AuthenticationHandlers\" />
       <Folder Include="Services\" />
     </ItemGroup>
 </Project>

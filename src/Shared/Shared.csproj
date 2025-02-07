@@ -3,10 +3,6 @@
         <Folder Include="Application\Data\"/>
         <Folder Include="Application\Repository\"/>
         <Folder Include="Domain\"/>
-        <Folder Include="Proto\Messages\MasterServerService\" />
-        <Folder Include="Proto\Messages\NodeServerService\" />
-        <Folder Include="Proto\Services\MasterServerService\" />
-        <Folder Include="Proto\Services\NodeServerService\" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="DotNetEnv"/>
