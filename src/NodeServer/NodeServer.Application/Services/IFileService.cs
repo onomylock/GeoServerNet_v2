@@ -1,4 +1,4 @@
-namespace Shared.Application.Services;
+namespace NodeServer.Application.Services;
 
 public interface IFileService
 {
