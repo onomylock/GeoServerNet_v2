@@ -1,6 +1,11 @@
-namespace NodeServer.Infrastructure.Handlers.Solution.Commands.NodeServerSolutionCreateCommand;
+using FluentValidation;
 
-public class NodeServerSolutionCreateCommandValidator
+namespace NodeServer.Infrastructure.Handlers.NodeServerSolution.Commands.NodeServerSolutionCreateCommand;
+
+public class NodeServerSolutionCreateCommandValidator : AbstractValidator<NodeServerSolutionCreateCommand>
 {
-    
+    public NodeServerSolutionCreateCommandValidator()
+    {
+        
+    }
 }

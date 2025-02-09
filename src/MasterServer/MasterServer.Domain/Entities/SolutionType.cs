@@ -7,5 +7,5 @@ public record SolutionType : EntityBase
 {
     public string Alias { get; set; }
 
-    [Column(TypeName = "jsonb")] public string ArgumentsMask { get; set; }
+    public string ArgumentsMask { get; set; }
 }

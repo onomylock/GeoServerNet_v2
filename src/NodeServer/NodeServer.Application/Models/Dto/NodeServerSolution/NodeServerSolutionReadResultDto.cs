@@ -1,9 +1,8 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using Shared.Domain.Entity.Base;
+using Shared.Common.Models.DTO.Base;
 
-namespace NodeServer.Domain.Entities;
+namespace NodeServer.Application.Models.Dto.NodeServerSolution;
 
-public record NodeServerSolution : EntityBase
+public class NodeServerSolutionReadResultDto : EntityResponseBase
 {
     public Guid MasterServerSolutionId { get; set; }
     public string DirectoryPath { get; set; }

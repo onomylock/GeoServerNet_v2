@@ -1,4 +1,4 @@
-namespace NodeServer.Infrastructure.Handlers.Job.Commands.NodeServerJobStopCommand;
+namespace NodeServer.Infrastructure.Handlers.NodeServerJob.Commands.NodeServerJobStopCommand;
 
 public class NodeServerJobStopHandler
 {

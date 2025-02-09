@@ -2,10 +2,10 @@ using System.ComponentModel.DataAnnotations;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NodeServer.Infrastructure.Handlers.Solution.Commands.NodeServerSolutionCreateCommand;
-using NodeServer.Infrastructure.Handlers.Solution.Commands.NodeServerSolutionDeleteCommand;
-using NodeServer.Infrastructure.Handlers.Solution.Commands.NodeServerSolutionUpdateCommand;
-using NodeServer.Infrastructure.Handlers.Solution.Queries.NodeServerSolutionReadQuery;
+using NodeServer.Infrastructure.Handlers.NodeServerSolution.Commands.NodeServerSolutionCreateCommand;
+using NodeServer.Infrastructure.Handlers.NodeServerSolution.Commands.NodeServerSolutionDeleteCommand;
+using NodeServer.Infrastructure.Handlers.NodeServerSolution.Commands.NodeServerSolutionUpdateCommand;
+using NodeServer.Infrastructure.Handlers.NodeServerSolution.Queries.NodeServerSolutionReadQuery;
 using Shared.Common.Models;
 
 namespace NodeServer.HttpApi.Controllers;

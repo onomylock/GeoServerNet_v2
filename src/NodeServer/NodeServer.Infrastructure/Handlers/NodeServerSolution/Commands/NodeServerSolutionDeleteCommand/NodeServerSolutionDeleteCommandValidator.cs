@@ -1,6 +1,11 @@
-namespace NodeServer.Infrastructure.Handlers.Solution.Commands.NodeServerSolutionDeleteCommand;
+using FluentValidation;
 
-public class NodeServerSolutionDeleteCommandValidator
+namespace NodeServer.Infrastructure.Handlers.NodeServerSolution.Commands.NodeServerSolutionDeleteCommand;
+
+public class NodeServerSolutionDeleteCommandValidator : AbstractValidator<NodeServerSolutionDeleteCommand>
 {
-    
+    public NodeServerSolutionDeleteCommandValidator()
+    {
+        
+    }
 }

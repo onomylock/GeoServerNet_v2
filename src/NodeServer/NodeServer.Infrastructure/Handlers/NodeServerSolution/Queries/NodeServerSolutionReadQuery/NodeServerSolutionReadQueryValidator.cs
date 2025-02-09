@@ -1,4 +1,4 @@
-namespace NodeServer.Infrastructure.Handlers.Solution.Queries.NodeServerSolutionReadQuery;
+namespace NodeServer.Infrastructure.Handlers.NodeServerSolution.Queries.NodeServerSolutionReadQuery;
 
 public class NodeServerSolutionReadQueryValidator
 {

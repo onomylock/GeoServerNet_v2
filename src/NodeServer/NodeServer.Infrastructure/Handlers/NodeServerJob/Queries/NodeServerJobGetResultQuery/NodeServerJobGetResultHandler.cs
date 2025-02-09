@@ -1,4 +1,4 @@
-namespace NodeServer.Infrastructure.Handlers.Job.Queries.NodeServerJobGetResultQuery;
+namespace NodeServer.Infrastructure.Handlers.NodeServerJob.Queries.NodeServerJobGetResultQuery;
 
 public class NodeServerJobGetResultHandler
 {

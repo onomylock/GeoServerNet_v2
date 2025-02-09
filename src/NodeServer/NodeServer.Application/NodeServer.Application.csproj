@@ -4,7 +4,6 @@
         <ProjectReference Include="..\NodeServer.Domain\NodeServer.Domain.csproj"/>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Models\Dto\" />
       <Folder Include="Models\Options\" />
     </ItemGroup>
 </Project>

@@ -3,9 +3,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NodeServer.Infrastructure.Handlers.Job.Commands.NodeServerJobRefrashCommand;
-using NodeServer.Infrastructure.Handlers.Job.Commands.NodeServerJobStopCommand;
-using NodeServer.Infrastructure.Handlers.Job.Queries.NodeServerJobGetResultQuery;
 using NodeServer.Infrastructure.Handlers.NodeServerJob.Commands.NodeServerJobStartCommand;
+using NodeServer.Infrastructure.Handlers.NodeServerJob.Commands.NodeServerJobStopCommand;
+using NodeServer.Infrastructure.Handlers.NodeServerJob.Queries.NodeServerJobGetResultQuery;
 using Shared.Common.Models;
 
 namespace NodeServer.HttpApi.Controllers;
