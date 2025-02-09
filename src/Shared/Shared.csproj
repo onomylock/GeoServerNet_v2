@@ -9,6 +9,12 @@
         <PackageReference Include="EntityFramework.DynamicLinq"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
+        <PackageReference Include="Google.Protobuf" />
+        <PackageReference Include="Grpc.AspNetCore" />
+        <PackageReference Include="Grpc.Tools">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Hangfire"/>
         <PackageReference Include="Hangfire.AspNetCore"/>
         <PackageReference Include="Hangfire.Core"/>
@@ -22,6 +28,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.IdentityModel.Tokens"/>
+        <PackageReference Include="Minio"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
         <PackageReference Include="Serilog.AspNetCore"/>
         <PackageReference Include="Serilog.Enrichers.AssemblyName"/>
@@ -40,5 +47,6 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations"/>
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
+        <PackageReference Include="Yarp.ReverseProxy"/>
     </ItemGroup>
 </Project>

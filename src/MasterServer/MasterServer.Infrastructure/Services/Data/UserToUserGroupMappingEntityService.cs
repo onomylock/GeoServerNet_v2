@@ -3,7 +3,6 @@ using MasterServer.Application.Repository;
 using MasterServer.Application.Services.Data;
 using MasterServer.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Query;
-using Shared.Common.Extensions;
 using Shared.Common.Models;
 using Shared.Infrastructure.Services;
 

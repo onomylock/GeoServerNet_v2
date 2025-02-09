@@ -2,6 +2,8 @@ namespace Shared.Common.Models;
 
 public static class Consts
 {
+    public const long SolutionMaxFileSize = 2097152L;
+
     public static readonly Guid RootUserId = new("51D5F7CA-E2FA-4DF8-96BF-E435EC016920");
     public static readonly Guid PublicUserId = new("4FC26534-803D-4561-A3B6-8E9EB7E99DE4");
 

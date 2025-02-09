@@ -16,7 +16,8 @@ public class UserDeleteHandler(
     IDbContextTransactionAction dbContextTransactionAction,
     IUserAdvancedService userAdvancedService,
     IUserEntityService userEntityService,
-    IUserToUserGroupMappingEntityService userToUserGroupMappingEntityService
+    IUserToUserGroupMappingEntityService userToUserGroupMappingEntityService,
+    IRefreshTokenEntityService refreshTokenEntityService
 ) : IRequestHandler<UserDeleteCommand, ResponseBase<OkResult>>
 {
     public async Task<ResponseBase<OkResult>> Handle(UserDeleteCommand request, CancellationToken cancellationToken)
@@ -42,6 +43,8 @@ public class UserDeleteHandler(
                 query => query.Where(_ => _.EntityLeftId == targetUser.Id), cancellationToken);
 
             await userEntityService.DeleteAsync(targetUser, cancellationToken);
+
+            await refreshTokenEntityService.PurgeByUserIdAsync(targetUser.Id, cancellationToken);
 
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
