@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReverseProxy", "ReverseProx
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseProxy.HttpApi", "src\ReverseProxy\ReverseProxy.HttpApi\ReverseProxy.HttpApi.csproj", "{47BAE765-00F9-4D2F-8C88-4F4BDDA5047F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseProxy.Application", "src\ReverseProxy\ReverseProxy.Application\ReverseProxy.Application.csproj", "{849D41D1-F6ED-469A-A964-32844EE2A0AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +80,10 @@ Global
 		{47BAE765-00F9-4D2F-8C88-4F4BDDA5047F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47BAE765-00F9-4D2F-8C88-4F4BDDA5047F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47BAE765-00F9-4D2F-8C88-4F4BDDA5047F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{849D41D1-F6ED-469A-A964-32844EE2A0AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{849D41D1-F6ED-469A-A964-32844EE2A0AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{849D41D1-F6ED-469A-A964-32844EE2A0AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{849D41D1-F6ED-469A-A964-32844EE2A0AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D571A425-5FDF-4170-93FD-98651EB62875} = {EBA5B145-B791-4D6A-BDAF-01ABFA66C827}
@@ -89,5 +95,6 @@ Global
 		{06DCB590-1D74-4C22-90C6-788B482E15A2} = {D9BA9B11-6715-4734-8437-FF9AC91BABB9}
 		{235BE773-57DF-4B16-9A5D-5BC622298B4A} = {D9BA9B11-6715-4734-8437-FF9AC91BABB9}
 		{47BAE765-00F9-4D2F-8C88-4F4BDDA5047F} = {76A93B7C-09D5-4416-BE1A-168CA68CDE87}
+		{849D41D1-F6ED-469A-A964-32844EE2A0AA} = {76A93B7C-09D5-4416-BE1A-168CA68CDE87}
 	EndGlobalSection
 EndGlobal
