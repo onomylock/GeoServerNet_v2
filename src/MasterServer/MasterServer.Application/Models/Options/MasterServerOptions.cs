@@ -17,6 +17,4 @@ public class MasterServerOptions : CommonServiceOptions
     ///     CORS allowed origins
     /// </summary>
     public string[] CorsAllowedOrigins { get; set; }
-
-    [Required] public UriData UserServiceChannel { get; set; }
 }
