@@ -3,7 +3,4 @@
         <ProjectReference Include="..\..\Shared\Shared.csproj"/>
         <ProjectReference Include="..\NodeServer.Domain\NodeServer.Domain.csproj"/>
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Models\Options\" />
-    </ItemGroup>
 </Project>
