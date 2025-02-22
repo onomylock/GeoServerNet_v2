@@ -5,6 +5,7 @@ using MasterServer.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Application.Data;
+using Shared.Common.Enums;
 using Shared.Common.Models;
 using Shared.Common.Models.DTO.Base;
 
@@ -44,10 +45,7 @@ public class ClusterLinkNodeHandler(
                 }
                 catch (Exception)
                 {
-                    errors.Add(new ErrorBase
-                    {
-                        ErrorMessage = Localize.Keys.Warning.MappingAlreadyExists
-                    });
+                    errors.Add(new ErrorModelResultEntry(ErrorType.Generic, Localize.Keys.Warning.MappingAlreadyExists));
                 }
             
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);

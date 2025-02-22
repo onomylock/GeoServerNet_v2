@@ -5,5 +5,5 @@ namespace MasterServer.Domain.Entities;
 
 public record Node : EntityBase
 {
-    private IPAddress Address { get; set; }
+    public IPAddress Address { get; set; }
 }

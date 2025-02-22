@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Http.Connections.Features;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Shared.Common.Enums;
 using Shared.Common.Models;
+using Shared.Common.Models.Dto;
+using Shared.Common.Models.DTO.Base;
 
 namespace Shared.Common.Hubs.Base;
 
@@ -74,8 +77,6 @@ public abstract class HubBase<T>(ILogger<HubBase<T>> logger, IHostEnvironment ho
     private async Task ThrowError(ErrorModelResult errorModelResult, bool abortConnection = false)
     {
         var httpContextFeature = Context.Features.Get<IHttpContextFeature>()!;
-
-        errorModelResult.TraceId = Activity.Current?.Id ?? httpContextFeature.HttpContext!.TraceIdentifier;
 
         await Clients.Caller.ReceiveError(errorModelResult);
 

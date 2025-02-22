@@ -1,8 +1,12 @@
 using FluentValidation;
 using MasterServer.Application.Models.Dto.Cluster;
+using MasterServer.Application.Models.Dto.Cluster.Notification;
+using MasterServer.Application.Services;
 using MasterServer.Application.Services.Data;
+using MasterServer.Infrastructure.Hubs;
 using MasterServer.Infrastructure.Mappers;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using Shared.Application.Data;
 using Shared.Common.Models.DTO.Base;
 
@@ -11,7 +15,8 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterUpdateCom
 public class ClusterUpdateHandler(
     IValidator<ClusterUpdateCommand> validator,
     IDbContextTransactionAction dbContextTransactionAction,
-    IClusterEntityService clusterEntityService
+    IClusterEntityService clusterEntityService,
+    IClusterNotificationService clusterNotificationService
 ) : IRequestHandler<ClusterUpdateCommand, ResponseBase<ClusterReadResultDto>>
 {
     public async Task<ResponseBase<ClusterReadResultDto>> Handle(ClusterUpdateCommand request, CancellationToken cancellationToken)
@@ -26,11 +31,14 @@ public class ClusterUpdateHandler(
             
             targetCluster.LoadBalancingPolicy = request.LoadBalancingPolicy;
             
+            
             await clusterEntityService.SaveAsync(targetCluster, cancellationToken);
             
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
-
-            return new ResponseBase<ClusterReadResultDto>()
+            
+            await clusterNotificationService.SendClusterUpdatedNotification(targetCluster, cancellationToken);
+            
+            return new ResponseBase<ClusterReadResultDto>
             {
                 Data = await ClusterMapper.ToClusterReadResultDto(targetCluster, null, cancellationToken)
             };

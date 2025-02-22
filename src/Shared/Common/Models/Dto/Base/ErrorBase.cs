@@ -1,7 +1,6 @@
 namespace Shared.Common.Models.DTO.Base;
 
-public class ErrorBase
+public class ErrorBase(string message)
 {
-    public string PropertyMessage { get; set; }
-    public string ErrorMessage { get; set; }
+    public string Message { get; } = message;
 }

@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Application.Data;
 using Shared.Application.Services;
+using Shared.Common.Enums;
 using Shared.Common.Exceptions;
 using Shared.Common.Models;
 using Shared.Common.Models.DTO.Base;
@@ -58,10 +59,7 @@ public class LinkUserGroupHandler(
                 }
                 catch (Exception)
                 {
-                    errors.Add(new ErrorBase
-                    {
-                        ErrorMessage = Localize.Keys.Warning.MappingAlreadyExists
-                    });
+                    errors.Add(new ErrorModelResultEntry(ErrorType.Generic, Localize.Keys.Warning.MappingAlreadyExists));
                 }
 
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
