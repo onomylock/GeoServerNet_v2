@@ -1,16 +1,15 @@
 using System.Diagnostics;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using NodeServer.Application.Exceptions;
 using NodeServer.Application.Models.Dto.NodeServerJob;
+using NodeServer.Application.Services;
 using NodeServer.Application.Services.Data;
 using NodeServer.Infrastructure.Helpers;
 using NodeServer.Infrastructure.Mappers;
 using Shared.Application.Data;
 using Shared.Application.Services;
 using Shared.Common.Models.DTO.Base;
-using Shared.Domain.View;
 
 namespace NodeServer.Infrastructure.Handlers.NodeServerJob.Commands.NodeServerJobStartCommand;
 
@@ -19,7 +18,8 @@ public class NodeServerJobStartHandler(
     IDbContextTransactionAction dbContextTransactionAction,
     INodeServerSolutionEntityService nodeServerSolutionEntityService,
     INodeServerJobEntityService jobEntityService,
-    IHangfireService hangfireService
+    IHangfireService hangfireService,
+    IFileService fileService,
 ) : IRequestHandler<NodeServerJobStartCommand, ResponseBase<NodeServerJobReadResultDto>>
 {
     public async Task<ResponseBase<NodeServerJobReadResultDto>> Handle(NodeServerJobStartCommand request, CancellationToken cancellationToken)
@@ -34,7 +34,10 @@ public class NodeServerJobStartHandler(
                 await nodeServerSolutionEntityService.GetByMasterServerSolutionIdAsync(request.SolutionId, false,
                     cancellationToken) ?? throw new NodeServerSolutionNotFoundException();
 
-            var workingDirectory = FileHelper.CreateTmpDirectory(targetNodeServerSolution.DirectoryResultsPath,
+            var destinationPath = await fileService.ExtractArchiveAsync(request.FileStream, FileHelper.CreateResultPath(), cancellationToken);
+            
+            
+            var workingDirectory = FileHelper.CreateResultPath(targetNodeServerSolution.DirectoryResultsPath,
                 targetNodeServerSolution.MasterServerSolutionId);
             
             var processStartInfo = ProcessHelper.ConfigureProcessStartInfo(request.Metadata, workingDirectory.ToString());
@@ -46,6 +49,7 @@ public class NodeServerJobStartHandler(
                 SolutionId = targetNodeServerSolution.Id,
                 Metadata = request.Metadata.ToArray(),
                 TmpResultPath = workingDirectory.ToString(),
+                WorkingDirectoryPath = null,
                 JobId = Guid.Parse(jobId)
             };
 

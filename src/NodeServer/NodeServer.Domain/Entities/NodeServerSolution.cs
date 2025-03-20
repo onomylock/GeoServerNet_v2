@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using Shared.Domain.Entity.Base;
 
 namespace NodeServer.Domain.Entities;

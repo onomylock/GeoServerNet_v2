@@ -8,6 +8,8 @@ namespace NodeServer.Infrastructure.Handlers.NodeServerJob.Commands.NodeServerJo
 
 public class NodeServerJobStartCommand : IRequest<ResponseBase<NodeServerJobReadResultDto>>
 {
+    public Stream FileStream { get; set; }
+    public string FileName { get; set; }
     public List<KeyValueEntry> Metadata { get; set; }
     public Guid SolutionId { get; set; }
 }

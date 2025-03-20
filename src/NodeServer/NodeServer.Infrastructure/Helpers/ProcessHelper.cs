@@ -10,18 +10,8 @@ public static class ProcessHelper
         return new ProcessStartInfo
         {
             Arguments = keyValueEntries.Find(_ => _.Key == nameof(ProcessStartInfo.Arguments)).Value ?? string.Empty,
-            // CreateNoWindow = false,
-            // ErrorDialog = false,
             ErrorDialogParentHandle = 0,
             FileName = keyValueEntries.Find(_ => _.Key == nameof(ProcessStartInfo.FileName)).Value ?? string.Empty,
-            // PasswordInClearText = null,
-            // RedirectStandardError = false,
-            // RedirectStandardInput = false,
-            // RedirectStandardOutput = false,
-            // StandardErrorEncoding = null,
-            // StandardInputEncoding = null,
-            // StandardOutputEncoding = null,
-            // UserName = null,
             UseShellExecute = false,
             WorkingDirectory = workingDirectory
         };
