@@ -7,6 +7,7 @@ using MasterServer.Application.Services.Data;
 using MasterServer.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Shared.Common.Enums;
 using Shared.Common.Helpers;
 using Shared.Common.Models;
 using Shared.Common.Models.DTO.Base;
@@ -115,10 +116,7 @@ public abstract class AuthSingInHandlerBase(
         }
         else
         {
-            errors.Add(new ErrorBase
-            {
-                ErrorMessage = Localize.Keys.Warning.XssVulnerable
-            });
+            errors.Add(new ErrorModelResultEntry(ErrorType.Generic, Localize.Keys.Warning.XssVulnerable));
         }
 
         return (

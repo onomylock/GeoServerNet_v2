@@ -1,6 +1,6 @@
 using Yarp.ReverseProxy.Configuration;
 
-namespace MasterServer.Application.Services;
+namespace ReverseProxy.Application.Services;
 
 public interface ICustomInMemoryProxyConfigProvider : IProxyConfigProvider
 {

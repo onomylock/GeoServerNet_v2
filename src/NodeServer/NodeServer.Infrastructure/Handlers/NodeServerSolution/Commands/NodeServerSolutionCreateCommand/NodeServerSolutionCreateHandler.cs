@@ -31,7 +31,7 @@ public class NodeServerSolutionCreateHandler(
 
             if (await nodeServerSolutionEntityService.GetByMasterServerSolutionIdAsync(request.MasterServerSolutionId,
                     true, cancellationToken) is { })
-                throw new NodeServerSolutionAlredyExistsException();
+                throw new NodeServerSolutionAlreadyExistsException();
             
             var uri = await minioService.GetFileUrl(request.FileName, request.BucketName, cancellationToken);
             

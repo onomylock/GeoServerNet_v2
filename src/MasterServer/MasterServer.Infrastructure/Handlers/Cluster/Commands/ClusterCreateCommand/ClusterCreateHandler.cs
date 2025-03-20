@@ -1,6 +1,7 @@
 using FluentValidation;
 using MasterServer.Application.Exceptions;
 using MasterServer.Application.Models.Dto.Cluster;
+using MasterServer.Application.Services;
 using MasterServer.Application.Services.Data;
 using MasterServer.Infrastructure.Mappers;
 using MediatR;
@@ -14,7 +15,8 @@ public class ClusterCreateHandler(
     IValidator<ClusterCreateCommand> validator,
     IDbContextTransactionAction dbContextTransactionAction, 
     IClusterEntityService clusterEntityService, 
-    IUserEntityService userEntityService
+    IUserEntityService userEntityService,
+    IClusterNotificationService notificationService
 ) : IRequestHandler<ClusterCreateCommand, ResponseBase<ClusterReadResultDto>>
 {
     public async Task<ResponseBase<ClusterReadResultDto>> Handle(ClusterCreateCommand request, CancellationToken cancellationToken)
@@ -35,11 +37,11 @@ public class ClusterCreateHandler(
             };
 
             await clusterEntityService.SaveAsync(targetCluster, cancellationToken);
-
-            
             
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
+            await notificationService.SendClusterCreatedNotification(targetCluster, cancellationToken);
+            
             return new ResponseBase<ClusterReadResultDto>
             {
                 Data = await ClusterMapper.ToClusterReadResultDto(targetCluster, null, cancellationToken)

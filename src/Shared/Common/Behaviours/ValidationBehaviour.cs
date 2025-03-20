@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Shared.Common.Enums;
 using Shared.Common.Exceptions;
 using Shared.Common.Models.DTO.Base;
 
@@ -21,7 +22,7 @@ public class ValidationBehaviour<TRequest, TResponse>(
         var errors = validationFailures
             .Where(validationResult => !validationResult.IsValid)
             .SelectMany(validationResult => validationResult.Errors)
-            .Select(r => new ErrorBase { PropertyMessage = r.PropertyName, ErrorMessage = r.ErrorMessage })
+            .Select(r => new ErrorModelResultEntry(ErrorType.ModelState, r.ErrorMessage, ErrorEntryType.Message))
             .ToList();
 
         if (errors.Any()) throw new CustomValidationException(errors);
