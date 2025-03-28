@@ -11,7 +11,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Shared\Shared.csproj"/>
         <ProjectReference Include="..\NodeServer.Application\NodeServer.Application.csproj"/>
-        <ProjectReference Include="..\NodeServer.Infrastructure\NodeServer.Infrastructure.csproj" />
+        <ProjectReference Include="..\NodeServer.Infrastructure\NodeServer.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>

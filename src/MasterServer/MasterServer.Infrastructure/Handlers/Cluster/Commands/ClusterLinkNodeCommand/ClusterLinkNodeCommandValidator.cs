@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterLinkNodeC
 
 public class ClusterLinkNodeCommandValidator : AbstractValidator<ClusterLinkNodeCommand>
 {
-    public ClusterLinkNodeCommandValidator()
-    {
-        
-    }
 }

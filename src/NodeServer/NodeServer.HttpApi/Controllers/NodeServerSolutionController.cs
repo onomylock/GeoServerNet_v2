@@ -12,7 +12,7 @@ namespace NodeServer.HttpApi.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class NodeServerSolutionController(IMediator mediator): ControllerBase
+public class NodeServerSolutionController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     [Authorize(AuthorizationPolicies.SystemOrAuthorized)]
@@ -21,10 +21,10 @@ public class NodeServerSolutionController(IMediator mediator): ControllerBase
     {
         return Ok(await mediator.Send(command, cancellationToken));
     }
-    
+
     [HttpPost]
     [Authorize(AuthorizationPolicies.SystemOrAuthorized)]
-    public async Task<IActionResult> Create([FromBody] [Required] NodeServerSolutionUpdateCommand command,
+    public async Task<IActionResult> Update([FromBody] [Required] NodeServerSolutionUpdateCommand command,
         CancellationToken cancellationToken = default)
     {
         return Ok(await mediator.Send(command, cancellationToken));
@@ -37,7 +37,7 @@ public class NodeServerSolutionController(IMediator mediator): ControllerBase
     {
         return Ok(await mediator.Send(query, cancellationToken));
     }
-    
+
     [HttpDelete]
     [Authorize(AuthorizationPolicies.SystemOrAuthorized)]
     public async Task<IActionResult> Delete([FromBody] [Required] NodeServerSolutionDeleteCommand command,

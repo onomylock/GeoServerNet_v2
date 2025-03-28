@@ -8,6 +8,6 @@ public sealed class ErrorModelResultEntry(
     ErrorEntryType errorEntryType = ErrorEntryType.None) : ErrorBase(message)
 {
     public ErrorType ErrorType { get; } = errorType;
-    
+
     public ErrorEntryType ErrorEntryType { get; } = errorEntryType;
 }

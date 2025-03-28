@@ -2,5 +2,4 @@ namespace NodeServer.Infrastructure.Handlers.NodeServerJob.Queries.NodeServerJob
 
 public class NodeServerJobGetResultQuery
 {
-    
 }

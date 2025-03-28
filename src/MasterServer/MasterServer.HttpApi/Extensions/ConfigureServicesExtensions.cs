@@ -9,7 +9,6 @@ using MasterServer.Infrastructure.AuthenticationHandlers;
 using MasterServer.Infrastructure.ConfigureNamedOptions;
 using MasterServer.Infrastructure.Data;
 using MasterServer.Infrastructure.Repository;
-using MasterServer.Infrastructure.Services;
 using MasterServer.Infrastructure.Services.Data;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -19,7 +18,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using Shared.Application.Data;
-using Shared.Application.Services;
 using Shared.Common.AuthenticationHandlers;
 using Shared.Common.AuthenticationSchemeOptions;
 using Shared.Common.AuthorizationRequirement;
@@ -114,32 +112,10 @@ public static class ConfigureServicesExtensions
 
     private static IServiceCollection ConfigureDiServices(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IJobEntityService, JobEntityService>();
-        serviceCollection.AddScoped<IJsonWebTokenRevokedEntityService, JsonWebTokenRevokedEntityService>();
         serviceCollection.AddScoped<INodeEntityService, NodeEntityService>();
-        serviceCollection.AddScoped<IRefreshTokenEntityService, RefreshTokenEntityService>();
-        serviceCollection.AddScoped<ISolutionEntityService, SolutionEntityService>();
-        serviceCollection.AddScoped<IUserEntityService, UserEntityService>();
-        serviceCollection.AddScoped<IUserGroupEntityService, UserGroupEntityService>();
-        serviceCollection.AddScoped<IUserToUserGroupMappingEntityService, UserToUserGroupMappingEntityService>();
-
-        //Those services are a must have for HttpApi/GrpcApi
-        serviceCollection.AddScoped<IJsonWebTokenAdvancedService, JsonWebTokenAdvancedService>();
-        serviceCollection.AddScoped<IUserAdvancedService, UserAdvancedService>();
+        serviceCollection.AddScoped<IClusterEntityService, ClusterEntityService>();
 
         serviceCollection.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-
-
-        //serviceCollection.AddSingleton<IMinioService, MinioService>();
-        // serviceCollection.AddKeyedScoped<IRedisCacheService, RedisCacheService>(ServiceKeys.Generic, (provider, _) => new RedisCacheService(
-        //     provider.GetRequiredService<ILogger<RedisCacheService>>(),
-        //     provider.GetRequiredService<IRedisService>(),
-        //     provider.GetRequiredService<IOptions<MasterServerHttpApiOptions>>().Value.RedisGenericDatabase
-        // ));
-        // serviceCollection.AddSingleton<IRedisService, RedisService>(provider => new RedisService(
-        //     provider.GetRequiredService<IOptions<RedisOptions>>().Value, provider.GetRequiredService<IHostEnvironment>())
-        // );
-        // serviceCollection.AddScoped<IWarningService, WarningService>();
 
         return serviceCollection;
     }

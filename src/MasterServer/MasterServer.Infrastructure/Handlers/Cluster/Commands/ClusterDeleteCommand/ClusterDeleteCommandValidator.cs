@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterDeleteCom
 
 public class ClusterDeleteCommandValidator : AbstractValidator<ClusterDeleteCommand>
 {
-    public ClusterDeleteCommandValidator()
-    {
-        
-    }
 }

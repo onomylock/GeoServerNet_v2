@@ -5,7 +5,8 @@ namespace NodeServer.Infrastructure.Helpers;
 
 public static class ProcessHelper
 {
-    public static ProcessStartInfo ConfigureProcessStartInfo(List<KeyValueEntry> keyValueEntries, string workingDirectory)
+    public static ProcessStartInfo ConfigureProcessStartInfo(List<KeyValueEntry> keyValueEntries,
+        string workingDirectory)
     {
         return new ProcessStartInfo
         {

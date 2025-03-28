@@ -2,5 +2,4 @@ namespace NodeServer.Infrastructure.Handlers.NodeServerJob.Commands.NodeServerJo
 
 public class NodeServerJobStopHandler
 {
-    
 }

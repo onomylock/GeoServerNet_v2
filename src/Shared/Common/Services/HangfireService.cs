@@ -11,17 +11,17 @@ public class HangfireService(IBackgroundJobClient backgroundJobClient) : IHangfi
     {
         return backgroundJobClient.Enqueue(methodCall);
     }
-    
+
     public string AddEnque<T>(Expression<Action<T>> methodCall)
     {
         return backgroundJobClient.Enqueue(methodCall);
     }
-    
+
     public string AddContinuations(Expression<Action> methodCall, string jobid)
     {
         return backgroundJobClient.ContinueJobWith(jobid, methodCall);
     }
-    
+
     public string AddContinuations<T>(Expression<Action<T>> methodCall, string jobid)
     {
         return backgroundJobClient.ContinueJobWith(jobid, methodCall);

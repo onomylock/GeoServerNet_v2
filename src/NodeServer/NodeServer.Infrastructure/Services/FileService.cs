@@ -8,24 +8,26 @@ namespace NodeServer.Infrastructure.Services;
 
 public class FileService : IFileService
 {
-    public async Task<string> ExtractArchiveAsync(Stream stream, string destinationPath, CancellationToken cancellationToken = default)
+    public async Task<string> ExtractArchiveAsync(Stream stream, string destinationPath,
+        CancellationToken cancellationToken = default)
     {
         await using var gZipStream = new GZipInputStream(stream);
         await using var tarInputStream = new TarInputStream(gZipStream, Encoding.UTF8);
-        
-        if(string.IsNullOrEmpty(destinationPath))
+
+        if (string.IsNullOrEmpty(destinationPath))
             throw new ArgumentNullException(nameof(destinationPath));
-        
-        if(!Directory.Exists(destinationPath))
+
+        if (!Directory.Exists(destinationPath))
             Directory.CreateDirectory(destinationPath);
-        
+
         while (await tarInputStream.GetNextEntryAsync(cancellationToken) is { } tarEntry)
         {
-            if(tarEntry.IsDirectory)
+            if (tarEntry.IsDirectory)
                 continue;
 
-            await using var fs = new FileStream(Path.Combine(destinationPath, tarEntry.Name), FileMode.OpenOrCreate, FileAccess.Write);
-            
+            await using var fs = new FileStream(Path.Combine(destinationPath, tarEntry.Name), FileMode.OpenOrCreate,
+                FileAccess.Write);
+
             await tarInputStream.CopyEntryContentsAsync(fs, cancellationToken);
             fs.Seek(0, SeekOrigin.Begin);
         }
@@ -36,14 +38,14 @@ public class FileService : IFileService
     public async Task<Stream> ZipFolderAsync(string sourcePath, CancellationToken cancellationToken = default)
     {
         var tempDirectory = Directory.CreateTempSubdirectory();
-        
-        CopyDirectory( sourcePath, tempDirectory.FullName, true);
+
+        CopyDirectory(sourcePath, tempDirectory.FullName, true);
 
         var memoryStream = new MemoryStream();
         var gZipOutputStream = new GZipOutputStream(memoryStream);
         gZipOutputStream.SetLevel(4);
         var tarArchive = TarArchive.CreateOutputTarArchive(gZipOutputStream);
-        
+
         tarArchive.RootPath = tempDirectory.FullName;
 
         TarHelper.AddToTarManually(tarArchive, tempDirectory.FullName);

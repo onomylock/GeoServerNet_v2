@@ -1,11 +1,5 @@
-
-
 using System.Diagnostics;
 using System.Reflection;
-using DotNetEnv;
-using DotNetEnv.Configuration;
-using Serilog;
-using Serilog.Settings.Configuration;
 
 namespace ReverseProxy.HttpApi.Extensions;
 

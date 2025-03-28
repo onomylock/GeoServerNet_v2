@@ -55,14 +55,19 @@ public abstract class DisconnectFilteredHub<T>(
         var httpContextFeature = Context.Features.Get<IHttpContextFeature>()!;
 
         foreach (var _ in HubConnectionInfos.Select(_ => new
-                     { ConnectionId = _.Key, DisconnectFilterResult = _.Value.DisconnectFilter.Invoke(), _.Value.HubCallerContext }).Where(_ => _.DisconnectFilterResult.result))
+                 {
+                     ConnectionId = _.Key, DisconnectFilterResult = _.Value.DisconnectFilter.Invoke(),
+                     _.Value.HubCallerContext
+                 }).Where(_ => _.DisconnectFilterResult.result))
         {
             Clients.Client(_.ConnectionId).ReceiveErrorModelResult(new ErrorModelResult
             {
                 Errors =
                 [
-                    new ErrorModelResultEntry(ErrorType.Generic, _.DisconnectFilterResult.reason ?? Localize.Keys.Error.SignalRDisconnectFiltered, ErrorEntryType.Message)
-                ],
+                    new ErrorModelResultEntry(ErrorType.Generic,
+                        _.DisconnectFilterResult.reason ?? Localize.Keys.Error.SignalRDisconnectFiltered,
+                        ErrorEntryType.Message)
+                ]
             });
             _.HubCallerContext.Abort();
         }
@@ -71,45 +76,47 @@ public abstract class DisconnectFilteredHub<T>(
     public async Task AddDisconnectFilter(string connectionId, Func<(bool result, string reason)> filter)
     {
         if (!HubConnectionInfos.TryAdd(Context.ConnectionId, new HubConnectionInfo(filter, Context)))
-        {
             await ThrowException(new AddDisconnectFilterFailedException(), abortConnection: true);
-        }
     }
 
     public void DeleteDisconnectFilter(Func<KeyValuePair<string, HubConnectionInfo>, bool> predicate)
     {
         if (!HubConnectionInfos.TryRemove(HubConnectionInfos.SingleOrDefault(predicate)))
-            loggerDisconnectFilteredHub.LogWarning("[{typeNameOf}:{functionNameOf}] Failed to remove disconnect filter for {ConnectionId} connection", nameof(DisconnectFilteredHub<T>), nameof(DeleteDisconnectFilter),
+            loggerDisconnectFilteredHub.LogWarning(
+                "[{typeNameOf}:{functionNameOf}] Failed to remove disconnect filter for {ConnectionId} connection",
+                nameof(DisconnectFilteredHub<T>), nameof(DeleteDisconnectFilter),
                 Context.ConnectionId);
     }
 
     public override async Task OnConnectedAsync()
     {
-        if (!Guid.TryParse(_httpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimKey.UserId)?.Value, out var userId) || userId == default)
+        if (!Guid.TryParse(_httpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimKey.UserId)?.Value,
+                out var userId) || userId == default)
             await ThrowException(new HttpContextMissingClaimsException(ClaimKey.UserId), abortConnection: true);
-        
-        if (!int.TryParse(_httpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimKey.ExpiresAt)?.Value, out var expiresAt))
+
+        if (!int.TryParse(_httpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimKey.ExpiresAt)?.Value,
+                out var expiresAt))
             await ThrowException(new HttpContextMissingClaimsException(ClaimKey.ExpiresAt), abortConnection: true);
-        
+
         var key = string.Format(SignalRKey.SignalRHubDisconnectFilterKey, userId);
         await Groups.AddToGroupAsync(Context.ConnectionId, key);
         await AddDisconnectFilter(Context.ConnectionId,
-            () => (DateTimeOffset.FromUnixTimeSeconds(expiresAt) < DateTimeOffset.UtcNow, Localize.Keys.Error.SignalRDisconnectFiltered));
+            () => (DateTimeOffset.FromUnixTimeSeconds(expiresAt) < DateTimeOffset.UtcNow,
+                Localize.Keys.Error.SignalRDisconnectFiltered));
 
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
     {
-        if (!Guid.TryParse(_httpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimKey.UserId)?.Value, out var userId) && userId != default)
-        {
+        if (!Guid.TryParse(_httpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimKey.UserId)?.Value,
+                out var userId) && userId != default)
             if (userId != default)
             {
                 var key = string.Format(SignalRKey.SignalRHubDisconnectFilterKey, userId);
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, key);
                 DeleteDisconnectFilter(_ => _.Key == Context.ConnectionId);
             }
-        }
 
         await base.OnDisconnectedAsync(exception);
     }

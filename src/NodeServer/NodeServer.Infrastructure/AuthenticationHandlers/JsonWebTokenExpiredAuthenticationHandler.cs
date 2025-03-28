@@ -62,21 +62,24 @@ public class JsonWebTokenExpiredAuthenticationHandler(
                         Content = new StringContent(new
                         {
                             Token = authorizationBearerPayloadTemp,
-                            AuthenticationScheme = AuthenticationSchemes.JsonWebTokenExpired    
+                            AuthenticationScheme = AuthenticationSchemes.JsonWebTokenExpired
                         }.ToString() ?? string.Empty),
                         RequestUri = null,
                         VersionPolicy = HttpVersionPolicy.RequestVersionOrLower
                     };
                     request.Headers.Add("Authorization", $"Bearer {nodeServerOptions.Value.SystemAccessToken}");
                     var responseMessage = await httpClient.SendAsync(request,
-                        cancellationToken: httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None);
-                    
+                        httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None);
+
                     var responseStream = await responseMessage.Content.ReadAsStreamAsync(
+                        httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None);
+
+                    var authenticateResult = await JsonSerializer.DeserializeAsync<AuthenticateResult>(responseStream,
                         cancellationToken: httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None);
 
-                    var authenticateResult = await JsonSerializer.DeserializeAsync<AuthenticateResult>(responseStream, cancellationToken: httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None); 
-                    
-                    claims.AddRange(authenticateResult.Ticket!.Principal.Claims.Select(_ => new Claim(_.Type, _.Value, _.ValueType)));
+                    claims.AddRange(
+                        authenticateResult.Ticket!.Principal.Claims.Select(_ =>
+                            new Claim(_.Type, _.Value, _.ValueType)));
 
                     authorizationBearerPayload = authorizationBearerPayloadTemp;
                     break;
@@ -86,7 +89,8 @@ public class JsonWebTokenExpiredAuthenticationHandler(
                     // ignored
                 }
 
-            if (!string.IsNullOrEmpty(authorizationBearerPayload)) claims.Add(new Claim(ClaimKey.JsonWebToken, authorizationBearerPayload, ClaimValueTypes.String));
+            if (!string.IsNullOrEmpty(authorizationBearerPayload))
+                claims.Add(new Claim(ClaimKey.JsonWebToken, authorizationBearerPayload, ClaimValueTypes.String));
         }
 
         var claimsIdentity = new ClaimsIdentity(claims, nameof(JsonWebTokenAuthenticationHandler));

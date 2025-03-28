@@ -71,7 +71,7 @@ public class NodeServerJobController(IMediator mediator) : ControllerBase
             throw new MultipartSectionHelper.MultipartSectionContentDispositionFileExpectedException();
 
         await using var fileStream = multipartSection.Body;
-        
+
         return Ok(await mediator.Send(new NodeServerJobStartCommand
         {
             FileStream = fileStream,

@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Connections.Features;
 using Microsoft.AspNetCore.SignalR;
@@ -59,17 +58,22 @@ public abstract class HubBase<T>(ILogger<HubBase<T>> logger, IHostEnvironment ho
 
         if (hostEnvironment.IsProduction())
         {
-            errorModelResult.Errors.Add(new ErrorModelResultEntry(errorType, Localize.Keys.Error.HandledExceptionContactSystemAdministrator, ErrorEntryType.Message));
+            errorModelResult.Errors.Add(new ErrorModelResultEntry(errorType,
+                Localize.Keys.Error.HandledExceptionContactSystemAdministrator, ErrorEntryType.Message));
 
             await ThrowError(errorModelResult);
 
             return;
         }
 
-        errorModelResult.Errors.Add(new ErrorModelResultEntry(errorType, exceptionHandlerFeature.Error.Message, ErrorEntryType.Message));
-        errorModelResult.Errors.Add(new ErrorModelResultEntry(errorType, exceptionHandlerFeature.Error.StackTrace, ErrorEntryType.StackTrace));
-        errorModelResult.Errors.Add(new ErrorModelResultEntry(errorType, exceptionHandlerFeature.Error.Source, ErrorEntryType.Source));
-        errorModelResult.Errors.Add(new ErrorModelResultEntry(errorType, exceptionHandlerFeature.Path, ErrorEntryType.Path));
+        errorModelResult.Errors.Add(new ErrorModelResultEntry(errorType, exceptionHandlerFeature.Error.Message,
+            ErrorEntryType.Message));
+        errorModelResult.Errors.Add(new ErrorModelResultEntry(errorType, exceptionHandlerFeature.Error.StackTrace,
+            ErrorEntryType.StackTrace));
+        errorModelResult.Errors.Add(new ErrorModelResultEntry(errorType, exceptionHandlerFeature.Error.Source,
+            ErrorEntryType.Source));
+        errorModelResult.Errors.Add(new ErrorModelResultEntry(errorType, exceptionHandlerFeature.Path,
+            ErrorEntryType.Path));
 
         await ThrowError(errorModelResult, abortConnection);
     }

@@ -3,4 +3,7 @@
         <ProjectReference Include="..\..\Shared\Shared.csproj"/>
         <ProjectReference Include="..\NodeServer.Application\NodeServer.Application.csproj"/>
     </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Handlers\NodeServerFile\Commands\"/>
+    </ItemGroup>
 </Project>

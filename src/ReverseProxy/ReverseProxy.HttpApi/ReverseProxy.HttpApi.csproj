@@ -5,13 +5,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Serilog.AspNetCore">
-        <HintPath>..\..\..\..\..\.nuget\packages\serilog.aspnetcore\9.0.0\lib\net9.0\Serilog.AspNetCore.dll</HintPath>
-      </Reference>
+        <Reference Include="Serilog.AspNetCore">
+            <HintPath>..\..\..\..\..\.nuget\packages\serilog.aspnetcore\9.0.0\lib\net9.0\Serilog.AspNetCore.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Shared\Shared.csproj" />
+        <ProjectReference Include="..\..\Shared\Shared.csproj"/>
     </ItemGroup>
 
 </Project>

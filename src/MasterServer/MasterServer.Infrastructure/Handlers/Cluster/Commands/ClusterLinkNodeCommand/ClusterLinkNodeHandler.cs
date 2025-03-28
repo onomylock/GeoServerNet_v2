@@ -18,7 +18,8 @@ public class ClusterLinkNodeHandler(
     IClusterEntityService clusterEntityService,
     INodeEntityService nodeEntityService) : IRequestHandler<ClusterLinkNodeCommand, ResponseBase<OkResult>>
 {
-    public async Task<ResponseBase<OkResult>> Handle(ClusterLinkNodeCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<OkResult>> Handle(ClusterLinkNodeCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
@@ -30,7 +31,7 @@ public class ClusterLinkNodeHandler(
                                 throw new ClusterNotFoundException();
 
             var errors = new List<ErrorBase>();
-            
+
             foreach (var nodeId in request.NodeIds)
                 try
                 {
@@ -45,12 +46,15 @@ public class ClusterLinkNodeHandler(
                 }
                 catch (Exception)
                 {
-                    errors.Add(new ErrorModelResultEntry(ErrorType.Generic, Localize.Keys.Warning.MappingAlreadyExists));
+                    errors.Add(new ErrorModelResultEntry(ErrorType.Generic,
+                        Localize.Keys.Warning.MappingAlreadyExists));
                 }
-            
+
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
-            return new ResponseBase<OkResult>()
+            
+            
+            return new ResponseBase<OkResult>
             {
                 Data = new OkResult(),
                 Errors = errors
@@ -59,7 +63,7 @@ public class ClusterLinkNodeHandler(
         catch (Exception)
         {
             await dbContextTransactionAction.RollbackTransactionAsync(CancellationToken.None);
-            
+
             throw;
         }
     }

@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Queries.ClusterReadCollec
 
 public class ClusterReadCollectionSearchQueryValidator : AbstractValidator<ClusterReadCollectionSearchQuery>
 {
-    public ClusterReadCollectionSearchQueryValidator()
-    {
-        
-    }
 }

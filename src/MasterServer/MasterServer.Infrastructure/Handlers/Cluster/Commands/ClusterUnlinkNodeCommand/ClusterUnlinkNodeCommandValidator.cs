@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterUnlinkNod
 
 public class ClusterUnlinkNodeCommandValidator : AbstractValidator<ClusterUnlinkNodeCommand>
 {
-    public ClusterUnlinkNodeCommandValidator()
-    {
-        
-    }
 }

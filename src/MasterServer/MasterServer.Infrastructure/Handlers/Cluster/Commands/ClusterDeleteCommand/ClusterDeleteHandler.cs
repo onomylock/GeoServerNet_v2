@@ -1,6 +1,9 @@
 using FluentValidation;
 using MasterServer.Application.Exceptions;
+using MasterServer.Application.Models.Dto.Cluster.Notification;
+using MasterServer.Application.Services;
 using MasterServer.Application.Services.Data;
+using MasterServer.Infrastructure.Mappers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Application.Data;
@@ -11,7 +14,9 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterDeleteCom
 public class ClusterDeleteHandler(
     IValidator<ClusterDeleteCommand> validator,
     IDbContextTransactionAction dbContextTransactionAction,
-    IClusterEntityService clusterEntityService
+    IClusterEntityService clusterEntityService,
+    IClusterToNodeMappingEntityService clusterToNodeMappingEntityService,
+    IClusterNotificationService clusterNotificationService
 ) : IRequestHandler<ClusterDeleteCommand, ResponseBase<OkResult>>
 {
     public async Task<ResponseBase<OkResult>> Handle(ClusterDeleteCommand request, CancellationToken cancellationToken)
@@ -21,15 +26,20 @@ public class ClusterDeleteHandler(
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
-            
+
             var targetCluster = await clusterEntityService.GetByIdAsync(request.ClusterId, true, cancellationToken) ??
                                 throw new ClusterNotFoundException();
-            
+
             await clusterEntityService.DeleteAsync(targetCluster, cancellationToken);
+
+            await clusterToNodeMappingEntityService.BulkDelete(query =>
+                query.Where(_ => _.EntityLeftId == targetCluster.Id), cancellationToken);
             
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
-            return new ResponseBase<OkResult>()
+            await clusterNotificationService.SendClusterDeletedNotification(ClusterMapper.ToClusterDeletedNotificationDto(targetCluster), cancellationToken);
+            
+            return new ResponseBase<OkResult>
             {
                 Data = new OkResult()
             };
@@ -37,7 +47,7 @@ public class ClusterDeleteHandler(
         catch (Exception)
         {
             await dbContextTransactionAction.RollbackTransactionAsync(CancellationToken.None);
-            
+
             throw;
         }
     }

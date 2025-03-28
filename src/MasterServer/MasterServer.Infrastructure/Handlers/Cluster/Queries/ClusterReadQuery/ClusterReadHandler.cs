@@ -14,16 +14,18 @@ public class ClusterReadHandler(
     IClusterToNodeMappingEntityService clusterToNodeMappingEntityService
 ) : IRequestHandler<ClusterReadQuery, ResponseBase<ClusterReadResultDto>>
 {
-    public async Task<ResponseBase<ClusterReadResultDto>> Handle(ClusterReadQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<ClusterReadResultDto>> Handle(ClusterReadQuery request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         var targetCluster = await clusterEntityService.GetByIdAsync(request.ClusterId, true, cancellationToken) ??
                             throw new ClusterNotFoundException();
 
         return new ResponseBase<ClusterReadResultDto>
         {
-            Data = await ClusterMapper.ToClusterReadResultDto(targetCluster, clusterToNodeMappingEntityService, cancellationToken)
+            Data = await ClusterMapper.ToClusterReadResultDto(targetCluster, clusterToNodeMappingEntityService,
+                cancellationToken)
         };
     }
 }

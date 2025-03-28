@@ -1,7 +1,6 @@
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Logging;
 using Shared.Application.Repository;
 using Shared.Domain.Entity.Base;
 using Shared.Infrastructure.Data;
@@ -17,7 +16,7 @@ public abstract class RepositoryBase<TEntity, TDbContext> : IRepositoryBase<TEnt
     private readonly DbContextAction<TDbContext> _dbContextAction;
     private readonly DbSet<TEntity> _dbSet;
 
-    protected RepositoryBase(TDbContext dbContext, ILogger<DbContextAction<TDbContext>> logger)
+    protected RepositoryBase(TDbContext dbContext)
     {
         _dbContext = dbContext;
         _dbSet = _dbContext.Set<TEntity>();

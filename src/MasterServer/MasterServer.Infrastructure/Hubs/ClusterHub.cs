@@ -15,7 +15,6 @@ public interface IClusterHubActions : IHubBaseAction
     Task SendClusterConfigInfo(ClusterReadCollectionNotificationDto notificationDto);
 }
 
-
 [Authorize(AuthorizationPolicies.System)]
 public sealed class ClusterHub(
     ILogger<ClusterHub> logger,

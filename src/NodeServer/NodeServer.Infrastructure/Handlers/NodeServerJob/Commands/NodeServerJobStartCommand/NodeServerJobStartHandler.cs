@@ -19,29 +19,34 @@ public class NodeServerJobStartHandler(
     INodeServerSolutionEntityService nodeServerSolutionEntityService,
     INodeServerJobEntityService jobEntityService,
     IHangfireService hangfireService,
-    IFileService fileService,
+    IFileService fileService
 ) : IRequestHandler<NodeServerJobStartCommand, ResponseBase<NodeServerJobReadResultDto>>
 {
-    public async Task<ResponseBase<NodeServerJobReadResultDto>> Handle(NodeServerJobStartCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<NodeServerJobReadResultDto>> Handle(NodeServerJobStartCommand request,
+        CancellationToken cancellationToken)
     {
+        throw new NotImplementedException();
+
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
-            
+
             var targetNodeServerSolution =
                 await nodeServerSolutionEntityService.GetByMasterServerSolutionIdAsync(request.SolutionId, false,
                     cancellationToken) ?? throw new NodeServerSolutionNotFoundException();
 
-            var destinationPath = await fileService.ExtractArchiveAsync(request.FileStream, FileHelper.CreateResultPath(), cancellationToken);
-            
-            
+            var destinationPath =
+                await fileService.ExtractArchiveAsync(request.FileStream, FileHelper.HomePath, cancellationToken);
+
+
             var workingDirectory = FileHelper.CreateResultPath(targetNodeServerSolution.DirectoryResultsPath,
                 targetNodeServerSolution.MasterServerSolutionId);
-            
-            var processStartInfo = ProcessHelper.ConfigureProcessStartInfo(request.Metadata, workingDirectory.ToString());
-            
+
+            var processStartInfo =
+                ProcessHelper.ConfigureProcessStartInfo(request.Metadata, workingDirectory.ToString());
+
             var jobId = hangfireService.AddEnque(() => Process.Start(processStartInfo));
 
             var targetJob = new Domain.Entities.NodeServerJob
@@ -54,10 +59,10 @@ public class NodeServerJobStartHandler(
             };
 
             await jobEntityService.SaveAsync(targetJob, cancellationToken);
-            
+
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
-            
-            return new ResponseBase<NodeServerJobReadResultDto>()
+
+            return new ResponseBase<NodeServerJobReadResultDto>
             {
                 Data = NodeServerJobMapper.ToNodeServerJobReadResultDto(targetJob)
             };
@@ -65,7 +70,7 @@ public class NodeServerJobStartHandler(
         catch (Exception)
         {
             await dbContextTransactionAction.RollbackTransactionAsync(CancellationToken.None);
-            
+
             throw;
         }
     }

@@ -15,5 +15,4 @@ public static class NodeServerJobMapper
             JobId = entity.JobId
         };
     }
-    
 }

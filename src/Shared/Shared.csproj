@@ -9,11 +9,11 @@
         <PackageReference Include="EntityFramework.DynamicLinq"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
-        <PackageReference Include="Google.Protobuf" />
-        <PackageReference Include="Grpc.AspNetCore" />
+        <PackageReference Include="Google.Protobuf"/>
+        <PackageReference Include="Grpc.AspNetCore"/>
         <PackageReference Include="Grpc.Tools">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Hangfire"/>
         <PackageReference Include="Hangfire.AspNetCore"/>

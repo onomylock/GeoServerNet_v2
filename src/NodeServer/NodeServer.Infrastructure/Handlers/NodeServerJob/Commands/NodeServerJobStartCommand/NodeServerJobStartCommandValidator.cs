@@ -4,8 +4,4 @@ namespace NodeServer.Infrastructure.Handlers.NodeServerJob.Commands.NodeServerJo
 
 public class NodeServerJobStartCommandValidator : AbstractValidator<NodeServerJobStartCommand>
 {
-    public NodeServerJobStartCommandValidator()
-    {
-        
-    }
 }

@@ -2,5 +2,4 @@ namespace NodeServer.Infrastructure.Handlers.Job.Commands.NodeServerJobRefrashCo
 
 public class NodeServerJobRefrashCommandValidator
 {
-    
 }

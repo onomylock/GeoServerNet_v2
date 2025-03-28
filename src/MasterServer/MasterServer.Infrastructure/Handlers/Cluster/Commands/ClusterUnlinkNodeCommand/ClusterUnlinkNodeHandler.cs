@@ -17,7 +17,8 @@ public class ClusterUnlinkNodeHandler(
     IClusterEntityService clusterEntityService
 ) : IRequestHandler<ClusterUnlinkNodeCommand, ResponseBase<OkResult>>
 {
-    public async Task<ResponseBase<OkResult>> Handle(ClusterUnlinkNodeCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<OkResult>> Handle(ClusterUnlinkNodeCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
@@ -29,25 +30,26 @@ public class ClusterUnlinkNodeHandler(
                                 throw new ClusterNotFoundException();
 
             var errors = new List<ErrorBase>();
-            
+
             foreach (var nodeId in request.NodeIds)
                 try
                 {
                     var targetClusterToNodeMapping =
                         await clusterToNodeMappingEntityService.GetByEntityLeftIdEntityRightIdAsync(targetCluster.Id,
                             nodeId, true, cancellationToken) ??
-                                     throw new NodeNodFoundException();
+                        throw new NodeNodFoundException();
 
                     await clusterToNodeMappingEntityService.DeleteAsync(targetClusterToNodeMapping, cancellationToken);
                 }
                 catch (Exception)
                 {
-                    errors.Add(new ErrorModelResultEntry(ErrorType.Generic, Localize.Keys.Warning.MappingAlreadyExists));
+                    errors.Add(new ErrorModelResultEntry(ErrorType.Generic,
+                        Localize.Keys.Warning.MappingAlreadyExists));
                 }
-            
+
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
-            return new ResponseBase<OkResult>()
+            return new ResponseBase<OkResult>
             {
                 Data = new OkResult(),
                 Errors = errors
@@ -56,7 +58,7 @@ public class ClusterUnlinkNodeHandler(
         catch (Exception)
         {
             await dbContextTransactionAction.RollbackTransactionAsync(CancellationToken.None);
-            
+
             throw;
         }
     }

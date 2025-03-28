@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
-      <Reference Include="Yarp.ReverseProxy">
-        <HintPath>..\..\..\..\..\.nuget\packages\yarp.reverseproxy\2.2.0\lib\net8.0\Yarp.ReverseProxy.dll</HintPath>
-      </Reference>
+        <Reference Include="Yarp.ReverseProxy">
+            <HintPath>..\..\..\..\..\.nuget\packages\yarp.reverseproxy\2.2.0\lib\net8.0\Yarp.ReverseProxy.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Shared\Shared.csproj" />
+        <ProjectReference Include="..\..\Shared\Shared.csproj"/>
     </ItemGroup>
 
 </Project>

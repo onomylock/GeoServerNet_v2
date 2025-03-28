@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterCreateCom
 
 public class ClusterCreateCommandValidator : AbstractValidator<ClusterCreateCommand>
 {
-    public ClusterCreateCommandValidator()
-    {
-        
-    }
 }

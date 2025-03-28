@@ -4,8 +4,4 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterUpdateCom
 
 public class ClusterUpdateCommandValidator : AbstractValidator<ClusterUpdateCommand>
 {
-    public ClusterUpdateCommandValidator()
-    {
-        
-    }
 }

@@ -13,10 +13,11 @@ public class ClusterReadCollectionSearchHandler(
     IClusterToNodeMappingEntityService clusterToNodeMappingEntityService
 ) : IRequestHandler<ClusterReadCollectionSearchQuery, ResponseBase<ClusterReadCollectionResultDto>>
 {
-    public async Task<ResponseBase<ClusterReadCollectionResultDto>> Handle(ClusterReadCollectionSearchQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<ClusterReadCollectionResultDto>> Handle(ClusterReadCollectionSearchQuery request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        
+
         var dataTerm = request.Term.ToLowerInvariant();
 
 #pragma warning disable CA1862
@@ -24,14 +25,17 @@ public class ClusterReadCollectionSearchHandler(
         {
             return query
                 .Where(_ => string.IsNullOrEmpty(request.Term)
-                            || _.UserId.ToString().ToLower().Contains(dataTerm) || dataTerm.Contains(_.UserId.ToString().ToLower())
-                            || _.LoadBalancingPolicy.ToLower().Contains(dataTerm) || dataTerm.Contains(_.LoadBalancingPolicy.ToLower()));
+                            || _.UserId.ToString().ToLower().Contains(dataTerm) ||
+                            dataTerm.Contains(_.UserId.ToString().ToLower())
+                            || _.LoadBalancingPolicy.ToLower().Contains(dataTerm) ||
+                            dataTerm.Contains(_.LoadBalancingPolicy.ToLower()));
         }, true, cancellationToken);
 #pragma warning restore CA1862
 
         return new ResponseBase<ClusterReadCollectionResultDto>
         {
-            Data = await ClusterMapper.ToClusterReadCollectionResultDto(targetClusters, clusterToNodeMappingEntityService,
+            Data = await ClusterMapper.ToClusterReadCollectionResultDto(targetClusters,
+                clusterToNodeMappingEntityService,
                 cancellationToken)
         };
     }

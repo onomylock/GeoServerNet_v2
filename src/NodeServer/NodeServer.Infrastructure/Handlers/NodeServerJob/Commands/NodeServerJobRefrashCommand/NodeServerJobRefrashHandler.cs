@@ -1,6 +1,5 @@
-namespace NodeServer.Infrastructure.Handlers.Job.Commands.NodeServerJobRefrashCommand;
+namespace NodeServer.Infrastructure.Handlers.NodeServerJob.Commands.NodeServerJobRefrashCommand;
 
 public class NodeServerJobRefrashHandler
 {
-    
 }

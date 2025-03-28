@@ -5,7 +5,8 @@ using Shared.Common.Models.DTO.Base;
 
 namespace NodeServer.Infrastructure.Handlers.NodeServerSolution.Commands.NodeServerSolutionUpdateCommand;
 
-public class NodeServerSolutionUpdateCommand : NodeServerSolutionTargetRequestDto, IRequest<ResponseBase<NodeServerSolutionReadResultDto>>
+public class NodeServerSolutionUpdateCommand : NodeServerSolutionTargetRequestDto,
+    IRequest<ResponseBase<NodeServerSolutionReadResultDto>>
 {
     [Required] public string FileName { get; set; }
     [Required] public string BucketName { get; set; }

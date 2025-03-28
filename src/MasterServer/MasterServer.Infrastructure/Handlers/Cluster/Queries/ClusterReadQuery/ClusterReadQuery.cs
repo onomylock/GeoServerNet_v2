@@ -6,5 +6,4 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Queries.ClusterReadQuery;
 
 public class ClusterReadQuery : ClusterTargetRequestDto, IRequest<ResponseBase<ClusterReadResultDto>>
 {
-    
 }

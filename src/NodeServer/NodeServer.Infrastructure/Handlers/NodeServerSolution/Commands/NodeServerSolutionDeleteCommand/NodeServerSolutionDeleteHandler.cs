@@ -14,26 +14,28 @@ public class NodeServerSolutionDeleteHandler(
     IDbContextTransactionAction dbContextTransactionAction,
     INodeServerSolutionEntityService nodeServerSolutionEntityService,
     IFileService fileService
-    ) : IRequestHandler<NodeServerSolutionDeleteCommand, ResponseBase<OkResult>>
+) : IRequestHandler<NodeServerSolutionDeleteCommand, ResponseBase<OkResult>>
 {
-    public async Task<ResponseBase<OkResult>> Handle(NodeServerSolutionDeleteCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<OkResult>> Handle(NodeServerSolutionDeleteCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
         try
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
-            
-            var targetNodeServerSolution = await nodeServerSolutionEntityService.GetByMasterServerSolutionIdAsync(request.MasterServerSolutionId, true,
+
+            var targetNodeServerSolution = await nodeServerSolutionEntityService.GetByMasterServerSolutionIdAsync(
+                request.MasterServerSolutionId, true,
                 cancellationToken) ?? throw new NodeServerSolutionNotFoundException();
-            
+
             await fileService.DeleteFolderAsync(targetNodeServerSolution.DirectoryPath, cancellationToken);
-            
+
             await nodeServerSolutionEntityService.DeleteAsync(targetNodeServerSolution, cancellationToken);
-            
+
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
-            return new ResponseBase<OkResult>()
+            return new ResponseBase<OkResult>
             {
                 Data = new OkResult()
             };
@@ -41,7 +43,7 @@ public class NodeServerSolutionDeleteHandler(
         catch (Exception)
         {
             await dbContextTransactionAction.RollbackTransactionAsync(CancellationToken.None);
-            
+
             throw;
         }
     }

@@ -7,5 +7,5 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterUpdateCom
 
 public class ClusterUpdateCommand : ClusterTargetRequestDto, IRequest<ResponseBase<ClusterReadResultDto>>
 {
-    [Required] public string LoadBalancingPolicy  { get; set; }
+    [Required] public string LoadBalancingPolicy { get; set; }
 }

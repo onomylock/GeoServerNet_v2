@@ -4,8 +4,4 @@ namespace NodeServer.Infrastructure.Handlers.NodeServerSolution.Commands.NodeSer
 
 public class NodeServerSolutionDeleteCommandValidator : AbstractValidator<NodeServerSolutionDeleteCommand>
 {
-    public NodeServerSolutionDeleteCommandValidator()
-    {
-        
-    }
 }

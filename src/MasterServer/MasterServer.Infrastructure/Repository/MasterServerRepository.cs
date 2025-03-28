@@ -10,5 +10,5 @@ namespace MasterServer.Infrastructure.Repository;
 public class MasterServerRepository<TEntity>(
     MasterServerDbContext dbContext,
     ILogger<DbContextAction<MasterServerDbContext>> logger)
-    : RepositoryBase<TEntity, MasterServerDbContext>(dbContext, logger), IMasterServerRepository<TEntity>
+    : RepositoryBase<TEntity, MasterServerDbContext>(dbContext), IMasterServerRepository<TEntity>
     where TEntity : EntityBase;

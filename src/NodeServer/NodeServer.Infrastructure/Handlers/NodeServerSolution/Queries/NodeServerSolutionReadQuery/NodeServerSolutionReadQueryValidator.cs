@@ -2,5 +2,4 @@ namespace NodeServer.Infrastructure.Handlers.NodeServerSolution.Queries.NodeServ
 
 public class NodeServerSolutionReadQueryValidator
 {
-    
 }

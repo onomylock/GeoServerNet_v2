@@ -21,32 +21,34 @@ public class NodeServerSolutionUpdateHandler(
     IFileService fileService
 ) : IRequestHandler<NodeServerSolutionUpdateCommand, ResponseBase<NodeServerSolutionReadResultDto>>
 {
-    public async Task<ResponseBase<NodeServerSolutionReadResultDto>> Handle(NodeServerSolutionUpdateCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseBase<NodeServerSolutionReadResultDto>> Handle(NodeServerSolutionUpdateCommand request,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
         try
         {
-            var errors = new List<ErrorBase>(); 
-            
+            var errors = new List<ErrorBase>();
+
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
-            
+
             var targetNodeServerSolution =
                 await nodeServerSolutionEntityService.GetByMasterServerSolutionIdAsync(request.MasterServerSolutionId,
                     true, cancellationToken) ?? throw new NodeServerSolutionNotFoundException();
-            
+
             await fileService.DeleteFolderAsync(targetNodeServerSolution.DirectoryPath, cancellationToken);
-            
+
             var uri = await minioService.GetFileUrl(request.FileName, request.BucketName, cancellationToken);
-            
+
             var requestStream = await httpClient.GetStreamAsync(uri, cancellationToken);
 
-            var solutionPath = await fileService.ExtractArchiveAsync(requestStream, FileHelper.BuildsPath, cancellationToken);
-            
+            var solutionPath =
+                await fileService.ExtractArchiveAsync(requestStream, FileHelper.BuildsPath, cancellationToken);
+
             var workingDirectory = FileHelper.CreateSolutionResultsPath(solutionPath);
 
             var fileExePath = Path.Combine(solutionPath, request.FileName);
-            
+
             if (!File.Exists(Path.Combine(solutionPath, request.FileName)))
                 throw new FileNotFoundException();
 
@@ -54,12 +56,12 @@ public class NodeServerSolutionUpdateHandler(
             targetNodeServerSolution.FileExePath = fileExePath;
             targetNodeServerSolution.DirectoryResultsPath = workingDirectory.ToString();
             targetNodeServerSolution.ArgumentsMask = request.ArgumentsMask;
-            
+
             await nodeServerSolutionEntityService.SaveAsync(targetNodeServerSolution, cancellationToken);
-            
+
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
-            return new ResponseBase<NodeServerSolutionReadResultDto>()
+            return new ResponseBase<NodeServerSolutionReadResultDto>
             {
                 Data = NodeServerSolutionMapper.ToNodeServerSolutionReadResultDto(targetNodeServerSolution)
             };
@@ -67,7 +69,7 @@ public class NodeServerSolutionUpdateHandler(
         catch (Exception)
         {
             await dbContextTransactionAction.RollbackTransactionAsync(CancellationToken.None);
-            
+
             throw;
         }
     }

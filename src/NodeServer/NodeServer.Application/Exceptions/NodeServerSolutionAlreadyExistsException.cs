@@ -4,5 +4,4 @@ namespace NodeServer.Application.Exceptions;
 
 public class NodeServerSolutionAlreadyExistsException : LocalizedException
 {
-    
 }
