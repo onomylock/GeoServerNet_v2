@@ -1,3 +1,0 @@
-namespace Shared.Common.AuthenticationSchemeOptions;
-
-public class DefaultAuthenticationSchemeOptions : Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions;

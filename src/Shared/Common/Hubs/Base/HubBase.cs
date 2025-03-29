@@ -80,8 +80,6 @@ public abstract class HubBase<T>(ILogger<HubBase<T>> logger, IHostEnvironment ho
 
     private async Task ThrowError(ErrorModelResult errorModelResult, bool abortConnection = false)
     {
-        var httpContextFeature = Context.Features.Get<IHttpContextFeature>()!;
-
         await Clients.Caller.ReceiveError(errorModelResult);
 
         if (abortConnection)

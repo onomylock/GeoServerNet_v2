@@ -1,0 +1,5 @@
+namespace MasterServer.Infrastructure.Handlers.Destination.Queries.DestinationReadCollectionSearchQuery;
+
+public class DestinationReadCollectionSearchQuery
+{
+}

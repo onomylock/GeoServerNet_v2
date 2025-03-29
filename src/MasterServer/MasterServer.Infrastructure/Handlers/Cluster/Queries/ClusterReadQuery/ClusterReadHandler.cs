@@ -11,7 +11,7 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Queries.ClusterReadQuery;
 public class ClusterReadHandler(
     IValidator<ClusterReadQuery> validator,
     IClusterEntityService clusterEntityService,
-    IClusterToNodeMappingEntityService clusterToNodeMappingEntityService
+    IClusterToDestinationMappingEntityService clusterToDestinationMappingEntityService
 ) : IRequestHandler<ClusterReadQuery, ResponseBase<ClusterReadResultDto>>
 {
     public async Task<ResponseBase<ClusterReadResultDto>> Handle(ClusterReadQuery request,
@@ -19,12 +19,12 @@ public class ClusterReadHandler(
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
-        var targetCluster = await clusterEntityService.GetByIdAsync(request.ClusterId, true, cancellationToken) ??
+        var targetCluster = await clusterEntityService.GetByAliasAsync(request.Alias, true, cancellationToken) ??
                             throw new ClusterNotFoundException();
 
         return new ResponseBase<ClusterReadResultDto>
         {
-            Data = await ClusterMapper.ToClusterReadResultDto(targetCluster, clusterToNodeMappingEntityService,
+            Data = await ClusterMapper.ToClusterReadResultDto(targetCluster, clusterToDestinationMappingEntityService,
                 cancellationToken)
         };
     }

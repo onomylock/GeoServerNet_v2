@@ -5,6 +5,8 @@ namespace ReverseProxy.Application.Models.Options;
 
 public class ReverseProxyOptions
 {
-    [Required] public UriData MasterServerJsonWebTokenExpiredChannel { get; set; }
-    [Required] public UriData MasterServerJsonWebTokenAuthenticationChannel { get; set; }
+    [Required] public UriData BaseUri { get; set; }
+    
+    [Required] public string MethodCaller { get; set; }
+    [Required] public int ErrorCooldown { get; set; }
 }

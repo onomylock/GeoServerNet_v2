@@ -5,13 +5,6 @@ namespace MasterServer.Application.Models.Options;
 public class MasterServerOptions : CommonServiceOptions
 {
     /// <summary>
-    ///     HTTP Secure Cookies
-    /// </summary>
-    public bool SecureCookies { get; set; }
-
-    public string CookiesDomain { get; set; }
-
-    /// <summary>
     ///     CORS allowed origins
     /// </summary>
     public string[] CorsAllowedOrigins { get; set; }

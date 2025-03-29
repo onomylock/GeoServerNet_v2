@@ -13,10 +13,10 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterLinkNodeC
 
 public class ClusterLinkNodeHandler(
     IValidator<ClusterLinkNodeCommand> validator,
-    IClusterToNodeMappingEntityService clusterToNodeMappingEntityService,
+    IClusterToDestinationMappingEntityService clusterToDestinationMappingEntityService,
     IDbContextTransactionAction dbContextTransactionAction,
     IClusterEntityService clusterEntityService,
-    INodeEntityService nodeEntityService) : IRequestHandler<ClusterLinkNodeCommand, ResponseBase<OkResult>>
+    IDestinationEntityService destinationEntityService) : IRequestHandler<ClusterLinkNodeCommand, ResponseBase<OkResult>>
 {
     public async Task<ResponseBase<OkResult>> Handle(ClusterLinkNodeCommand request,
         CancellationToken cancellationToken)
@@ -27,21 +27,21 @@ public class ClusterLinkNodeHandler(
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
 
-            var targetCluster = await clusterEntityService.GetByIdAsync(request.ClusterId, true, cancellationToken) ??
+            var targetCluster = await clusterEntityService.GetByAliasAsync(request.Alias, true, cancellationToken) ??
                                 throw new ClusterNotFoundException();
 
             var errors = new List<ErrorBase>();
 
-            foreach (var nodeId in request.NodeIds)
+            foreach (var destinationAlias in request.DestinationsAlias)
                 try
                 {
-                    var targetNode = await nodeEntityService.GetByIdAsync(nodeId, true, cancellationToken) ??
+                    var targetDestination = await destinationEntityService.GetByAliasAsync(destinationAlias, true, cancellationToken) ??
                                      throw new NodeNodFoundException();
 
-                    await clusterToNodeMappingEntityService.SaveAsync(new ClusterToNodeMapping
+                    await clusterToDestinationMappingEntityService.SaveAsync(new ClusterToDestinationMapping
                     {
                         EntityLeftId = targetCluster.Id,
-                        EntityRightId = targetNode.Id
+                        EntityRightId = targetDestination.Id
                     }, cancellationToken);
                 }
                 catch (Exception)
@@ -52,8 +52,7 @@ public class ClusterLinkNodeHandler(
 
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
-            
-            
+
             return new ResponseBase<OkResult>
             {
                 Data = new OkResult(),

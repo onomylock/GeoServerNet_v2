@@ -7,6 +7,10 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterCreateCom
 
 public class ClusterCreateCommand : IRequest<ResponseBase<ClusterReadResultDto>>
 {
+    [Required] public string Alias { get; set; }
     [Required] public string LoadBalancingPolicy { get; set; }
-    public Guid[] NodeIds { get; set; }
+    [Required] public int HealthCheckInterval { get; set; } 
+    [Required] public string HealthCheckPath { get; set; }
+    [Required] public string RouteAlias { get; set; }
+    [Required] public IEnumerable<string> Destinations { get; set; }
 }

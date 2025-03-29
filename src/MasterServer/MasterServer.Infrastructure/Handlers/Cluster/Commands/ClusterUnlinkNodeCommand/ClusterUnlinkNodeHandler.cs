@@ -12,9 +12,10 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterUnlinkNod
 
 public class ClusterUnlinkNodeHandler(
     IValidator<ClusterUnlinkNodeCommand> validator,
-    IClusterToNodeMappingEntityService clusterToNodeMappingEntityService,
+    IClusterToDestinationMappingEntityService clusterToDestinationMappingEntityService,
     IDbContextTransactionAction dbContextTransactionAction,
-    IClusterEntityService clusterEntityService
+    IClusterEntityService clusterEntityService,
+    IDestinationEntityService destinationEntityService
 ) : IRequestHandler<ClusterUnlinkNodeCommand, ResponseBase<OkResult>>
 {
     public async Task<ResponseBase<OkResult>> Handle(ClusterUnlinkNodeCommand request,
@@ -26,20 +27,21 @@ public class ClusterUnlinkNodeHandler(
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
 
-            var targetCluster = await clusterEntityService.GetByIdAsync(request.ClusterId, true, cancellationToken) ??
+            var targetCluster = await clusterEntityService.GetByAliasAsync(request.Alias, true, cancellationToken) ??
                                 throw new ClusterNotFoundException();
 
             var errors = new List<ErrorBase>();
 
-            foreach (var nodeId in request.NodeIds)
+            foreach (var destinationAlias in request.DestinationsAlias)
                 try
                 {
+                    var targetDestination = await destinationEntityService.GetByAliasAsync(destinationAlias, true, cancellationToken);
                     var targetClusterToNodeMapping =
-                        await clusterToNodeMappingEntityService.GetByEntityLeftIdEntityRightIdAsync(targetCluster.Id,
-                            nodeId, true, cancellationToken) ??
+                        await clusterToDestinationMappingEntityService.GetByEntityLeftIdEntityRightIdAsync(targetCluster.Id,
+                            targetDestination.Id, true, cancellationToken) ??
                         throw new NodeNodFoundException();
 
-                    await clusterToNodeMappingEntityService.DeleteAsync(targetClusterToNodeMapping, cancellationToken);
+                    await clusterToDestinationMappingEntityService.DeleteAsync(targetClusterToNodeMapping, cancellationToken);
                 }
                 catch (Exception)
                 {

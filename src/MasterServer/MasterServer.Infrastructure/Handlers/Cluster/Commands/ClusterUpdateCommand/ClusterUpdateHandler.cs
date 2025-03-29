@@ -1,9 +1,10 @@
 using FluentValidation;
 using MasterServer.Application.Models.Dto.Cluster;
-using MasterServer.Application.Services;
 using MasterServer.Application.Services.Data;
+using MasterServer.Infrastructure.Hubs;
 using MasterServer.Infrastructure.Mappers;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using Shared.Application.Data;
 using Shared.Common.Models.DTO.Base;
 
@@ -13,7 +14,7 @@ public class ClusterUpdateHandler(
     IValidator<ClusterUpdateCommand> validator,
     IDbContextTransactionAction dbContextTransactionAction,
     IClusterEntityService clusterEntityService,
-    IClusterNotificationService clusterNotificationService
+    IHubContext<ClusterHub, IClusterHubActions> clusterHub
 ) : IRequestHandler<ClusterUpdateCommand, ResponseBase<ClusterReadResultDto>>
 {
     public async Task<ResponseBase<ClusterReadResultDto>> Handle(ClusterUpdateCommand request,
@@ -25,16 +26,19 @@ public class ClusterUpdateHandler(
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
 
-            var targetCluster = await clusterEntityService.GetByIdAsync(request.ClusterId, true, cancellationToken);
+            var targetCluster = await clusterEntityService.GetByAliasAsync(request.Alias, true, cancellationToken);
 
             targetCluster.LoadBalancingPolicy = request.LoadBalancingPolicy;
-
+            targetCluster.RouteAlias = request.RouteAlias;
+            targetCluster.HealthCheckInterval = request.HealthCheckInterval;
+            targetCluster.HealthCheckPath = request.HealthCheckPath;
 
             await clusterEntityService.SaveAsync(targetCluster, cancellationToken);
 
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
-            await clusterNotificationService.SendClusterUpdatedNotification(targetCluster, cancellationToken);
+            await clusterHub.Clients.All.SendClusterUpdated(
+                ClusterMapper.ToClusterUpdatedNotificationDto(targetCluster));
 
             return new ResponseBase<ClusterReadResultDto>
             {

@@ -7,10 +7,10 @@ namespace MasterServer.Infrastructure.Data;
 
 public class MasterServerDbContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<Node> Nodes { get; set; }
-    public DbSet<ClusterToNodeMapping> ClusterToNodeMappings { get; set; }
-
-
+    public DbSet<Destination> Nodes { get; set; }
+    public DbSet<ClusterToDestinationMapping> ClusterToNodeMappings { get; set; }
+    public DbSet<Route> Routes { get; set; }
+    public DbSet<Cluster> Clusters { get; set; }
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder
@@ -20,11 +20,18 @@ public class MasterServerDbContext(DbContextOptions options) : DbContext(options
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ClusterToNodeMapping>(_ =>
+        modelBuilder.Entity<ClusterToDestinationMapping>(_ =>
         {
             _.HasIndex(__ => new { __.EntityLeftId, __.EntityRightId }).IsUnique();
         });
 
-        modelBuilder.Entity<Node>();
+        modelBuilder.Entity<Cluster>()
+            .HasIndex(x => x.Alias);
+        
+        modelBuilder.Entity<Destination>()
+            .HasIndex(x => x.Alias);
+
+        modelBuilder.Entity<Route>()
+            .HasIndex(x => x.Alias);
     }
 }

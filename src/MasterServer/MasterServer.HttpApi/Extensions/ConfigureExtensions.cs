@@ -49,20 +49,12 @@ public static class ConfigureExtensions
                     diagnosticContext.Set("httpContextRequestCookies", httpContext.Request.Cookies);
                 };
             })
-            //.UseExceptionHandler("/Error")
             .UseRouting()
             .UseCors()
-            // .UseRequestTimeouts()
-            // .UseRateLimiter()
             .UseAuthentication()
             .UseAuthorization()
             .UseWebSockets()
-            .UseEndpoints(endpointRouteBuilder =>
-            {
-                endpointRouteBuilder.MapControllers();
-
-                // endpointRouteBuilder.MapHub<ChatHub>("/hubs/chat");
-            });
+            .UseEndpoints(endpointRouteBuilder => { endpointRouteBuilder.MapControllers(); });
     }
 
     public static void InitBootstrapLogger()

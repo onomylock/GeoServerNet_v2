@@ -10,7 +10,7 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Queries.ClusterReadCollec
 public class ClusterReadCollectionSearchHandler(
     IValidator<ClusterReadCollectionSearchQuery> validator,
     IClusterEntityService clusterEntityService,
-    IClusterToNodeMappingEntityService clusterToNodeMappingEntityService
+    IClusterToDestinationMappingEntityService clusterToDestinationMappingEntityService
 ) : IRequestHandler<ClusterReadCollectionSearchQuery, ResponseBase<ClusterReadCollectionResultDto>>
 {
     public async Task<ResponseBase<ClusterReadCollectionResultDto>> Handle(ClusterReadCollectionSearchQuery request,
@@ -25,8 +25,6 @@ public class ClusterReadCollectionSearchHandler(
         {
             return query
                 .Where(_ => string.IsNullOrEmpty(request.Term)
-                            || _.UserId.ToString().ToLower().Contains(dataTerm) ||
-                            dataTerm.Contains(_.UserId.ToString().ToLower())
                             || _.LoadBalancingPolicy.ToLower().Contains(dataTerm) ||
                             dataTerm.Contains(_.LoadBalancingPolicy.ToLower()));
         }, true, cancellationToken);
@@ -35,7 +33,7 @@ public class ClusterReadCollectionSearchHandler(
         return new ResponseBase<ClusterReadCollectionResultDto>
         {
             Data = await ClusterMapper.ToClusterReadCollectionResultDto(targetClusters,
-                clusterToNodeMappingEntityService,
+                clusterToDestinationMappingEntityService,
                 cancellationToken)
         };
     }

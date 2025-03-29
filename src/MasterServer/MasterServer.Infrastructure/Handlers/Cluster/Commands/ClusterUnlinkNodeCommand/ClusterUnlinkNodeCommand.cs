@@ -8,5 +8,5 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterUnlinkNod
 
 public class ClusterUnlinkNodeCommand : ClusterTargetRequestDto, IRequest<ResponseBase<OkResult>>
 {
-    [Required] public Guid[] NodeIds { get; set; }
+    public string[] DestinationsAlias { get; set; }
 }

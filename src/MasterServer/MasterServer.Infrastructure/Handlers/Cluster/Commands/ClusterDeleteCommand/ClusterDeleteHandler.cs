@@ -1,11 +1,11 @@
 using FluentValidation;
 using MasterServer.Application.Exceptions;
-using MasterServer.Application.Models.Dto.Cluster.Notification;
-using MasterServer.Application.Services;
 using MasterServer.Application.Services.Data;
+using MasterServer.Infrastructure.Hubs;
 using MasterServer.Infrastructure.Mappers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Shared.Application.Data;
 using Shared.Common.Models.DTO.Base;
 
@@ -15,8 +15,8 @@ public class ClusterDeleteHandler(
     IValidator<ClusterDeleteCommand> validator,
     IDbContextTransactionAction dbContextTransactionAction,
     IClusterEntityService clusterEntityService,
-    IClusterToNodeMappingEntityService clusterToNodeMappingEntityService,
-    IClusterNotificationService clusterNotificationService
+    IClusterToDestinationMappingEntityService clusterToDestinationMappingEntityService,
+    IHubContext<ClusterHub, IClusterHubActions> clusterHub
 ) : IRequestHandler<ClusterDeleteCommand, ResponseBase<OkResult>>
 {
     public async Task<ResponseBase<OkResult>> Handle(ClusterDeleteCommand request, CancellationToken cancellationToken)
@@ -27,18 +27,19 @@ public class ClusterDeleteHandler(
         {
             await dbContextTransactionAction.BeginTransactionAsync(cancellationToken);
 
-            var targetCluster = await clusterEntityService.GetByIdAsync(request.ClusterId, true, cancellationToken) ??
+            var targetCluster = await clusterEntityService.GetByAliasAsync(request.Alias, true, cancellationToken) ??
                                 throw new ClusterNotFoundException();
 
             await clusterEntityService.DeleteAsync(targetCluster, cancellationToken);
 
-            await clusterToNodeMappingEntityService.BulkDelete(query =>
+            await clusterToDestinationMappingEntityService.BulkDelete(query =>
                 query.Where(_ => _.EntityLeftId == targetCluster.Id), cancellationToken);
-            
+
             await dbContextTransactionAction.CommitTransactionAsync(cancellationToken);
 
-            await clusterNotificationService.SendClusterDeletedNotification(ClusterMapper.ToClusterDeletedNotificationDto(targetCluster), cancellationToken);
-            
+            await clusterHub.Clients.All.SenClusterDeleted(
+                ClusterMapper.ToClusterDeletedNotificationDto(targetCluster));
+
             return new ResponseBase<OkResult>
             {
                 Data = new OkResult()

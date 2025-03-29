@@ -5,30 +5,17 @@ using Hangfire.PostgreSql;
 using MasterServer.Application.Models.Options;
 using MasterServer.Application.Repository;
 using MasterServer.Application.Services.Data;
-using MasterServer.Infrastructure.AuthenticationHandlers;
-using MasterServer.Infrastructure.ConfigureNamedOptions;
 using MasterServer.Infrastructure.Data;
 using MasterServer.Infrastructure.Repository;
 using MasterServer.Infrastructure.Services.Data;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using Shared.Application.Data;
-using Shared.Common.AuthenticationHandlers;
-using Shared.Common.AuthenticationSchemeOptions;
-using Shared.Common.AuthorizationRequirement;
-using Shared.Common.AuthorizationRequirementHandlers;
 using Shared.Common.Behaviours;
-using Shared.Common.ConfigureNamedOptions;
-using Shared.Common.ConfigureOptions;
-using Shared.Common.Filters;
-using Shared.Common.Helpers;
 using Shared.Common.JsonConverters;
-using Shared.Common.Models;
 using Shared.Common.Models.Options;
 using Shared.Infrastructure.Data;
 
@@ -40,7 +27,6 @@ public static class ConfigureServicesExtensions
     {
         var masterServerHttpApiOptions = builder.Configuration.GetSection(nameof(MasterServerHttpApiOptions))
             .Get<MasterServerHttpApiOptions>();
-        //var minioOptions = builder.Configuration.GetSection(nameof(MinioOptions)).Get<MinioOptions>();
 
         builder.Services
             .ConfigureDiOptions(builder.Configuration)
@@ -62,20 +48,6 @@ public static class ConfigureServicesExtensions
                                    """
                 });
 
-                // swaggerGenOptions.AddSignalRSwaggerGen(ssgOptions => ssgOptions.ScanAssemblies([typeof(ChatHub).Assembly]));
-
-                swaggerGenOptions.AddSecurityDefinition("Bearer",
-                    new OpenApiSecurityScheme
-                    {
-                        Type = SecuritySchemeType.Http,
-                        BearerFormat = "JWT",
-                        In = ParameterLocation.Header,
-                        Scheme = "Bearer",
-                        Name = "Authorization"
-                    });
-
-                swaggerGenOptions.OperationFilter<AuthorizeCheckOperationFilter>();
-
                 swaggerGenOptions.IncludeXmlComments(Path.Join(AppDomain.CurrentDomain.BaseDirectory,
                     "MasterServer.HttpApi.xml"));
 
@@ -96,11 +68,8 @@ public static class ConfigureServicesExtensions
                         ;
                 });
             })
-            .ConfigureAuthentication()
-            .ConfigureAuthorization()
-            //.ConfigureSignalR(builder.Configuration, builder.Environment)
+            .ConfigureSignalR(builder.Configuration, builder.Environment)
             .ConfigureHttp();
-        //.AddMinio(_ => _.WithEndpoint(minioOptions.Endpoint).WithCredentials(minioOptions.AccessKey, minioOptions.SecretKey));
     }
 
     private static IServiceCollection ConfigureDiRepositories(this IServiceCollection serviceCollection)
@@ -112,8 +81,9 @@ public static class ConfigureServicesExtensions
 
     private static IServiceCollection ConfigureDiServices(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<INodeEntityService, NodeEntityService>();
+        serviceCollection.AddScoped<IDestinationEntityService, DestinationEntityService>();
         serviceCollection.AddScoped<IClusterEntityService, ClusterEntityService>();
+        serviceCollection.AddScoped<IClusterToDestinationMappingEntityService, ClusterToDestinationMappingEntityService>();
 
         serviceCollection.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
@@ -187,15 +157,6 @@ public static class ConfigureServicesExtensions
 
     private static IServiceCollection ConfigureDiConfigureOptions(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddSingleton<IConfigureOptions<AuthenticationOptions>, ConfigureAuthenticationOptions>();
-        serviceCollection
-            .AddSingleton<IConfigureOptions<JsonWebTokenAuthenticationSchemeOptions>,
-                MasterServerConfigureJwtBearerOptions>(
-                provider => new MasterServerConfigureJwtBearerOptions(provider
-                    .GetRequiredService<IOptions<JsonWebTokenOptions>>().Value));
-        serviceCollection
-            .AddSingleton<IConfigureOptions<AccessTokenAuthenticationSchemeOptions>, ConfigureAccessTokenOptions>();
-
         return serviceCollection;
     }
 
@@ -259,171 +220,32 @@ public static class ConfigureServicesExtensions
         return serviceCollection;
     }
 
-    private static IServiceCollection ConfigureAuthentication(this IServiceCollection serviceCollection)
+    private static IServiceCollection ConfigureSignalR(this IServiceCollection serviceCollection,
+        IConfiguration configuration, IHostEnvironment hostEnvironment)
     {
         serviceCollection
-            .AddAuthentication()
-            .AddScheme<DefaultAuthenticationSchemeOptions, DefaultAuthenticationHandler>(AuthenticationSchemes.Default,
-                null!)
-            .AddScheme<AccessTokenAuthenticationSchemeOptions, AccessTokenAuthenticationHandler>(
-                AuthenticationSchemes.AccessToken, null!)
-            .AddScheme<JsonWebTokenAuthenticationSchemeOptions, MasterServerJsonWebTokenAuthenticationHandler>(
-                AuthenticationSchemes.JsonWebToken, null!)
-            .AddScheme<JsonWebTokenAuthenticationSchemeOptions, MasterServerJsonWebTokenExpiredAuthenticationHandler>(
-                AuthenticationSchemes.JsonWebTokenExpired, null!);
-
-        return serviceCollection;
-    }
-
-    private static IServiceCollection ConfigureAuthorization(this IServiceCollection serviceCollection)
-    {
-        /*
-         * One authorization policy can have multiple requirements (all must succeed - AND operator)
-         *
-         * And requirements can have multiple handlers (any can succeed, others skip - OR operator)
-         *
-         * Calling context.Fail() fails entire pipeline!
-         */
-
-        serviceCollection
-            .AddAuthorization<IServiceProvider>((authorizationOptions, provider) =>
+            .AddSignalR(options => { options.EnableDetailedErrors = true; })
+            .AddJsonProtocol(options =>
             {
-                authorizationOptions.AddPolicy(AuthorizationPolicies.Default,
-                    policy =>
-                    {
-                        policy.Requirements.Add(new DefaultAR());
-                        policy.AuthenticationSchemes = DefaultAR.AuthenticationSchemes;
-                    });
-                authorizationOptions.AddPolicy(AuthorizationPolicies.System,
-                    policy =>
-                    {
-                        policy.Requirements.Add(new SystemAR(provider
-                            .GetRequiredService<IOptions<MasterServerHttpApiOptions>>().Value.SystemAccessToken));
-                        policy.AuthenticationSchemes = SystemAR.AuthenticationSchemes;
-                    });
-                authorizationOptions.AddPolicy(AuthorizationPolicies.Authorized,
-                    policy =>
-                    {
-                        policy.Requirements.Add(new AuthorizedAR());
-                        policy.AuthenticationSchemes = AuthorizedAR.AuthenticationSchemes;
-                    });
-                authorizationOptions.AddPolicy(AuthorizationPolicies.AuthorizedExpired,
-                    policy =>
-                    {
-                        policy.Requirements.Add(new AuthorizedExpiredAR());
-                        policy.AuthenticationSchemes = AuthorizedExpiredAR.AuthenticationSchemes;
-                    });
-                authorizationOptions.AddPolicy(AuthorizationPolicies.AuthorizedOrDefault,
-                    policy =>
-                    {
-                        policy.Requirements.Add(new AuthorizedOrDefaultAR());
-                        policy.AuthenticationSchemes = AuthorizedOrDefaultAR.AuthenticationSchemes;
-                    });
-                authorizationOptions.AddPolicy(AuthorizationPolicies.SystemOrAuthorized,
-                    policy =>
-                    {
-                        policy.Requirements.Add(new SystemOrAuthorizedAR(provider
-                            .GetRequiredService<IOptions<MasterServerHttpApiOptions>>().Value.SystemAccessToken));
-                        policy.AuthenticationSchemes = SystemOrAuthorizedAR.AuthenticationSchemes;
-                    });
-                authorizationOptions.AddPolicy(AuthorizationPolicies.SystemOrAuthorizedOrDefault,
-                    policy =>
-                    {
-                        policy.Requirements.Add(new SystemOrAuthorizedOrDefaultAR(provider
-                            .GetRequiredService<IOptions<MasterServerHttpApiOptions>>().Value.SystemAccessToken));
-                        policy.AuthenticationSchemes = SystemOrAuthorizedOrDefaultAR.AuthenticationSchemes;
-                    });
+                options.PayloadSerializerOptions.PropertyNameCaseInsensitive = false;
+                options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+                options.PayloadSerializerOptions.IncludeFields = true;
+                options.PayloadSerializerOptions.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;
+                options.PayloadSerializerOptions.Converters.Add(new StringTrimmingJsonConverter());
+                //In JS/TS there might be a problem converting string enum into a number, either disable that converter or use https://pastebin.com/raw/uxndBZgZ
+                options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
-        serviceCollection.AddScoped<IAuthorizationHandler, DefaultARH>();
-        serviceCollection.AddScoped<IAuthorizationHandler, SystemARH>();
-        serviceCollection.AddScoped<IAuthorizationHandler, AuthorizedARH>();
-        serviceCollection.AddScoped<IAuthorizationHandler, AuthorizedExpiredARH>();
-        serviceCollection.AddScoped<IAuthorizationHandler, AuthorizedOrDefaultARH.Default>();
-        serviceCollection.AddScoped<IAuthorizationHandler, AuthorizedOrDefaultARH.Authorized>();
-        serviceCollection.AddScoped<IAuthorizationHandler, SystemOrAuthorizedOrDefaultARH.System>();
-        serviceCollection.AddScoped<IAuthorizationHandler, SystemOrAuthorizedOrDefaultARH.Authorized>();
-        serviceCollection.AddScoped<IAuthorizationHandler, SystemOrAuthorizedOrDefaultARH.Default>();
-        serviceCollection.AddScoped<IAuthorizationHandler, SystemOrAuthorizedARH.System>();
-        serviceCollection.AddScoped<IAuthorizationHandler, SystemOrAuthorizedARH.Authorized>();
-
         return serviceCollection;
     }
-
-    //TODO: add SingnalR for publish metrics to client
-    // private static IServiceCollection ConfigureSignalR(this IServiceCollection serviceCollection, IConfiguration configuration, IHostEnvironment hostEnvironment)
-    // {
-    //     var redisOptions = configuration.GetSection(nameof(RedisOptions)).Get<RedisOptions>();
-    //
-    //     serviceCollection
-    //         .AddSignalR(options => { options.EnableDetailedErrors = true; })
-    //         .AddStackExchangeRedis(configure =>
-    //         {
-    //             var configurationOptions = ConfigurationOptions.Parse(redisOptions.ConnectionString);
-    //
-    //             configure.Configuration = configurationOptions;
-    //             configure.Configuration.ChannelPrefix = new RedisChannel(string.Format(RedisChannelPrefix.SignalR, hostEnvironment.EnvironmentName),
-    //                 RedisChannel.PatternMode.Literal);
-    //         })
-    //         .AddJsonProtocol(options =>
-    //         {
-    //             // options.PayloadSerializerOptions.TypeInfoResolver = JsonSerializer.IsReflectionEnabledByDefault
-    //             //     ? DefaultJsonTypeInfoResolver.RootDefaultInstance()
-    //             //     : JsonTypeInfoResolver.Empty,
-    //             options.PayloadSerializerOptions.PropertyNameCaseInsensitive = false;
-    //             options.PayloadSerializerOptions.PropertyNamingPolicy = null;
-    //             options.PayloadSerializerOptions.IncludeFields = true;
-    //             options.PayloadSerializerOptions.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;
-    //             options.PayloadSerializerOptions.Converters.Add(new StringTrimmingJsonConverter());
-    //             //In JS/TS there might be a problem converting string enum into a number, either disable that converter or use https://pastebin.com/raw/uxndBZgZ
-    //             options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    //         });
-    //
-    //     return serviceCollection;
-    // }
 
     private static IServiceCollection ConfigureHttp(this IServiceCollection serviceCollection)
     {
-        // serviceCollection
-        //     .Configure<ApiBehaviorOptions>(apiBehaviorOptions =>
-        //     {
-        //         // options.SuppressModelStateInvalidFilter = true;
-        //         apiBehaviorOptions.InvalidModelStateResponseFactory = context =>
-        //         {
-        //             var errorModelResult = new ErrorModelResult
-        //             {
-        //                 TraceId = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier
-        //             };
-        //
-        //             foreach (var modelError in context.ModelState.Values.SelectMany(modelStateValue => modelStateValue.Errors))
-        //                 errorModelResult.Errors.Add(new ErrorModelResultEntry(ErrorType.ModelState, modelError.ErrorMessage));
-        //
-        //             return new BadRequestObjectResult(errorModelResult);
-        //         };
-        //     });
-
         serviceCollection
             .AddMvc();
-        // .ConfigureApiBehaviorOptions(apiBehaviorOptions =>
-        // {
-        //     // options.SuppressModelStateInvalidFilter = true;
-        //     apiBehaviorOptions.InvalidModelStateResponseFactory = context =>
-        //     {
-        //         var errorModelResult = new ErrorModelResult
-        //         {
-        //             TraceId = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier
-        //         };
-        //
-        //         foreach (var modelError in context.ModelState.Values.SelectMany(modelStateValue => modelStateValue.Errors))
-        //             errorModelResult.Errors.Add(new ErrorModelResultEntry(ErrorType.ModelState, modelError.ErrorMessage));
-        //
-        //         return new BadRequestObjectResult(errorModelResult);
-        //     };
-        // });
 
         serviceCollection
-            //.AddControllers(mvcOptions => { mvcOptions.Filters.Add<HttpResponseExceptionFilter>(); })
-            .AddControllers(mvcOptions => { mvcOptions.Filters.Add<HttpResponseExceptionFilter>(); })
+            .AddControllers()
             .AddControllersAsServices()
             .AddJsonOptions(jsonOptions =>
             {
@@ -432,7 +254,6 @@ public static class ConfigureServicesExtensions
                 jsonOptions.JsonSerializerOptions.IncludeFields = true;
                 jsonOptions.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;
                 jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                //In JS/TS there might be a problem converting string enum into a number, either disable that converter or use https://pastebin.com/raw/uxndBZgZ
                 jsonOptions.JsonSerializerOptions.Converters.Add(new StringTrimmingJsonConverter());
             });
 

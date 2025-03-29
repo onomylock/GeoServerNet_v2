@@ -4,5 +4,5 @@ namespace MasterServer.Application.Models.Dto.Cluster;
 
 public class ClusterTargetRequestDto
 {
-    [Required] public Guid ClusterId { get; set; }
+    [Required] public string Alias { get; set; }
 }

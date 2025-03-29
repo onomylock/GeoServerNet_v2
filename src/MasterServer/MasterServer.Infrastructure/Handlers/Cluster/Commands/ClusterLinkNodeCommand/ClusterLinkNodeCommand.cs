@@ -7,5 +7,5 @@ namespace MasterServer.Infrastructure.Handlers.Cluster.Commands.ClusterLinkNodeC
 
 public class ClusterLinkNodeCommand : ClusterTargetRequestDto, IRequest<ResponseBase<OkResult>>
 {
-    public Guid[] NodeIds { get; set; }
+    public string[] DestinationsAlias { get; set; }
 }
